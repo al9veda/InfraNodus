@@ -5,6 +5,9 @@
 
 var express = require('express');
 var routes = require('./routes');
+var entries = require('./routes/entries');
+var entry = require('./lib/entry');
+
 
 // add a route for user processing
 var user = require('./lib/middleware/user');
@@ -51,7 +54,8 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
+app.get('/', entries.list);
+
 
 // on get request for /register request a form route function from register.js
 app.get('/register', register.form);
