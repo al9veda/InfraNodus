@@ -7,7 +7,7 @@ var express = require('express');
 var routes = require('./routes');
 
 // add a route for user processing
-var user = require('./routes/user');
+var user = require('./lib/middleware/user');
 
 // add a route for registration (the destination for users when they request it)
 var register = require('./routes/register');
@@ -40,6 +40,7 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
 app.use(express.session());
+app.use(user);
 app.use(messages);
 
 app.use(app.router);
@@ -51,7 +52,6 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/users', user.list);
 
 // on get request for /register request a form route function from register.js
 app.get('/register', register.form);
@@ -64,6 +64,8 @@ app.get('/login', login.form);
 
 // on post request to /register request a submit rout function from register.js
 app.post('/login', login.submit);
+
+app.get('/logout', login.logout);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
