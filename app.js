@@ -54,7 +54,7 @@ app.get('/users', user.list);
 app.get('/register', register.form);
 
 // on post request to /register request a submit rout function from register.js
-//app.post('/register', register.submit);
+app.post('/register', register.submit);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
