@@ -6,8 +6,10 @@
 var express = require('express');
 var routes = require('./routes');
 var entries = require('./routes/entries');
-var entry = require('./lib/entry');
+var Entry = require('./lib/entry');
+var page = require('./lib/middleware/page');
 
+var validate = require('./lib/middleware/validate');
 
 // add a route for user processing
 var user = require('./lib/middleware/user');
@@ -54,8 +56,6 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', entries.list);
-
 
 // on get request for /register request a form route function from register.js
 app.get('/register', register.form);
@@ -70,6 +70,18 @@ app.get('/login', login.form);
 app.post('/login', login.submit);
 
 app.get('/logout', login.logout);
+
+app.get('/post', entries.form);
+app.post(
+    '/post',
+    validate.required('entry[title]'),
+    validate.lengthAbove('entry[title]', 4),
+    entries.submit
+);
+
+app.get('/:page?', page(Entry.count, 5), entries.list);
+
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
