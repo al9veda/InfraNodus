@@ -12,6 +12,9 @@ var user = require('./routes/user');
 // add a route for registration (the destination for users when they request it)
 var register = require('./routes/register');
 
+// add a route for login (the destination for users when they request it)
+var login = require('./routes/login');
+
 // add a business logic for displaying messages (not a route as we don't need the user to access them directly)
 var messages = require('./lib/messages');
 
@@ -55,6 +58,12 @@ app.get('/register', register.form);
 
 // on post request to /register request a submit rout function from register.js
 app.post('/register', register.submit);
+
+// on get request for /register request a form route function from register.js
+app.get('/login', login.form);
+
+// on post request to /register request a submit rout function from register.js
+app.post('/login', login.submit);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
