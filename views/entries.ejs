@@ -9,11 +9,9 @@
 
 <% entries.forEach(function(entry) { %>
 <div class='entry'>
-    <h3><%= entry.title %></h3>
-    <p><%= entry.body %></p>
-    <p>Posted by <%= entry.username %></p>
+    <h3><%= entry.id %></h3>
+    <p><%= entry.start_node_id %></p>
 </div>
 <% }) %>
-<% include pager %>
 </body>
 </html>

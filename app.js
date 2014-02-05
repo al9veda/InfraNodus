@@ -63,8 +63,8 @@ app.post(
 
 app.get('/api/user/:id', api.user);
 app.post('/api/entry', entries.submit);
-app.get('/api/entries/:page?', page(Entry.count), api.entries);
-app.get('/:page?', page(Entry.count, 5), entries.list);
+app.get('/api/entries', api.entries);
+app.get('/', entries.list);
 
 
 
