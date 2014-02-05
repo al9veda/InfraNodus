@@ -20,7 +20,7 @@ exports.submit = function(req, res, next){
     var data = req.body.entry;
 
     var entry = new Entry({
-        "by": res.locals.user.name,
+        "by": res.locals.user.neo_id,
         "name": data.title
     });
 
