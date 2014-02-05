@@ -24,6 +24,7 @@ exports.submit = function(req, res, next){
         "name": data.title
     });
 
+
     entry.save(function(err) {
         if (err) return next(err);
         if (req.remoteUser) {
