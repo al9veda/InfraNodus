@@ -7,7 +7,7 @@ exports.list = function(req, res, next){
             title: 'Entries',
             entries: []
         });
-        return next();
+        return;
     }
 
 

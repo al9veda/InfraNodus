@@ -9,8 +9,8 @@
 
 <% entries.forEach(function(entry) { %>
 <div class='entry'>
-    <h3><%= entry.id %></h3>
-    <p><%= entry.start_node_id %></p>
+    <h3>ID: <%= entry._id %></h3>
+    <p>FROM: <%= entry._start %>, TO: <%= entry._end %></p>
 </div>
 <% }) %>
 </body>
