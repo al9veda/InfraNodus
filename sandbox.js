@@ -1,17 +1,15 @@
-var FlowdockText = require('flowdock-text');
+var neo4j = require('node-neo4j');
+db = new neo4j('http://localhost:7474');
 
-var text = "So #Paris is a bit like #Moscow but it doesn't compare to #NewYork";
+db.insertNode({
+    name: 'Darth Vader',
+    sex: 'male'
+},function(err, node){
+    if(err) throw err;
 
-var hashtags = FlowdockText.extractHashtags(text);
+    // Output node properties.
+    console.log(node.data);
 
-hashtags.splice(0,0,"");
-
-console.log(hashtags);
-
-
-hashtags_str = hashtags.join(" #").substr(1);
-
-
-console.log(hashtags_str);
-
-
+    // Output node id.
+    console.log(node._id); /* for 2.0.0-RC4, use: console.log(node._id) */
+});
