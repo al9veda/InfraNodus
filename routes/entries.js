@@ -2,9 +2,17 @@ var Entry = require('../lib/entry');
 
 exports.list = function(req, res, next){
 
-    // TODO: How to transfer the logged in user ID here?
+    if (typeof res.locals.user === 'undefined') {
+        res.render('entries', {
+            title: 'Entries',
+            entries: []
+        });
+        return next();
+    }
 
-    Entry.getRange("191", function(err, entries) {
+
+
+    Entry.getRange(res.locals.user.neo_id, function(err, entries) {
         if (err) return next(err);
 
         res.render('entries', {
