@@ -8,7 +8,7 @@ db.insertNode({
     if(err) throw err;
 
     // Output node properties.
-    console.log(node.data);
+    console.log(node.name);
 
     // Output node id.
     console.log(node._id); /* for 2.0.0-RC4, use: console.log(node._id) */
