@@ -56,8 +56,8 @@ app.get('/logout', login.logout);
 app.get('/post', entries.form);
 app.post(
     '/post',
-    validate.required('entry[title]'),
-    validate.lengthAbove('entry[title]', 4),
+    validate.required('entry[body]'),
+    validate.lengthAbove('entry[body]', 4),
     entries.submit
 );
 
