@@ -13,3 +13,5 @@ sumup(10,5, function(sum) {
 })
 
 
+// Always make a variable empty after announcing it just in case so you don't get undefined functions
+

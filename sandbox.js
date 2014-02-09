@@ -5,9 +5,11 @@ db = new neo4j('http://localhost:7474');
 
 var FlowdockText = require('flowdock-text');
 
-var text = "Like #Paris was really something but #Berlin could never compare to it in its #Awesomeness";
+var context = "Default";
 
-var hashtags = FlowdockText.extractHashtags(text);
+var statement = "So like #ClignancourtMarket is the #besthing I know and definitely they have lots of cool stuff like #rings and #hoodies much better than #KTZ";
+
+var hashtags = FlowdockText.extractHashtags(statement);
 
 var user_id = 270;
 
@@ -17,29 +19,32 @@ console.log(hashtags);
 // Construct CREATE Cypher query
 
 
-function makeCypherQuery (nodes,user_id,callback) {
+function makeCypherQuery (user_id,concepts,statement,context,callback) {
+
     var index;
-    var createNodesQuery;
-    var createEdgesQuery;
 
     matchUser = 'MATCH (u:User {name: "nassim"}) CREATE ';
-    createNodesQuery = '(' + nodes[0] + ':Hashtag ' + '{name:"' + nodes[0] + '", id:"' + user_id + '"}), ';
-    createNodesQuery += nodes[0] +'-[:BY]->u';
-    createEdgesQuery = '';
+    createContext = '(c:Context ' + '{name:"' + context + '", by:"' + user_id + '"}), ';
+    createStatement = '(s:Statement ' + '{name:"#' + concepts[0];
+    createNodesQuery = '(' + concepts[0] + ':Hashtag ' + '{name:"' + concepts[0] + '", by:"' + user_id + '"})';
+    createEdgesQuery = ', ' + concepts[0] +'-[:BY]->u, ' + concepts[0] + '-[:OF]->s, ' + concepts[0] + '-[:AT]->c';
 
-    for (index = 1; index < nodes.length; ++ index) {
-        createNodesQuery += ', (' + nodes[index] + ':Hashtag ' + '{name:"' + nodes[index] + '", id:"' + user_id + '"})';
+
+    for (index = 1; index < concepts.length; ++ index) {
+        createNodesQuery += ', (' + concepts[index] + ':Hashtag ' + '{name:"' + concepts[index] + '", by:"' + user_id + '"})';
         minusOne = index - 1;
-        createEdgesQuery += ', ' + nodes[minusOne] + '-[:TO]->' + nodes[index] + ', ' + nodes[index] + '-[:BY]->u';
+        createEdgesQuery += ', ' + concepts[minusOne] + '-[:TO]->' + concepts[index] + ', ' + concepts[index] + '-[:BY]->u, ' + concepts[index] + '-[:OF]->s, ' + concepts[index] + '-[:AT]->c';
+        createStatement += ' #' + concepts[index];
     }
 
-    createNodesEdgesQuery = matchUser + createNodesQuery + createEdgesQuery + ';';
+    createStatement += '", text:"' + statement + '", by:"' + user_id + '"}), s-[:BY]->u, s-[:IN]->c, ';
+    createNodesEdgesQuery = matchUser + createContext + createStatement + createNodesQuery + createEdgesQuery + ';';
     callback(createNodesEdgesQuery);
 
 };
 
 
-makeCypherQuery(hashtags, user_id, function(query) {
+makeCypherQuery(user_id, hashtags, statement, context, function(query) {
     console.log(query);
 } );
 
