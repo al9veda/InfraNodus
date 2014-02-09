@@ -24,12 +24,13 @@ function makeCypherQuery (nodes,user_id,callback) {
 
     matchUser = 'MATCH (u:User {name: "nassim"}) CREATE ';
     createNodesQuery = '(' + nodes[0] + ':Hashtag ' + '{name:"' + nodes[0] + '", id:"' + user_id + '"}), ';
-    createNodesQuery += nodes[0] +'-[:BY]->u, ';
+    createNodesQuery += nodes[0] +'-[:BY]->u';
+    createEdgesQuery = '';
 
     for (index = 1; index < nodes.length; ++ index) {
-        createNodesQuery += '(' + nodes[index] + ':Hashtag ' + '{name:"' + nodes[index] + '", id:"' + user_id + '"}), ';
+        createNodesQuery += ', (' + nodes[index] + ':Hashtag ' + '{name:"' + nodes[index] + '", id:"' + user_id + '"})';
         minusOne = index - 1;
-        createEdgesQuery += nodes[minusOne] + '-[:TO]->' + nodes[index] + ', ' + nodes[index] + '-[:BY]->u';
+        createEdgesQuery += ', ' + nodes[minusOne] + '-[:TO]->' + nodes[index] + ', ' + nodes[index] + '-[:BY]->u';
     }
 
     createNodesEdgesQuery = matchUser + createNodesQuery + createEdgesQuery + ';';
