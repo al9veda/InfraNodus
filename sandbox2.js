@@ -15,3 +15,12 @@ sumup(10,5, function(sum) {
 
 // Always make a variable empty after announcing it just in case so you don't get undefined functions
 
+var hashtags = ['TAG1','tag2','tag3'];
+
+
+for(var i = 0; i < hashtags.length; i++) {
+    hashtags[i] = hashtags[i].toLowerCase();
+}
+
+console.log(hashtags);
+
