@@ -20,7 +20,7 @@ var context = {
 }
 
 var statement = {
-        text: "I think th'at #KTZ is a bit #fuckedUp and rather #crazy-motherfucker so I #DontKnow if it's \"similar \" to #EGR and I saw ¥¨∞∞§¶&^%#&&^###### { them } both '(at #Barbes and they were like totally #awesome",
+        text: "I think th'at #KTZ is a bit #fuckedUp and rather #pretentions_little and #FuckingSick and #Ostensibly #crazy-motherfucker so I #DontKnow if it's \"similar \" to #EGR and I saw ♥ { them } both [here and there]'(at #Barbes and they were like totally #awesome",
         uid: statement_uid
 };
 
@@ -42,7 +42,7 @@ var hashtags = FlowdockText.extractHashtags(statement.text);
 
 for(var i = 0; i < hashtags.length; i++) {
     if (!S(hashtags[i]).isUpper()) {
-        hashtags[i] = S(hashtags[i]).dasherize().chompLeft('-').s.toLowerCase();
+        hashtags[i] = S(hashtags[i]).dasherize().chompLeft('-').camelize().s;
     }
     else {
         hashtags[i] = hashtags[i].toLowerCase();
@@ -56,7 +56,9 @@ console.log(hashtags);
 statement.text = S(statement.text).trim().collapseWhitespace().s
 
 // Make sure there's no injection
-statement.text = jsesc(statement.text);
+statement.text = jsesc(statement.text, {
+    'quotes': 'double'
+});
 
 console.log(statement.text);
 
