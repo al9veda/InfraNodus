@@ -7,7 +7,7 @@ var FlowdockText = require('flowdock-text');
 
 var context = "Default";
 
-var statement = "So like #ClignancourtMarket is the #besthing I know and definitely they have lots of cool stuff like #rings and #hoodies much better than #KTZ";
+var statement = "So like #ClignancourtMarket is the #besthing I know and definitely they have lots of cool stuff like #rings and #hoodies much better than #KTZ and from #WestCoast";
 
 var hashtags = FlowdockText.extractHashtags(statement);
 
@@ -23,21 +23,21 @@ function makeCypherQuery (user_id,concepts,statement,context,callback) {
 
     var index;
 
-    matchUser = 'MATCH (u:User {name: "nassim"}) CREATE ';
-    createContext = '(c:Context ' + '{name:"' + context + '", by:"' + user_id + '"}), ';
+    matchUser = 'MATCH (u:User {name: "nassim"}) MERGE ';
+    createContext = '(c:Context ' + '{name:"' + context + '"}) MERGE c-[:BY]->u MERGE ';
     createStatement = '(s:Statement ' + '{name:"#' + concepts[0];
     createNodesQuery = '(' + concepts[0] + ':Hashtag ' + '{name:"' + concepts[0] + '", by:"' + user_id + '"})';
-    createEdgesQuery = ', ' + concepts[0] +'-[:BY]->u, ' + concepts[0] + '-[:OF]->s, ' + concepts[0] + '-[:AT]->c';
+    createEdgesQuery = 'MERGE ' + concepts[0] +'-[:BY]->u MERGE ' + concepts[0] + '-[:OF]->s MERGE ' + concepts[0] + '-[:AT]->c';
 
 
     for (index = 1; index < concepts.length; ++ index) {
-        createNodesQuery += ', (' + concepts[index] + ':Hashtag ' + '{name:"' + concepts[index] + '", by:"' + user_id + '"})';
+        createNodesQuery += 'MERGE (' + concepts[index] + ':Hashtag ' + '{name:"' + concepts[index] + '", by:"' + user_id + '"})';
         minusOne = index - 1;
-        createEdgesQuery += ', ' + concepts[minusOne] + '-[:TO]->' + concepts[index] + ', ' + concepts[index] + '-[:BY]->u, ' + concepts[index] + '-[:OF]->s, ' + concepts[index] + '-[:AT]->c';
+        createEdgesQuery += ' MERGE ' + concepts[minusOne] + '-[:TO]->' + concepts[index] + ' MERGE ' + concepts[index] + '-[:BY]->u MERGE ' + concepts[index] + '-[:OF]->s MERGE ' + concepts[index] + '-[:AT]->c';
         createStatement += ' #' + concepts[index];
     }
 
-    createStatement += '", text:"' + statement + '", by:"' + user_id + '"}), s-[:BY]->u, s-[:IN]->c, ';
+    createStatement += '", text:"' + statement + '"}) MERGE s-[:BY]->u MERGE s-[:IN]->c MERGE ';
     createNodesEdgesQuery = matchUser + createContext + createStatement + createNodesQuery + createEdgesQuery + ';';
     callback(createNodesEdgesQuery);
 
