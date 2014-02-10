@@ -16,6 +16,10 @@ var user_id = 270;
 console.log(hashtags);
 
 
+
+// TODO create an internal system of IDs for each node
+
+
 // Construct CREATE Cypher query
 
 
@@ -26,18 +30,18 @@ function makeCypherQuery (user_id,concepts,statement,context,callback) {
     matchUser = 'MATCH (u:User {name: "nassim"}) MERGE ';
     createContext = '(c:Context ' + '{name:"' + context + '"}) MERGE c-[:BY]->u MERGE ';
     createStatement = '(s:Statement ' + '{name:"#' + concepts[0];
-    createNodesQuery = '(' + concepts[0] + ':Hashtag ' + '{name:"' + concepts[0] + '", by:"' + user_id + '"})';
-    createEdgesQuery = 'MERGE ' + concepts[0] +'-[:BY]->u MERGE ' + concepts[0] + '-[:OF]->s MERGE ' + concepts[0] + '-[:AT]->c';
+    createNodesQuery = '(' + concepts[0] + ':Hashtag ' + '{name:"' + concepts[0] + '"})';
+    createEdgesQuery = ' MERGE ' + concepts[0] +'-[:BY]->u MERGE ' + concepts[0] + '-[:OF {context:"' + context + '",user:"' + user_id + '"}]->s MERGE ' + concepts[0] + '-[:AT {user:"' + user_id + '"}]->c';
 
 
     for (index = 1; index < concepts.length; ++ index) {
-        createNodesQuery += 'MERGE (' + concepts[index] + ':Hashtag ' + '{name:"' + concepts[index] + '", by:"' + user_id + '"})';
+        createNodesQuery += ' MERGE (' + concepts[index] + ':Hashtag ' + '{name:"' + concepts[index] + '"})';
         minusOne = index - 1;
-        createEdgesQuery += ' MERGE ' + concepts[minusOne] + '-[:TO]->' + concepts[index] + ' MERGE ' + concepts[index] + '-[:BY]->u MERGE ' + concepts[index] + '-[:OF]->s MERGE ' + concepts[index] + '-[:AT]->c';
+        createEdgesQuery += ' MERGE ' + concepts[minusOne] + '-[:TO {context:"' + context + '",statement:"' + statement + '",user:"' + user_id + '"}]->' + concepts[index] + ' MERGE ' + concepts[index] + '-[:BY]->u MERGE ' + concepts[index] + '-[:OF {context:"' + context + '",user:"' + user_id + '"}]->s MERGE ' + concepts[index] + '-[:AT {user:"' + user_id + '"}]->c';
         createStatement += ' #' + concepts[index];
     }
 
-    createStatement += '", text:"' + statement + '"}) MERGE s-[:BY]->u MERGE s-[:IN]->c MERGE ';
+    createStatement += '", text:"' + statement + '"}) MERGE s-[:BY]->u MERGE s-[:IN {user:"' + user_id + '"}]->c MERGE ';
     createNodesEdgesQuery = matchUser + createContext + createStatement + createNodesQuery + createEdgesQuery + ';';
     callback(createNodesEdgesQuery);
 
