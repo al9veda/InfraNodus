@@ -7,6 +7,11 @@ var uuid = require('node-uuid');
 var statement_uid;
 statement_uid = uuid.v1();
 
+// Require string methods
+
+var S = require('string');
+
+var jsesc = require('jsesc');
 
 
 var context = {
@@ -15,7 +20,7 @@ var context = {
 }
 
 var statement = {
-        text: "I think that #KTZ is a bit similar to #EGR and I saw them both at #Barbes and they were like totally #awesome",
+        text: "I think th'at #KTZ is a bit #fuckedUp and rather #crazy-motherfucker so I #DontKnow if it's \"similar \" to #EGR and I saw ¥¨∞∞§¶&^%#&&^###### { them } both '(at #Barbes and they were like totally #awesome",
         uid: statement_uid
 };
 
@@ -36,10 +41,25 @@ var hashtags = FlowdockText.extractHashtags(statement.text);
 // Convert them to lowercase
 
 for(var i = 0; i < hashtags.length; i++) {
-    hashtags[i] = hashtags[i].toLowerCase();
+    if (!S(hashtags[i]).isUpper()) {
+        hashtags[i] = S(hashtags[i]).dasherize().chompLeft('-').s.toLowerCase();
+    }
+    else {
+        hashtags[i] = hashtags[i].toLowerCase();
+    }
+
 }
 
 console.log(hashtags);
+
+// Remove extra whitespaces
+statement.text = S(statement.text).trim().collapseWhitespace().s
+
+// Make sure there's no injection
+statement.text = jsesc(statement.text);
+
+console.log(statement.text);
+
 
 
 
@@ -92,7 +112,7 @@ function makeCypherQuery (user,concepts,statement,context,callback) {
     var index;
 
     matchUser = 'MATCH (u:User {uid: "' + user.uid + '"}) MERGE ';
-    createContext = '(c:Context ' + '{uid:"' + context.uid + '"}) MERGE c-[:BY]->u MERGE ';
+    createContext = '(c:Context ' + '{uid:"' + context.uid + '",name:"' + context.name + '"}) MERGE c-[:BY]->u MERGE ';
     createStatement = '(s:Statement ' + '{name:"#' + concepts[0];
     createNodesQuery = '(' + concepts[0] + ':Hashtag ' + '{name:"' + concepts[0] + '"})';
     createEdgesQuery = ' MERGE ' + concepts[0] +'-[:BY]->u MERGE ' + concepts[0] + '-[:OF {context:"' + context.uid + '",user:"' + user.uid + '"}]->s MERGE ' + concepts[0] + '-[:AT {user:"' + user.uid + '"}]->c';
@@ -105,7 +125,7 @@ function makeCypherQuery (user,concepts,statement,context,callback) {
         createStatement += ' #' + concepts[index];
     }
 
-    createStatement += '", text:"' + statement.text + '"}) MERGE s-[:BY]->u MERGE s-[:IN {user:"' + user.uid + '"}]->c MERGE ';
+    createStatement += '", text:"' + statement.text + '", uid:"' + statement.uid + '"}) MERGE s-[:BY]->u MERGE s-[:IN {user:"' + user.uid + '"}]->c MERGE ';
     createNodesEdgesQuery = matchUser + createContext + createStatement + createNodesQuery + createEdgesQuery + ';';
     callback(createNodesEdgesQuery);
 
