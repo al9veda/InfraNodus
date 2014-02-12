@@ -1,4 +1,4 @@
-var cypherQuery = require('./sandbox');
+var CypherQuery = require('./lib/db/neo4j');
 
 
 // Create unique ID for the statement
@@ -38,7 +38,7 @@ var user = {
 
 
 // Get the hashtags out
-/*
+
 var FlowdockText = require('flowdock-text');
 
 var hashtags = FlowdockText.extractHashtags(statement.text);
@@ -52,10 +52,10 @@ for(var i = 0; i < hashtags.length; i++) {
     else {
         hashtags[i] = hashtags[i].toLowerCase();
     }
-}  */
+}
 
 console.log(hashtags);
- /*
+
 // Remove extra whitespaces
 statement.text = S(statement.text).trim().collapseWhitespace().s
 
@@ -67,12 +67,13 @@ statement.text = jsesc(statement.text, {
 // Display them
 console.log(statement.text);
 
-*/
 
 
-cypherQuery.create(user,hashtags,statement,context, function(entries) {
+
+CypherQuery.addStatement(user,hashtags,statement,context, function(entries) {
   console.log(entries);
 });
+
 
 
 
