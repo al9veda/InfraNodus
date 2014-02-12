@@ -59,6 +59,7 @@ app.post(
     validate.required('entry[body]'),
     validate.lengthAbove('entry[body]', 4),
     validate.sanitize('entry[body]'),
+    validate.getHashtags('entry[body]'),
     entries.submit
 );
 
