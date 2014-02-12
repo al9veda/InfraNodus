@@ -24,3 +24,12 @@ for(var i = 0; i < hashtags.length; i++) {
 
 console.log(hashtags);
 
+var timestamp = new Date().getTime() * 10000;
+
+console.log(timestamp + 1);
+
+
+console.log(timestamp + 2);
+
+
+
