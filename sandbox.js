@@ -1,95 +1,8 @@
-var neo4j = require('node-neo4j');
-db = new neo4j('http://localhost:7474');
-
-
 // Create unique ID for the statement
-var uuid = require('node-uuid');
-var statement_uid;
-statement_uid = uuid.v1();
-
-// Require string methods
-
-var S = require('string');
-
-var jsesc = require('jsesc');
 
 
-var context = {
-        name: "Rocket Science",
-        uid: "cc5c4320-927e-11e3-a139-9331f538c925"
-}
+module.exports = cypherQuery;
 
-var statement = {
-        text: "lets check if #lacie drives are better than #westernDigital when used with #Macs",
-        uid: statement_uid
-};
-
-
-var user = {
-    name: 'nassim',
-    uid: "cc5c4320-927e-11e3-a139-9331f538c824"
-};
-
-
-
-// Get the hashtags out
-
-var FlowdockText = require('flowdock-text');
-
-var hashtags = FlowdockText.extractHashtags(statement.text);
-
-// Convert them to lowercase
-
-for(var i = 0; i < hashtags.length; i++) {
-    if (!S(hashtags[i]).isUpper()) {
-        hashtags[i] = S(hashtags[i]).dasherize().chompLeft('-').camelize().s;
-    }
-    else {
-        hashtags[i] = hashtags[i].toLowerCase();
-    }
-
-}
-
-console.log(hashtags);
-
-// Remove extra whitespaces
-statement.text = S(statement.text).trim().collapseWhitespace().s
-
-// Make sure there's no injection
-statement.text = jsesc(statement.text, {
-    'quotes': 'double'
-});
-
-console.log(statement.text);
-
-
-
-var timestamp = new Date().getTime() * 10000;
-
-console.log(timestamp);
-
-
-/*
-   TODO Add timestamp to all the inputs
-
-   TODO Implement the logic from here into the interface
-   Implement this logic into the interface
-
-   TODO Implement a simple server-side no database login system
-
-   TODO Formalize this logic into a post on Nodus Labs and for KnowNodes
-
-   TODO API
-   Add all this functionality to APIs
-
-   TODO Viz
-   Visualize the graphs through Sigma
-
-   TODO Interface
-   Create better way to create contexts, etc. etc.
-
-
-*/
 
 // Construct CREATE Cypher query
 
@@ -97,6 +10,8 @@ console.log(timestamp);
 function makeCypherQuery (user,concepts,statement,context,callback) {
 
     var index;
+
+    var timestamp = new Date().getTime() * 10000;
 
     // We create a new timestamp and multiply it by 10000 to be able to track the sequence the nodes were created in
     var timestamp = new Date().getTime() * 10000;
@@ -123,46 +38,15 @@ function makeCypherQuery (user,concepts,statement,context,callback) {
 
 
 
-makeCypherQuery(user, hashtags, statement, context, function(query) {
-    console.log(query);
-} );
+function cypherQuery() {
 
+}
 
+cypherQuery.create = function(user, hashtags, statement, context, fn){
 
+    makeCypherQuery(user, hashtags, statement, context, function(query) {
+        var result = query;
+        fn(result);
+    } );
 
-
-var addConcepts = {
-    statements : [ {
-        statement : 'CREATE (p:Hashtag {props}) RETURN p',
-        parameters : {
-            props : {
-                name : 'Adam',
-                timestamp : '',
-                by: 22
-            }
-        }
-    }]
 };
-
-
-
-/* db.insertNode({ name:'Darth Merengi', level: 99, hobbies: ['lightsaber fighting', 'cycling in space'], shipIds: [123, 321] }, 'User', function(err, result){
-    console.log(result._id);
-    console.log(result.hobbies);
-}); */
-
-
-/*
-
-db.beginTransaction(function(err,returns) {
-    if (err) throw err;
-    console.log(returns);
-});
-*/
-
-var d = new Date();
-
-console.log(d.getTime());
-
-
-

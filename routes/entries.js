@@ -27,13 +27,28 @@ exports.form = function(req, res){
 };
 
 exports.submit = function(req, res, next){
+
+    // Here we process the data of the POST request
+
+    // TODO 1. get the right data right here (user.id, context, statement, concepts - all from POST - maybe need separate modules)
+
     var data = req.body.entry;
+
+
+    // Then we ascribe the data that the Entry object needs in order to survive
+    // We create various fields and values for that object
+
+   // TODO 2. once we have all the data right and transformed we create a new Entry object but with the parameters that we need
 
     var entry = new Entry({
         "by": res.locals.user.neo_id,
         "text": data.body
+
     });
 
+    // Now that the object is created, we can call upon the save function
+
+    // TODO 3. now that the object with all the parameters is created, we can simply call the method on it to save it into the database
 
     entry.save(function(err) {
         if (err) return next(err);

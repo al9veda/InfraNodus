@@ -58,6 +58,7 @@ app.post(
     '/post',
     validate.required('entry[body]'),
     validate.lengthAbove('entry[body]', 4),
+    validate.convert('entry[body]'),
     entries.submit
 );
 
