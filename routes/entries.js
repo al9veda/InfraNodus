@@ -41,7 +41,8 @@ exports.submit = function(req, res, next){
    // TODO 2. once we have all the data right and transformed we create a new Entry object but with the parameters that we need
 
     var entry = new Entry({
-        "by": res.locals.user.neo_id,
+        "by_uid": res.locals.user.neo_uid,
+        "by_id": res.locals.user.neo_id,
         "text": data.body
 
     });
