@@ -38,6 +38,19 @@
             '/javascripts/sigma/data/short.json',
             s,
             function() {
+                var i,
+                        nodes = s.graph.nodes(),
+                        len = nodes.length;
+
+                for (i = 0; i < len; i++) {
+                    nodes[i].x = Math.random();
+                    nodes[i].y = Math.random();
+                    nodes[i].size = s.graph.degree(nodes[i].id);
+                    nodes[i].color = nodes[i].center ? '#333' : '#666';
+                }
+
+                // Refresh the display:
+                s.refresh();
                 s.startForceAtlas2();
             }
     );
