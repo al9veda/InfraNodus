@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<% include menu %>
+<h1><%= title %></h1>
+<p>An example of Sigma.Js</p>
+
+<div id="graph-container"></div>
+<script src="/javascripts/sigma/sigma.min.js"></script>
+<script src="/javascripts/sigma/plugins/sigma.parsers.json.min.js"></script>
+<script>
+    sigma.parsers.json('/javascripts/sigma/data/arctic.json', {
+        container: 'graph-container'
+    });
+</script>
+
+
+</body>
+</html>

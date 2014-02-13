@@ -16,7 +16,7 @@ var login = require('./routes/login');
 var messages = require('./lib/messages');
 var http = require('http');
 var path = require('path');
-
+var sandbox = require('./routes/sandbox');
 
 var app = express();
 
@@ -63,6 +63,7 @@ app.post(
     entries.submit
 );
 
+app.get('/sandbox', sandbox.render);
 app.get('/api/user/:id', api.user);
 app.post('/api/entry', entries.submit);
 app.get('/api/entries', api.entries);
