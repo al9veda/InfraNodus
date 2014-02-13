@@ -1,6 +1,9 @@
 var CypherQuery = require('./lib/db/neo4j');
 
 
+var neo4j = require('node-neo4j');
+dbneo = new neo4j('http://localhost:7474');
+
 // Create unique ID for the statement
 var uuid = require('node-uuid');
 var statement_uid;
@@ -71,7 +74,35 @@ console.log(statement.text);
 
 
 CypherQuery.addStatement(user,hashtags,statement,context, function(entries) {
-  console.log(entries);
+
+    console.log(entries);
+
+    function getStatements(callback) {
+        dbneo.cypherQuery("match (n:User{name:'nassim'}), (m:Statement), n<-[rel:BY]-m return m;", function(err, result){
+            if(err) throw err;
+            callback(result);
+        });
+    }
+
+    function printStatements(result) {
+
+        result.data.forEach(function(entry) {
+          // console.log(entry.text);    // this is for when there's only one column with nodes
+
+        });
+        //console.log(result.data[1][1]);
+       console.log(result.data);
+
+    }
+
+
+    getStatements(printStatements);
+
+
+
+
+
+
 });
 
 

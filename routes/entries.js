@@ -12,7 +12,7 @@ exports.list = function(req, res, next){
 
 
 
-    Entry.getRange(res.locals.user.neo_id, function(err, entries) {
+    Entry.getRange(res.locals.user.neo_uid, function(err, entries) {
         if (err) return next(err);
 
         res.render('entries', {
