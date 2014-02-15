@@ -1,6 +1,19 @@
-/*
- * GET home page.
+/**
+ * InfraNodus is a lightweight interface to graph databases.
+ *
+ * This open source, free software is available under MIT license.
+ * It is provided as is, with no guarantees and no liabilities.
+ * You are very welcome to reuse this code if you keep this notice.
+ *
+ * Written by Dmitry Paranyushkin | Nodus Labs, you, you and you!
+ * www.noduslabs.com | info AT noduslabs DOT com
+ *
+ * In some parts the code from the book "Node.js in Action" is used,
+ * (c) 2014 Manning Publications Co.
+ *
  */
+
+
 exports.notfound = function(req, res){
     res.status(404).format({
         html: function(){
