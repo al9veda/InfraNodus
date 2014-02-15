@@ -1,9 +1,5 @@
 ##InfraNodus is a lightweight interface to graph databases (User - Node.Js - Neo4J).
  
-  
- 
-####Created by [Nodus Labs](http://www.noduslabs.com), conceptualized via [Polysingularity](http://polysingularity.com), inspired from [ThisIsLike.Com](http://thisislike.com), and [KnowNodes (now Rhizi)](http://rhizi.org) co-developed at [Center for Interdisciplinary Research](http://cri-paris.org). 
- 
  
 ####The basic ideas are:
 - [x] Make it easy to add nodes into a graph through a simple web interface.
@@ -48,6 +44,7 @@ You can re-use it as long as you keep this notice inside the code
 
 **You are very welcome to join the project!**
 
+Created by [Nodus Labs](http://www.noduslabs.com), conceptualized via [Polysingularity](http://polysingularity.com), inspired from [ThisIsLike.Com](http://thisislike.com), and [KnowNodes (now Rhizi)](http://rhizi.org) co-developed at [Center for Interdisciplinary Research](http://cri-paris.org). 
 
 Written by [Dmitry Paranyushkin](http://github.com/deemeetree) | [Nodus Labs](http://www.noduslabs.com) and hopefully you also!
 (http://www.noduslabs.com) | info AT noduslabs DOT com
