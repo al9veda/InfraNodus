@@ -13,10 +13,11 @@
 ###The basic ideas are:
 - Make it easy to add nodes into a graph through a simple web interface.
 - Work with what people already know and use well: #hashtags, not nodes and edges.
-- Move from binary edges (e.g. A < - > B) to hyperedges in one statement (e.g. A and B and C or D)
+- Move away from binary edges (e.g. A < - > B) to hyperedges in one statement (e.g. A and B and C or D)
+- API and JSON export of all data;
 - Make it as lightweight, portable, and standalone as possible;
 - Make it as fast as possible;
-- Enable people to use collaboratively, both locally and over the internet (TODO);
+- Enable people to use ше collaboratively, both locally and over the internet (TODO);
 - Your suggestions? (TODO: open an issue)
 
 =================
