@@ -1,6 +1,27 @@
-
 /**
- * Module dependencies.
+ * InfraNodus is a lightweight interface to graph databases.
+ *
+ * Inspired from ThisIsLike.Com and KnowNodes (now Rhizi) we
+ * want to create a basic interface for rich edge annotation of graphs
+ * for collaborative use.
+ *
+ * This open source, free software is available under MIT license.
+ * It is provided as is, with no guarantees and no liabilities.
+ *
+ * You are very welcome to reuse this code if you keep this notice.
+ *
+ * Written by Dmitry Paranyushkin | Nodus Labs, you, you and you!
+ * www.noduslabs.com | info AT noduslabs DOT com
+ *
+ *
+ * In some parts the code from the book "Node.js in Action" is used,
+ * (c) 2014 Manning Publications Co.
+ * by Marc Harter, T.J. Holowaychuk, Nathan Rajlich
+ * Any source code files provided as a supplement to the book are freely
+ * available to the public for download. Reuse of the code is permitted,
+ * in whole or in part, including the creation of derivative works, provided
+ * that you acknowledge that you are using it and identify the source:
+ * title, publisher and year.
  */
 
 var api = require('./routes/api');
@@ -16,7 +37,7 @@ var login = require('./routes/login');
 var messages = require('./lib/messages');
 var http = require('http');
 var path = require('path');
-
+var sandbox = require('./routes/sandbox');
 
 var app = express();
 
@@ -35,6 +56,7 @@ app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
 app.use(express.session());
 app.use(express.static(path.join(__dirname, 'public')));
+// This makes sure that when someone accesses /api they are authenticated first
 app.use('/api', api.auth);
 app.use(user);
 app.use(messages);
@@ -56,14 +78,19 @@ app.get('/logout', login.logout);
 app.get('/post', entries.form);
 app.post(
     '/post',
+    validate.isLoggedIn(),
     validate.required('entry[body]'),
     validate.lengthAbove('entry[body]', 4),
+    validate.sanitize('entry[body]'),
+    validate.getHashtags('entry[body]'),
     entries.submit
 );
 
+app.get('/sandbox', sandbox.render);
+app.get('/api/user/nodes', api.nodes);
+app.get('/api/user/statements', api.entries);
 app.get('/api/user/:id', api.user);
 app.post('/api/entry', entries.submit);
-app.get('/api/entries', api.entries);
 app.get('/', entries.list);
 
 

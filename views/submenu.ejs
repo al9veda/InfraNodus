@@ -1,0 +1,9 @@
+<% if (locals.user) { %>
+<div id='submenu'>
+    export - <a href='/api/user/statements' target='_blank'>statements</a> &nbsp;<a href='/api/user/nodes' target='_blank'>concepts</a> &nbsp;| &nbsp;info - <a href='http://github.com/noduslabs/infranodus' target='_blank'>github</a>
+</div>
+<% } else { %>
+<div id='submenu'>
+    <a href='http://github.com/noduslabs/infranodus' target="_blank">github</a>
+</div>
+<% } %>

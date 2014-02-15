@@ -1,0 +1,7 @@
+{"edges":[{"source":"from_node_id","target":"to_node_id","id":"edge_id"},{"source":"from_node_id","target":"to_node_id","id":"edge_id"},{"source":"from_node_id","target":"to_node_id","id":"edge_id"}],
+ "nodes":[{"label":"node_name","id":"node_id"},{"label":"node_name","id":"node_id"},{"label":"node_name","id":"node_id"},{"label":"node_name","id":"node_id"}]}
+
+
+
+MATCH (u:User{uid:"a5ecb670-962f-11e3-8b8e-abca0f9fdedd"}), (c1:Concept), (c2:Concept), c1-[:BY]->u, c2-[:BY]->u, c1-[rel:TO]->c2 RETURN collect(rel);
+
