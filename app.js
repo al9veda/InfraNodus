@@ -64,10 +64,10 @@ app.post(
 );
 
 app.get('/sandbox', sandbox.render);
+app.get('/api/user/nodes', api.nodes);
 app.get('/api/user/:id', api.user);
 app.post('/api/entry', entries.submit);
 app.get('/api/entries', api.entries);
-app.get('/api/nodes', api.nodes);
 app.get('/', entries.list);
 
 
