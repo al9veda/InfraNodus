@@ -35,6 +35,7 @@ app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
 app.use(express.session());
 app.use(express.static(path.join(__dirname, 'public')));
+// This makes sure that when someone accesses /api they are authenticated first
 app.use('/api', api.auth);
 app.use(user);
 app.use(messages);
@@ -56,6 +57,7 @@ app.get('/logout', login.logout);
 app.get('/post', entries.form);
 app.post(
     '/post',
+    validate.isLoggedIn(),
     validate.required('entry[body]'),
     validate.lengthAbove('entry[body]', 4),
     validate.sanitize('entry[body]'),
@@ -65,9 +67,9 @@ app.post(
 
 app.get('/sandbox', sandbox.render);
 app.get('/api/user/nodes', api.nodes);
+app.get('/api/user/statements', api.entries);
 app.get('/api/user/:id', api.user);
 app.post('/api/entry', entries.submit);
-app.get('/api/entries', api.entries);
 app.get('/', entries.list);
 
 

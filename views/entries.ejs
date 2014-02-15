@@ -6,14 +6,80 @@
 </head>
 <body>
 <% include menu %>
+<% include submenu %>
 
+<div id='content'>
+
+
+    <% include messages %>
+
+    <form action='/post' method='post'>
+
+       <textarea rows=4 cols="45" name='entry[body]' placeholder='Enter a note here, marking the most important words with a #hashtag'></textarea>
+       <br>
+       <input type='submit' value='Post' />
+
+    </form>     <br>&nbsp;
+<br>
 <% entries.forEach(function(entry) { %>
 <div class='entry'>
-    <h3><%= entry.name %></h3>
     <p><%= entry.text %></p>
-    <p>UID: <%= entry.uid %></p>
-    <br>
+    <!-- Hashtags: <%= entry.name %> -->
+    <!-- UID: <%= entry.uid %> -->
 </div>
 <% }) %>
+</div>
+
+<% if (locals.user) { %>
+<div id="graph-container"></div>
+
+<script src="/javascripts/sigma/sigma.min.js"></script>
+<script src="/javascripts/sigma/plugins/sigma.parsers.json.min.js"></script>
+<script src="/javascripts/sigma/plugins/sigma.layout.forceAtlas2.min.js"></script>
+
+<script>
+    var g = {
+        nodes: [],
+        edges: []
+    };
+
+    s = new sigma({
+        graph: g,
+        container: 'graph-container',
+        renderer: {
+            container: document.getElementById('graph-container'),
+            type: 'canvas'
+        },
+        settings: {
+            minNodeSize: 8,
+            maxNodeSize: 16
+        }
+    });
+
+
+    sigma.parsers.json(
+            '/api/user/nodes',
+            s,
+            function() {
+                var i,
+                        nodes = s.graph.nodes(),
+                        len = nodes.length;
+
+                for (i = 0; i < len; i++) {
+                    nodes[i].x = Math.random();
+                    nodes[i].y = Math.random();
+                    nodes[i].size = s.graph.degree(nodes[i].id);
+                    nodes[i].color = nodes[i].center ? '#333' : '#666';
+                }
+
+                // Refresh the display:
+                s.refresh();
+                s.startForceAtlas2();
+            }
+    );
+
+</script>
+<% } %>
+
 </body>
 </html>
