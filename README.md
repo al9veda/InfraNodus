@@ -43,6 +43,21 @@ in node_modules folder of the project to install all the dependencies.
 
 =================
 
+###The basic data model is:
+- There are 5 labels (types) for nodes: Concepts, Statements, Contexts, Users, and Narratives
+- Every expression of a user into the system is a Statement
+Example: "#antibiotics can fight #bacteria which are #dangerous for #health
+The system creates 4 :Concept nodes from the hashtags inside the :Statement, which is linked to the :Context (by default, user's Sandbox) and all those are attached to the :User.
+- Types of connections: :TO (between Concepts), :AT (Concepts to Context), :OF (Concepts to Statement), :IN (Statment to Context), :BY (to User)
+- Narrative is implemented through creating a :Narrative node, which is linked to from Statements and Concepts by :INTO type of connection (think of :Narrative as another :Context)
+- Narrative elements are linked to each other via :THRU type of connection.
+
+This data model enables to create custom views for any kind of data and introduce the idea of narrative into holistic graph views.
+
+More on (http://noduslabs.com)
+
+=================
+
 
 ####MIT License####
 
