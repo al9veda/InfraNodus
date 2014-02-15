@@ -2,7 +2,7 @@
  
 =================
 
-![](/images/infranodus.png "InfraNodus Interface")
+![](/public/images/infranodus.png "InfraNodus Interface")
 [Watch a Video Demo - 2 Mins](https://vimeo.com/deemeetree/review/86794258/e51e15db50)
 
 =================
