@@ -2,6 +2,12 @@
  
 =================
 
+![](/images/infranodus.png "InfraNodus Interface")
+[Watch a Video Demo - 2 Mins](https://vimeo.com/deemeetree/review/86794258/e51e15db50)
+
+=================
+
+
 ###The basic ideas are:
 - Make it easy to add nodes into a graph through a simple web interface.
 - Work with what people already know and use well: #hashtags, not nodes and edges.
