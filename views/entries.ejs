@@ -43,6 +43,9 @@
         edges: []
     };
 
+    // ForceAtlas timeout
+    var timeout = 3000;
+
     s = new sigma({
         graph: g,
         container: 'graph-container',
@@ -74,7 +77,14 @@
 
                 // Refresh the display:
                 s.refresh();
+
+                // Do ForceAtlasLayout
                 s.startForceAtlas2();
+
+
+                setTimeout(function() {
+                    s.stopForceAtlas2();
+                },timeout);
             }
     );
 
