@@ -1,4 +1,4 @@
-##InfraNodus is a lightweight interface to graph databases (User - Node.Js - Neo4J).
+##InfraNodus is an interface to Neo4J in Node.Js.
  
 =================
 
