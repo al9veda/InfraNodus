@@ -64,6 +64,7 @@ app.use(app.router);
 app.use(app.router);
 app.use(routes.notfound);
 app.use(routes.error);
+app.use(routes.badrequest);
 
 // development only
 if ('development' == app.get('env')) {

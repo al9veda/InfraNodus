@@ -20,18 +20,20 @@ exports.notfound = function(req, res){
             res.render('404');
         },
         json: function(){
-            res.send({ message: 'Resource not found' });
+            res.send({ message: 'We did not find what you were looking for :(' });
         },
         xml: function() {
             res.write('<error>\n');
-            res.write(' <message>Resource not found</message>\n');
+            res.write(' <message>We did not find what you were looking for :(</message>\n');
             res.end('</error>\n');
         },
         text: function(){
-            res.send('Resource not found\n');
+            res.send('We did not find what you were looking for :(\n');
         }
     });
 };
+
+
 
 exports.error = function(err, req, res, next){
     console.error(err.stack);
@@ -41,6 +43,11 @@ exports.error = function(err, req, res, next){
         case 'database':
             msg = 'Server Unavailable';
             res.statusCode = 503;
+            break;
+
+        case 'neo4j':
+            msg = 'Error in Neo4J Query';
+            res.statusCode = 400;
             break;
 
         default:
@@ -62,3 +69,24 @@ exports.error = function(err, req, res, next){
         }
     });
 };
+
+
+exports.badrequest = function(req, res){
+    res.status(400).format({
+        html: function(){
+            res.render('400');
+        },
+        json: function(){
+            res.send({ message: 'Bad request, probably our database did not understand what you asked for...' });
+        },
+        xml: function() {
+            res.write('<error>\n');
+            res.write(' <message>Bad request, probably our database did not understand what you asked for:(</message>\n');
+            res.end('</error>\n');
+        },
+        text: function(){
+            res.send('Bad request, probably our database did not understand what you asked for:(\n');
+        }
+    });
+};
+
