@@ -14,6 +14,8 @@
  */
 
 var Entry = require('../lib/entry');
+var FlowdockText = require("flowdock-text");
+
 
 exports.list = function(req, res, next){
 
@@ -29,6 +31,12 @@ exports.list = function(req, res, next){
 
     Entry.getRange(res.locals.user.neo_uid, function(err, entries) {
         if (err) return next(err);
+
+
+        for (var i = 0; i < entries.length; ++ i) {
+              entries[i].text = FlowdockText.autoLinkMentions(entries[i].text,{hashtagUrlBase:"/context/"});
+        }
+
 
         res.render('entries', {
             title: 'Entries',

@@ -23,7 +23,7 @@
 <br>
 <% entries.forEach(function(entry) { %>
 <div class='entry' data-hashtags='<%= entry.name %>'>
-    <p><%= entry.text %></p>
+    <p><%- entry.text %></p>
     <!-- UID: <%= entry.uid %> -->
 </div>
 <% }) %>
