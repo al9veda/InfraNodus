@@ -36,8 +36,7 @@ exports.submit = function(req, res, next){
         if (user) {
             req.session.uid = user.id;
 
-            // TODO Get their default context in here into req.session parameter
-            // Later the user can also also change their default from Private to another one.
+            req.session.context_uid = user.context_uid;
 
             res.redirect('/');
         } else {

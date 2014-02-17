@@ -55,6 +55,7 @@ exports.submit = function(req, res, next){
         "by_uid": res.locals.user.neo_uid,
         "by_id": res.locals.user.neo_id,
         "by_name": res.locals.user.name,
+        "context_uid": res.locals.user.context_uid,
         "hashtags": data.hashtags,
         "text": data.body
 
