@@ -84,6 +84,7 @@ app.post(
     validate.lengthAbove('entry[body]', 4),
     validate.sanitize('entry[body]'),
     validate.getHashtags('entry[body]'),
+    validate.getContext('entry[body]'),
     entries.submit
 );
 
