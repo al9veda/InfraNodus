@@ -35,6 +35,10 @@ exports.submit = function(req, res, next){
         // user exists? add his id into the session parameters and redirect to the main page
         if (user) {
             req.session.uid = user.id;
+
+            // TODO Get their default context in here into req.session parameter
+            // Later the user can also also change their default from Private to another one.
+
             res.redirect('/');
         } else {
             res.error("Sorry! invalid credentials.");
