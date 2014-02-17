@@ -119,7 +119,7 @@
 
                 sigma.bind('clickNode', function(e) {
                     var nodeId = e.data.node.id,
-                            nodeClicked = "#" + S(e.data.node.label).dasherize().chompLeft('-').s,
+                            nodeClicked = "#" + S(e.data.node.originalLabel).dasherize().chompLeft('-').s,
                             toKeep = sigma.graph.neighbors(nodeId);
                     toKeep[nodeId] = e.data.node;
 
@@ -166,6 +166,12 @@
                     sigma.graph.edges().forEach(function(e) {
                         e.color = e.originalColor;
                     });
+
+                    // UnFilter statements
+                    $('.entry').each(function(){
+                        $('.entry').show();
+                        return false;
+                    })
 
                     // Same as in the previous event:
                     sigma.refresh();
