@@ -22,9 +22,8 @@
     </form>     <br>&nbsp;
 <br>
 <% entries.forEach(function(entry) { %>
-<div class='entry'>
+<div class='entry' data-hashtags='<%= entry.name %>'>
     <p><%= entry.text %></p>
-    <!-- Hashtags: <%= entry.name %> -->
     <!-- UID: <%= entry.uid %> -->
 </div>
 <% }) %>
@@ -36,6 +35,8 @@
 <script src="/javascripts/sigma/sigma.min.js"></script>
 <script src="/javascripts/sigma/plugins/sigma.parsers.json.min.js"></script>
 <script src="/javascripts/sigma/plugins/sigma.layout.forceAtlas2.min.js"></script>
+<script src="/javascripts/jquery.min.js"></script>
+<script src="/javascripts/string.min.js"></script>
 
 <script>
 
@@ -69,11 +70,11 @@
                     maxNodeSize: 16
                 }
             },
-            function(s) {
+            function(sigma) {
 
                 var i,
                         timeout = 2000,
-                        nodes = s.graph.nodes(),
+                        nodes = sigma.graph.nodes(),
                         len = nodes.length;
 
                 // This is a fix for JSON
@@ -82,7 +83,7 @@
                 for (i = 0; i < len; i++) {
                     nodes[i].x = Math.random();
                     nodes[i].y = Math.random();
-                    nodes[i].size = s.graph.degree(nodes[i].id);
+                    nodes[i].size = sigma.graph.degree(nodes[i].id);
                     nodes[i].color = nodes[i].center ? '#333' : '#666';
                 }
 
@@ -90,23 +91,23 @@
                 // We first need to save the original colors and LABELS of our
                 // nodes and edges, like this:
 
-                s.graph.nodes().forEach(function(n) {
+                sigma.graph.nodes().forEach(function(n) {
                     n.originalColor = n.color;
                     n.originalLabel = n.label;
                 });
-                s.graph.edges().forEach(function(e) {
+                sigma.graph.edges().forEach(function(e) {
                     e.originalColor = e.color;
                 });
 
 
                 // Do ForceAtlasLayout
 
-                s.startForceAtlas2();
+                sigma.startForceAtlas2();
 
                 // Don't run it forever not to overheat :)
 
                 setTimeout(function() {
-                    s.stopForceAtlas2();
+                    sigma.stopForceAtlas2();
                 },timeout);
 
                 // When a node is clicked, we check for each node
@@ -116,12 +117,21 @@
                 // We do the same for the edges, and we only keep
                 // edges that have both extremities colored.
 
-                s.bind('clickNode', function(e) {
+                sigma.bind('clickNode', function(e) {
                     var nodeId = e.data.node.id,
-                            toKeep = s.graph.neighbors(nodeId);
+                            nodeClicked = "#" + S(e.data.node.label).dasherize().chompLeft('-').s,
+                            toKeep = sigma.graph.neighbors(nodeId);
                     toKeep[nodeId] = e.data.node;
 
-                    s.graph.nodes().forEach(function(n) {
+                    // Filter statements
+                    $('.entry').each(function(){
+                        $('.entry').hide();
+                        $('.entry:contains('+nodeClicked+')').show();
+                        return false;
+                    })
+
+
+                    sigma.graph.nodes().forEach(function(n) {
                         if (toKeep[n.id])  {
                             n.color = n.originalColor;
                             n.label = n.originalLabel;
@@ -132,7 +142,7 @@
                         }
                     });
 
-                    s.graph.edges().forEach(function(e) {
+                    sigma.graph.edges().forEach(function(e) {
                         if (toKeep[e.source] && toKeep[e.target])
                             e.color = e.originalColor;
                         else
@@ -142,23 +152,23 @@
                     // Since the data has been modified, we need to
                     // call the refresh method to make the colors
                     // update effective.
-                    s.refresh();
+                    sigma.refresh();
                 });
 
                 // When the stage is clicked, we just color each
                 // node and edge with its original color.
-                s.bind('clickStage', function(e) {
-                    s.graph.nodes().forEach(function(n) {
+                sigma.bind('clickStage', function(e) {
+                    sigma.graph.nodes().forEach(function(n) {
                         n.color = n.originalColor;
                         n.label = n.originalLabel;
                     });
 
-                    s.graph.edges().forEach(function(e) {
+                    sigma.graph.edges().forEach(function(e) {
                         e.color = e.originalColor;
                     });
 
                     // Same as in the previous event:
-                    s.refresh();
+                    sigma.refresh();
                 });
             }
     );
