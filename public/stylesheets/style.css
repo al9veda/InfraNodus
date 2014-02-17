@@ -16,6 +16,15 @@
     url('../fonts/IstokWeb-Bold.svg#IstokWeb-Bold') format('svg');
 }
 
+@font-face {
+    font-family: 'IstokWeb-Regular';
+    src: url('../fonts/IstokWeb-Regular.eot');
+    src: url('../fonts/IstokWeb-Regular.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/IstokWeb-Regular.woff') format('woff'),
+    url('../fonts/IstokWeb-Regular.ttf') format('truetype'),
+    url('../fonts/IstokWeb-Regular.svg#IstokWeb-Regular') format('svg');
+}
+
 
 body {
     font: 16px 'IstokWeb-Bold',sans-serif;
@@ -27,11 +36,12 @@ a {
 }
 
 #menu {
-    position: absolute;
+    position: fixed;
     top: 15px;
     left: 50px;
     font-size: 14px;
     color: #888;
+    z-index: 10;
 }
 
 #menu .name:after {
@@ -43,9 +53,15 @@ a {
     color: black;
 }
 
+.entry {
+    font: 17px 'IstokWeb-Bold',sans-serif;
+}
+
 .entry a {
     text-decoration: none;
     color: #ddd;
+   font: 'IstokWeb-Regular',sans-serif;
+
 }
 .entry a:hover {
     text-decoration: underline;
@@ -55,16 +71,17 @@ a {
 #content {
     position: absolute;
     top: 60px;
+    margin-bottom: 60px;
     left: 50px;
     right: 50px;
     max-width: 320px;
-    font: 17px 'IstokWeb-Bold',sans-serif;
+
 
 }
 
 #submenu {
-    position: absolute;
-    top: 15px;
+    position: fixed;
+    bottom: 15px;
     right: 50px;
     font-size: 12px;
     color: #888;
