@@ -228,8 +228,11 @@
             document.getElementById('contexts').innerHTML = 'filters: ' + context_filters;
 
             console.log(contexts);
+
             // Add some remove @context functionality
             removeContext();
+
+
 
 
 
@@ -238,11 +241,80 @@
 
 
 
-
+    var contextNodes = [];
 
     // Remove context filters function - launched only when the first context is added into filters
 
     function removeContext() {
+
+
+        // Clean up the context from @ sign
+
+        cleancontexts = [];
+
+
+        for (var m=0;m<contexts.length;++m) {
+            cleancontexts.push(contexts[m].substr(1));
+        }
+
+        // First let's reiterate the graph and only show nodes that belong to the context created
+
+        sigma.instances(0).graph.edges().forEach(function(e) {
+
+
+            var index = cleancontexts.indexOf(e.edge_context);
+
+            // Does the edge belong to the currently chosen contexts?
+
+            if (cleancontexts.length == 0) {
+                // Show the edge if there's no contexts at all
+                e.color = e.originalColor;
+            }
+
+            else if (index > -1) {
+                // Let's get the IDs of the nodes to keep
+                contextNodes.push(e.source);
+                contextNodes.push(e.target);
+                e.color = e.originalColor;
+
+            }
+            else {
+                // Otherwise color the edge invisible
+                e.color = '#ddd';
+            }
+
+
+        });
+
+
+
+
+        // Now that we know which nodes and edges to keep, let's reiterate through them all
+
+        sigma.instances(0).graph.nodes().forEach(function(n) {
+
+            // Is there no contexts at all? Show the node.
+            if (cleancontexts.length == 0) {
+                n.color = n.originalColor;
+                n.label = n.originalLabel;
+            }
+
+            else if (contextNodes.indexOf(n.id) < 0)  {
+                n.color = '#ddd';
+                n.label = '';
+            }
+            else {
+                n.color = n.originalColor;
+                n.label = n.originalLabel;
+            }
+        });
+
+
+        // Since the data has been modified, we need to
+        // call the refresh method to make the colors
+        // update effective.
+        sigma.instances(0).refresh();
+
 
 
         var remove_context_links = document.getElementsByClassName('remove-context');
