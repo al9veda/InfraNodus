@@ -55,15 +55,26 @@ a {
 
 .entry {
     font: 17px 'IstokWeb-Bold',sans-serif;
+    color: #000;
 }
 
-.entry a {
+a.app-concept-link {
+    text-decoration: none;
+    color: #000;
+
+}
+a:hover.app-concept-link {
+    text-decoration: underline;
+    color: #333;
+}
+
+a.app-context-link {
     text-decoration: none;
     color: #ddd;
-   font: 'IstokWeb-Regular',sans-serif;
+    font: 'IstokWeb-Regular',sans-serif;
 
 }
-.entry a:hover {
+a:hover.app-context-link {
     text-decoration: underline;
     color: #999;
 }

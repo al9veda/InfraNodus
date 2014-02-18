@@ -123,6 +123,7 @@
                             toKeep = sigma.graph.neighbors(nodeId);
                     toKeep[nodeId] = e.data.node;
 
+
                     // Filter statements
                     $('.entry').each(function(){
                         $('.entry').hide();
@@ -178,6 +179,52 @@
                 });
             }
     );
+
+
+
+    // TODO When we work with the Public/Private view these two functions will be initialized only in Private view. Public view will just load links
+
+    // Find @Contexts and make them filter statements when clicked
+
+    var links = document.getElementsByClassName('app-context-link');
+
+    for (var k=0;k<links.length;++k) {
+        links[k].addEventListener('click', function(e) {
+
+            e.preventDefault();
+
+            filter = e.srcElement.innerText.substr(1);
+
+            // Filter statements
+            $('.entry').each(function(){
+            $('.entry').hide();
+            $('.entry:contains('+filter+')').show();
+                    return false;
+            });
+        });
+    }
+
+    // Find #Concepts and make them filter statements when clicked
+
+    var links = document.getElementsByClassName('app-concept-link');
+
+    for (var k=0;k<links.length;++k) {
+        links[k].addEventListener('click', function(e) {
+
+            e.preventDefault();
+
+            filter = e.srcElement.innerText.substr(1);
+
+            // Filter statements
+            $('.entry').each(function(){
+                $('.entry').hide();
+                $('.entry:contains('+filter+')').show();
+                return false;
+            });
+        });
+    }
+
+
 
 
 
