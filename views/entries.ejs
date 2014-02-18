@@ -193,7 +193,7 @@
 
             e.preventDefault();
 
-            filter = e.srcElement.innerText.substr(1);
+            var filter = e.srcElement.innerText.substr(1);
 
             // Filter statements
             $('.entry').each(function(){
@@ -204,16 +204,20 @@
         });
     }
 
+
     // Find #Concepts and make them filter statements when clicked
 
     var links = document.getElementsByClassName('app-concept-link');
 
+
     for (var k=0;k<links.length;++k) {
+
         links[k].addEventListener('click', function(e) {
 
             e.preventDefault();
 
-            filter = e.srcElement.innerText.substr(1);
+            var filter = e.srcElement.innerText.substr(1);
+
 
             // Filter statements
             $('.entry').each(function(){
@@ -221,13 +225,49 @@
                 $('.entry:contains('+filter+')').show();
                 return false;
             });
+
+
+            // TODO Create index of nodes ID to avoid iteration within iteration
+            // TODO move the node hiding code into a separate function for re-use
+
+            sigma.instances(0).graph.nodes().filter(function(n) {
+                if (n.originalLabel === filter) {
+                    var nodeId = n.id,
+                            toKeep = sigma.instances(0).graph.neighbors(nodeId);
+                    toKeep[nodeId] = n;
+
+                    sigma.instances(0).graph.nodes().forEach(function(n) {
+                        if (toKeep[n.id])  {
+                            n.color = n.originalColor;
+                            n.label = n.originalLabel;
+                        }
+                        else  {
+                            n.color = '#ddd';
+                            n.label = '';
+                        }
+                    });
+
+                    sigma.instances(0).graph.edges().forEach(function(e) {
+                        if (toKeep[e.source] && toKeep[e.target])
+                            e.color = e.originalColor;
+                        else
+                            e.color = '#ddd';
+                    });
+
+                    // Since the data has been modified, we need to
+                    // call the refresh method to make the colors
+                    // update effective.
+                    sigma.instances(0).refresh();
+                }
+            });
+
+
+
+
+
         });
+
     }
-
-
-
-
-
 
 
 </script>
