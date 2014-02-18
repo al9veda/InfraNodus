@@ -19,8 +19,8 @@
        <br>
        <input type='submit' value='Post' />
 
-    </form>     <br>&nbsp;
-<br>
+    </form>   <br>
+<div id="contexts">&nbsp;</div>
 <% entries.forEach(function(entry) { %>
 <div class='entry' data-hashtags='<%= entry.name %>'>
     <p><%- entry.text %></p>
@@ -185,15 +185,12 @@
 
     // Find @Contexts and make them filter statements when clicked
 
-    // TODO When a context is clicked it is in fact remembered so further filtering appends more contexts
-
-
     var contexts = [];
 
-    var links = document.getElementsByClassName('app-context-link');
+    var context_links = document.getElementsByClassName('app-context-link');
 
-    for (var k=0;k<links.length;++k) {
-        links[k].addEventListener('click', function(e) {
+    for (var k=0;k<context_links.length;++k) {
+        context_links[k].addEventListener('click', function(e) {
 
             // Do not follow the link, to change that after for Public view
             e.preventDefault();
@@ -201,17 +198,17 @@
             // Extract filter label
             var filter = e.srcElement.innerText.substr(1);
 
-            // Save it in contexts
-            contexts.push('@'+filter);
-
-            contexts = $.unique(contexts);
+            // Save it in contexts if it's not there yet
+            var index = contexts.indexOf(e.srcElement.innerText);
+            if (index < 0) {
+                contexts.push('@'+filter);
+            }
 
             // Create context query for jQuery
             var contextstring = '';
             for (var l=0;l<contexts.length;++l) {
                 contextstring += ":contains('"+contexts[l]+"')";
             }
-            console.log(contextstring);
 
             // Filter statements
             $('.entry').each(function(){
@@ -219,21 +216,99 @@
                 $('.entry'+contextstring).show();
             });
 
+
+            // Display @contexts above the statements
+
+            var context_filters = '';
+
+            contexts.forEach(function(n) {
+                context_filters += '<a href="javascript:" class="remove-context">'+n+'</a> ';
+            });
+
+            document.getElementById('contexts').innerHTML = 'filters: ' + context_filters;
+
             console.log(contexts);
+            // Add some remove @context functionality
+            removeContext();
+
 
 
         });
     }
 
 
+
+
+
+    // Remove context filters function - launched only when the first context is added into filters
+
+    function removeContext() {
+
+
+        var remove_context_links = document.getElementsByClassName('remove-context');
+
+        for (var j=0;j<remove_context_links.length;++j) {
+            remove_context_links[j].addEventListener('click', function(e) {
+
+                console.log(document.getElementById('contexts').innerHTML);
+                // Do not follow the link, to change that after for Public view
+                e.preventDefault();
+
+                // Extract the context to remove
+                var to_remove = e.srcElement.innerText;
+
+                // Find its index in contexts array and remove it
+                var index = contexts.indexOf(to_remove);
+                if (index > -1) {
+                    contexts.splice(index, 1);
+                }
+
+                // Create context query for jQuery
+                var contextstring = '';
+                for (var l=0;l<contexts.length;++l) {
+                    contextstring += ":contains('"+contexts[l]+"')";
+                }
+
+                // Filter statements according to the new contexts list
+                $('.entry').each(function(){
+                    $('.entry').hide();
+                    $('.entry'+contextstring).show();
+                });
+
+
+
+                // Update the filters list after the removal
+
+                if (contexts.length > 0) {
+
+                    var context_filters = '';
+
+                    contexts.forEach(function(n) {
+                        context_filters += '<a href="javascript:" class="remove-context">'+n+'</a> ';
+                    });
+
+                    document.getElementById('contexts').innerHTML = 'filters: ' + context_filters;
+                }
+                else {
+                    document.getElementById('contexts').innerHTML = '&nbsp;';
+                }
+
+                // Launch itself to update the @contexts cache
+                removeContext();
+
+            });
+        }
+    }
+
+
     // Find #Concepts and make them filter statements when clicked
 
-    var links = document.getElementsByClassName('app-concept-link');
+    var concept_links = document.getElementsByClassName('app-concept-link');
 
 
-    for (var k=0;k<links.length;++k) {
+    for (var k=0;k<concept_links.length;++k) {
 
-        links[k].addEventListener('click', function(e) {
+        concept_links[k].addEventListener('click', function(e) {
 
             e.preventDefault();
 
@@ -289,6 +364,9 @@
         });
 
     }
+
+
+
 
 
 </script>
