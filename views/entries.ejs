@@ -182,25 +182,46 @@
 
 
 
-    // TODO When we work with the Public/Private view these two functions will be initialized only in Private view. Public view will just load links
 
     // Find @Contexts and make them filter statements when clicked
+
+    // TODO When a context is clicked it is in fact remembered so further filtering appends more contexts
+
+
+    var contexts = [];
 
     var links = document.getElementsByClassName('app-context-link');
 
     for (var k=0;k<links.length;++k) {
         links[k].addEventListener('click', function(e) {
 
+            // Do not follow the link, to change that after for Public view
             e.preventDefault();
 
+            // Extract filter label
             var filter = e.srcElement.innerText.substr(1);
+
+            // Save it in contexts
+            contexts.push('@'+filter);
+
+            contexts = $.unique(contexts);
+
+            // Create context query for jQuery
+            var contextstring = '';
+            for (var l=0;l<contexts.length;++l) {
+                contextstring += ":contains('"+contexts[l]+"')";
+            }
+            console.log(contextstring);
 
             // Filter statements
             $('.entry').each(function(){
-            $('.entry').hide();
-            $('.entry:contains('+filter+')').show();
-                    return false;
+                $('.entry').hide();
+                $('.entry'+contextstring).show();
             });
+
+            console.log(contexts);
+
+
         });
     }
 
