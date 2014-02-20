@@ -31,6 +31,9 @@ exports.user = function(req, res, next){
 exports.entries = function(req, res, next){
     var page = req.page;
     Entry.getRange(res.locals.user.neo_uid, function(err, entries){
+
+        console.log("Getting nodes for " + res.locals.user.neo_id);
+
         if (err) return next(err);
 
         res.format({

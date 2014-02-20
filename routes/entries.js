@@ -38,6 +38,7 @@ exports.list = function(req, res, next){
               entries[i].text = FlowdockText.autoLinkHashtags(entries[i].text,{hashtagUrlBase:"/concept/",hashtagClass:"app-concept-link"});
         }
 
+        console.log("Showing statements for user "+ res.locals.user.neo_uid);
 
         res.render('entries', {
             title: 'Entries',
