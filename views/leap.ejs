@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<% include menu %>
+<% include submenu %>
+
+<div id='content'>
+
+
+    <% include messages %>
+
+    <form action='/post' method='post'>
+
+        <textarea rows=4 cols="45" name='entry[body]' placeholder='Enter a note here, marking the most important words with a #hashtag'></textarea>
+        <br>
+        <input type='submit' value='Post' />
+
+    </form>   <br>
+    <div id="contexts">&nbsp;</div>
+    <% entries.forEach(function(entry) { %>
+    <div class='entry' data-hashtags='<%= entry.name %>'>
+        <p><%- entry.text %></p>
+        <!-- UID: <%= entry.uid %> -->
+    </div>
+    <% }) %>
+</div>
+
+<% if (locals.user) { %>
+<div id="graph-container"></div>
+
+<script src="/javascripts/sigma/sigma.min.js"></script>
+<script src="/javascripts/sigma/plugins/sigma.parsers.json.min.js"></script>
+<script src="/javascripts/sigma/plugins/sigma.layout.forceAtlas2.min.js"></script>
+<script src="/javascripts/jquery.min.js"></script>
+<script src="/javascripts/string.min.js"></script>
+<script src="http://js.leapmotion.com/leap-0.4.1.js"></script>
+
+
+
+<script>
+
+
+// Add a method to the graph model that returns an
+// object with every neighbors of a node inside:
+
+sigma.classes.graph.addMethod('neighbors', function(nodeId) {
+    var k,
+            neighbors = {},
+            index = this.allNeighborsIndex[nodeId] || {};
+
+    for (k in index)
+        neighbors[k] = this.nodesIndex[k];
+
+    return neighbors;
+});
+
+// Initialize JSON parser
+
+sigma.parsers.json(
+        '/api/user/nodes',
+        {
+            container: 'graph-container',
+            renderer: {
+                container: document.getElementById('graph-container'),
+                type: 'canvas'
+            },
+            settings: {
+                minNodeSize: 8,
+                maxNodeSize: 16
+            }
+        },
+        function(sigma) {
+
+            var i,
+                    timeout = 2000,
+                    nodes = sigma.graph.nodes(),
+                    len = nodes.length;
+
+            // This is a fix for JSON
+            // Sigma requires that nodes have X, Y, Size and Color properties which our JSON doesn't have. So we add them.
+
+            for (i = 0; i < len; i++) {
+                nodes[i].x = Math.random();
+                nodes[i].y = Math.random();
+                nodes[i].size = sigma.graph.degree(nodes[i].id);
+                nodes[i].color = nodes[i].center ? '#333' : '#666';
+            }
+
+
+            // We first need to save the original colors and LABELS of our
+            // nodes and edges, like this:
+
+            sigma.graph.nodes().forEach(function(n) {
+                n.originalColor = n.color;
+                n.originalLabel = n.label;
+            });
+            sigma.graph.edges().forEach(function(e) {
+                e.originalColor = e.color;
+            });
+
+
+            // Do ForceAtlasLayout
+
+            sigma.startForceAtlas2();
+
+            // Don't run it forever not to overheat :)
+
+            setTimeout(function() {
+                sigma.stopForceAtlas2();
+            },timeout);
+
+            leap(sigma);
+
+            // When a node is clicked, we check for each node
+            // if it is a neighbor of the clicked one. If not,
+            // we set its color as grey, and else, it takes its
+            // original color.
+            // We do the same for the edges, and we only keep
+            // edges that have both extremities colored.
+
+            sigma.bind('clickNode', function(e) {
+                var nodeId = e.data.node.id,
+                        nodeClicked = "#" + S(e.data.node.originalLabel).dasherize().chompLeft('-').s,
+                        toKeep = sigma.graph.neighbors(nodeId);
+                toKeep[nodeId] = e.data.node;
+
+
+                // Filter statements
+                $('.entry').each(function(){
+                    $('.entry').hide();
+                    $('.entry:contains('+nodeClicked+')').show();
+                    return false;
+                })
+
+
+                sigma.graph.nodes().forEach(function(n) {
+                    if (toKeep[n.id])  {
+                        n.color = n.originalColor;
+                        n.label = n.originalLabel;
+                    }
+                    else  {
+                        n.color = '#ddd';
+                        n.label = '';
+                    }
+                });
+
+                sigma.graph.edges().forEach(function(e) {
+                    if (toKeep[e.source] && toKeep[e.target])
+                        e.color = e.originalColor;
+                    else
+                        e.color = '#ddd';
+                });
+
+                // Since the data has been modified, we need to
+                // call the refresh method to make the colors
+                // update effective.
+                sigma.refresh();
+            });
+
+            // When the stage is clicked, we just color each
+            // node and edge with its original color.
+            sigma.bind('clickStage', function(e) {
+                sigma.graph.nodes().forEach(function(n) {
+                    n.color = n.originalColor;
+                    n.label = n.originalLabel;
+                });
+
+                sigma.graph.edges().forEach(function(e) {
+                    e.color = e.originalColor;
+                });
+
+                // UnFilter statements
+                $('.entry').each(function(){
+                    $('.entry').show();
+                    return false;
+                })
+
+                // Same as in the previous event:
+                sigma.refresh();
+            });
+        }
+);
+
+
+
+
+// Find @Contexts and make them filter statements when clicked
+
+var contexts = [];
+
+var context_links = document.getElementsByClassName('app-context-link');
+
+for (var k=0;k<context_links.length;++k) {
+    context_links[k].addEventListener('click', function(e) {
+
+        // Do not follow the link, to change that after for Public view
+        e.preventDefault();
+
+        // Extract filter label
+        var filter = e.srcElement.innerText.substr(1);
+
+        // Save it in contexts if it's not there yet
+        var index = contexts.indexOf(e.srcElement.innerText);
+        if (index < 0) {
+            contexts.push('@'+filter);
+        }
+
+        // Create context query for jQuery
+        var contextstring = '';
+        for (var l=0;l<contexts.length;++l) {
+            contextstring += ":contains('"+contexts[l]+"')";
+        }
+
+        // Filter statements
+        $('.entry').each(function(){
+            $('.entry').hide();
+            $('.entry'+contextstring).show();
+        });
+
+
+        // Display @contexts above the statements
+
+        var context_filters = '';
+
+        contexts.forEach(function(n) {
+            context_filters += '<a href="javascript:" class="remove-context">'+n+'</a> ';
+        });
+
+        document.getElementById('contexts').innerHTML = 'filters: ' + context_filters;
+
+        console.log(contexts);
+
+        // Add some remove @context functionality
+        removeContext();
+
+
+
+
+
+    });
+}
+
+
+
+var contextNodes = [];
+
+// Remove context filters function - launched only when the first context is added into filters
+
+function removeContext() {
+
+
+    // Clean up the context from @ sign
+
+    cleancontexts = [];
+
+
+    for (var m=0;m<contexts.length;++m) {
+        cleancontexts.push(contexts[m].substr(1));
+    }
+
+    // First let's reiterate the graph and only show nodes that belong to the context created
+
+    sigma.instances(0).graph.edges().forEach(function(e) {
+
+
+        var index = cleancontexts.indexOf(e.edge_context);
+
+        // Does the edge belong to the currently chosen contexts?
+
+        if (cleancontexts.length == 0) {
+            // Show the edge if there's no contexts at all
+            e.color = e.originalColor;
+        }
+
+        else if (index > -1) {
+            // Let's get the IDs of the nodes to keep
+            contextNodes.push(e.source);
+            contextNodes.push(e.target);
+            e.color = e.originalColor;
+
+        }
+        else {
+            // Otherwise color the edge invisible
+            e.color = '#ddd';
+        }
+
+
+    });
+
+
+
+
+    // Now that we know which nodes and edges to keep, let's reiterate through them all
+
+    sigma.instances(0).graph.nodes().forEach(function(n) {
+
+        // Is there no contexts at all? Show the node.
+        if (cleancontexts.length == 0) {
+            n.color = n.originalColor;
+            n.label = n.originalLabel;
+        }
+
+        else if (contextNodes.indexOf(n.id) < 0)  {
+            n.color = '#ddd';
+            n.label = '';
+        }
+        else {
+            n.color = n.originalColor;
+            n.label = n.originalLabel;
+        }
+    });
+
+
+    // Since the data has been modified, we need to
+    // call the refresh method to make the colors
+    // update effective.
+    sigma.instances(0).refresh();
+
+
+
+    var remove_context_links = document.getElementsByClassName('remove-context');
+
+    for (var j=0;j<remove_context_links.length;++j) {
+        remove_context_links[j].addEventListener('click', function(e) {
+
+            console.log(document.getElementById('contexts').innerHTML);
+            // Do not follow the link, to change that after for Public view
+            e.preventDefault();
+
+            // Extract the context to remove
+            var to_remove = e.srcElement.innerText;
+
+            // Find its index in contexts array and remove it
+            var index = contexts.indexOf(to_remove);
+            if (index > -1) {
+                contexts.splice(index, 1);
+            }
+
+            // Create context query for jQuery
+            var contextstring = '';
+            for (var l=0;l<contexts.length;++l) {
+                contextstring += ":contains('"+contexts[l]+"')";
+            }
+
+            // Filter statements according to the new contexts list
+            $('.entry').each(function(){
+                $('.entry').hide();
+                $('.entry'+contextstring).show();
+            });
+
+
+
+            // Update the filters list after the removal
+
+            if (contexts.length > 0) {
+
+                var context_filters = '';
+
+                contexts.forEach(function(n) {
+                    context_filters += '<a href="javascript:" class="remove-context">'+n+'</a> ';
+                });
+
+                document.getElementById('contexts').innerHTML = 'filters: ' + context_filters;
+            }
+            else {
+                document.getElementById('contexts').innerHTML = '&nbsp;';
+            }
+
+            // Launch itself to update the @contexts cache
+            removeContext();
+
+        });
+    }
+}
+
+
+// Find #Concepts and make them filter statements when clicked
+
+var concept_links = document.getElementsByClassName('app-concept-link');
+
+
+for (var k=0;k<concept_links.length;++k) {
+
+    concept_links[k].addEventListener('click', function(e) {
+
+        e.preventDefault();
+
+        var filter = e.srcElement.innerText.substr(1);
+
+
+        // Filter statements
+        $('.entry').each(function(){
+            $('.entry').hide();
+            $('.entry:contains('+filter+')').show();
+            return false;
+        });
+
+
+        // TODO Create index of nodes ID to avoid iteration within iteration
+        // TODO move the node hiding code into a separate function for re-use
+
+        sigma.instances(0).graph.nodes().filter(function(n) {
+            if (n.originalLabel === filter) {
+                var nodeId = n.id,
+                        toKeep = sigma.instances(0).graph.neighbors(nodeId);
+                toKeep[nodeId] = n;
+
+                sigma.instances(0).graph.nodes().forEach(function(n) {
+                    if (toKeep[n.id])  {
+                        n.color = n.originalColor;
+                        n.label = n.originalLabel;
+                    }
+                    else  {
+                        n.color = '#ddd';
+                        n.label = '';
+                    }
+                });
+
+                sigma.instances(0).graph.edges().forEach(function(e) {
+                    if (toKeep[e.source] && toKeep[e.target])
+                        e.color = e.originalColor;
+                    else
+                        e.color = '#ddd';
+                });
+
+                // Since the data has been modified, we need to
+                // call the refresh method to make the colors
+                // update effective.
+                sigma.instances(0).refresh();
+            }
+        });
+
+
+
+
+
+    });
+
+}
+
+function leap (sigma) {
+// LeapController Code
+
+var defaultRatio = sigma.cameras[0].ratio;
+
+console.log(defaultRatio);
+
+var firstValidFrame = null;
+var started = null;
+
+
+var controller = new Leap.Controller({enableGestures: true});
+
+
+controller.loop(function(frame) {
+    if(frame.hands.length > 0)
+    {
+        if (!firstValidFrame && frame.valid) firstValidFrame = frame;
+
+        // https://developer.leapmotion.com/documentation/javascript/api/Leap.Hand.html
+
+        var hand = frame.hands[0];
+        var position = hand.stabilizedPalmPosition;
+        var fingers = hand.fingers;
+        var center = hand.sphereCenter;
+
+        console.log(center);
+
+        if (position[2] < 60) {
+            started = 1;
+        }
+
+        if (fingers.length > 2 && started) {
+            sigma.cameras[0].x =  - position[0]*2;
+            sigma.cameras[0].y = position[1]*2-360;
+            sigma.cameras[0].ratio = defaultRatio - (position[2]*2/360);
+            sigma.render();
+        }
+
+    }
+
+
+});
+}
+
+
+</script>
+<% } %>
+
+</body>
+</html>

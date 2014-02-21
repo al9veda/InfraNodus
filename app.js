@@ -37,7 +37,7 @@ var login = require('./routes/login');
 var messages = require('./lib/messages');
 var http = require('http');
 var path = require('path');
-var sandbox = require('./routes/sandbox');
+var leap = require('./routes/leap');
 
 var app = express();
 
@@ -88,7 +88,7 @@ app.post(
     entries.submit
 );
 
-app.get('/sandbox', sandbox.render);
+app.get('/leap', leap.render);
 app.get('/api/user/nodes', api.nodes);
 app.get('/api/user/statements', api.entries);
 app.get('/api/user/:id', api.user);
