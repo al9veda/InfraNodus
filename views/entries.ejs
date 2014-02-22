@@ -273,11 +273,10 @@
     function removeContext() {
 
 
-        // Clean up the context from @ sign
-
+        // Reset variable - we fill it in below
         cleancontexts = [];
 
-
+        // Clean up the context from @ sign
         for (var m=0;m<contexts.length;++m) {
             cleancontexts.push(contexts[m].substr(1));
         }
@@ -285,6 +284,8 @@
         // First let's reiterate the graph and only show nodes that belong to the context created
 
         sigma.instances(0).graph.edges().forEach(function(e) {
+
+
 
 
             var index = cleancontexts.indexOf(e.edge_context);
@@ -309,10 +310,37 @@
                 e.color = '#ddd';
             }
 
-            contextNodes = $.unique(contextNodes);
+
 
         });
 
+        contextNodes = $.unique(contextNodes);
+
+        // We need to remove the nodes that don't belong to ALL contexts we've chosen
+        var removeNodes = [];
+
+        // Iterate through all nodes that are in the contexts chosen, see if those chosen contexts have those nodes
+
+        contextNodes.forEach(function(element){
+           cleancontexts.forEach(function(value){
+                    if (contextNodeID[value].indexOf(element) == -1) {
+                        // The node that was in our list is not in the index of nodes belonging to the context filtered
+                        removeNodes.push(element);
+                    }
+           });
+        });
+
+        removeNodes = $.unique(removeNodes);
+
+        // Remove each node from nodes list that doesn't belong to the contexts filtered
+
+        removeNodes.forEach(function(element){
+            if (contextNodes.indexOf(element) > -1) {
+                contextNodes.splice(contextNodes.indexOf(element),1);
+            }
+        });
+
+        console.log("New contextualized nodes: "+contextNodes);
 
 
         // Now that we know which nodes and edges to keep, let's reiterate through them all
