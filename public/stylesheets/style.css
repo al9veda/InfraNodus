@@ -93,6 +93,20 @@ a:hover.app-context-link {
     color: #f00;
 }
 
+#concepts {
+    font: 17px 'IstokWeb-Bold',sans-serif;
+    color: #666;
+}
+
+#concepts a {
+    text-decoration: none;
+    color: #999;
+}
+#concepts a:hover {
+    text-decoration: line-through;
+    color: #f00;
+}
+
 
 #content {
     position: absolute;

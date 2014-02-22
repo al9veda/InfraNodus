@@ -21,6 +21,7 @@
 
     </form>   <br>
 <div id="contexts">&nbsp;</div>
+<div id="concepts">&nbsp;</div>
 <% entries.forEach(function(entry) { %>
 <div class='entry' data-hashtags='<%= entry.name %>'>
     <p><%- entry.text %></p>
@@ -61,6 +62,13 @@
 
     // Create context-node index for filtering
     var contextNodeID = [];
+
+
+    // Track which concepts have been clicked so far
+    var conceptsClicked = [];
+    var conceptsClickedID = [];
+
+    var toKeepHistory = [];
 
     // Initialize JSON parser
 
@@ -143,15 +151,61 @@
 
                 sigma.bind('clickNode', function(e) {
                     var nodeId = e.data.node.id,
-                            nodeClicked = "#" + S(e.data.node.originalLabel).dasherize().chompLeft('-').s,
-                            toKeep = sigma.graph.neighbors(nodeId);
-                    toKeep[nodeId] = e.data.node;
+                            nodeClickedClean = S(e.data.node.originalLabel).dasherize().chompLeft('-').s,
+                            nodeClicked = "#" + nodeClickedClean;
 
+                    console.log(toKeep);
+
+
+                    // Save clicked node label into array
+                    if (conceptsClicked.indexOf(nodeClickedClean) < 0) {
+                        conceptsClicked.push(nodeClickedClean);
+                    }
+
+
+
+                    // Create context query for jQuery
+                    var conceptstring = '';
+                    for (var l=0;l<conceptsClicked.length;++l) {
+                        conceptstring += ":contains('"+conceptsClicked[l]+"')";
+                    }
 
                     // Filter statements
 
                     $('.entry').hide();
-                    $('.entry:contains('+nodeClicked+')').show();
+                    $('.entry'+conceptstring).show();
+
+
+                    // Display @contexts above the statements
+
+                    var concept_filters = '';
+
+                    conceptsClicked.forEach(function(n) {
+                        concept_filters += '<a href="javascript:" class="remove-concept">'+n+'</a> ';
+                    });
+
+                    document.getElementById('concepts').innerHTML = 'concepts: ' + concept_filters;
+
+
+
+                    // Save clicked node ID into array
+                    if (conceptsClickedID.indexOf(nodeId) < 0) {
+                        conceptsClickedID.push(nodeId);
+                    }
+
+                    // Let's get which neighbors to keep
+                    var toKeep = sigma.graph.neighbors(nodeId);
+
+                    // Keep the clicked node itself
+                    toKeep[nodeId] = e.data.node;
+
+                    // Add to the history of nodes to keep
+
+
+                    toKeepHistory = toKeepHistory.concat(toKeep);
+
+
+
 
 
 
@@ -228,7 +282,7 @@
                 context_filters += '<a href="javascript:" class="remove-context">'+n+'</a> ';
             });
 
-            document.getElementById('contexts').innerHTML = 'filters: ' + context_filters;
+            document.getElementById('contexts').innerHTML = 'contexts: ' + context_filters;
 
             console.log(contexts);
 
@@ -420,7 +474,7 @@
                         context_filters += '<a href="javascript:" class="remove-context">'+n+'</a> ';
                     });
 
-                    document.getElementById('contexts').innerHTML = 'filters: ' + context_filters;
+                    document.getElementById('contexts').innerHTML = 'contexts: ' + context_filters;
                 }
                 else {
                     document.getElementById('contexts').innerHTML = '&nbsp;';
