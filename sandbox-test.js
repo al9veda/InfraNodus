@@ -1,7 +1,9 @@
 var neo4j = require('node-neo4j');
 dbneo = new neo4j('http://localhost:7474');
+var uuid = require('node-uuid');
 
-var contexts = ['tips','health'];
+
+var contexts = ['tips','health', 'dsafdsa', 'dsfadfs'];
 
 var uid = '3883c620-9a2e-11e3-9340-29d7278f08ec';
 
@@ -33,24 +35,40 @@ function showContexts (err,answer) {
     if (err) console.log(err);
     console.log(context_query);
 
+    var newcontexts = [];
 
-
-    var contexts = [];
+    var check = [];
 
     for (var i=0;i<answer.data.length;i++) {
-        contexts.push({
+        newcontexts.push({
             uid: answer.data[i].uid,
             name: answer.data[i].name
         });
+        check.push(answer.data[i].name);
     }
 
-    console.log(contexts);
+
+    contexts.forEach(function(element){
+        if (check.indexOf(element) < 0) {
+            newcontexts.push({
+               uid: uuid.v1(),
+               name: element
+            });
+        }
+    });
+
+
+
+    console.log(newcontexts);
+    console.log(newcontexts.length);
+
 
 
 }
 
 
 getContexts(showContexts);
+
 
 
 
