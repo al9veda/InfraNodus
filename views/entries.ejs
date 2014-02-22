@@ -149,11 +149,10 @@
 
 
                     // Filter statements
-                    $('.entry').each(function(){
-                        $('.entry').hide();
-                        $('.entry:contains('+nodeClicked+')').show();
-                        return false;
-                    });
+
+                    $('.entry').hide();
+                    $('.entry:contains('+nodeClicked+')').show();
+
 
 
                     sigma.graph.nodes().forEach(function(n) {
@@ -182,25 +181,6 @@
 
                 // When the stage is clicked, we just color each
                 // node and edge with its original color.
-                sigma.bind('clickStage', function(e) {
-                    sigma.graph.nodes().forEach(function(n) {
-                        n.color = n.originalColor;
-                        n.label = n.originalLabel;
-                    });
-
-                    sigma.graph.edges().forEach(function(e) {
-                        e.color = e.originalColor;
-                    });
-
-                    // UnFilter statements
-                    $('.entry').each(function(){
-                        $('.entry').show();
-                        return false;
-                    })
-
-                    // Same as in the previous event:
-                    sigma.refresh();
-                });
             }
     );
 
@@ -234,11 +214,10 @@
                 contextstring += ":contains('"+contexts[l]+"')";
             }
 
-            // Filter statements
-            $('.entry').each(function(){
-                $('.entry').hide();
-                $('.entry'+contextstring).show();
-            });
+            // Filter text statements
+            $('.entry').hide();
+            $('.entry'+contextstring).show();
+
 
 
             // Display @contexts above the statements
@@ -424,10 +403,10 @@
                 }
 
                 // Filter statements according to the new contexts list
-                $('.entry').each(function(){
-                    $('.entry').hide();
-                    $('.entry'+contextstring).show();
-                });
+
+                $('.entry').hide();
+                $('.entry'+contextstring).show();
+
 
 
 
@@ -470,11 +449,9 @@
 
 
             // Filter statements
-            $('.entry').each(function(){
-                $('.entry').hide();
-                $('.entry:contains('+filter+')').show();
-                return false;
-            });
+            $('.entry').hide();
+            $('.entry:contains('+filter+')').show();
+
 
 
             // TODO Create index of nodes ID to avoid iteration within iteration
