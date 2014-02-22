@@ -55,6 +55,13 @@
         return neighbors;
     });
 
+
+    // Create node ID - Name index for filtering
+    var nodeID = [];
+
+    // Create context-node index for filtering
+    var contextNodeID = [];
+
     // Initialize JSON parser
 
     sigma.parsers.json(
@@ -94,11 +101,28 @@
                 sigma.graph.nodes().forEach(function(n) {
                     n.originalColor = n.color;
                     n.originalLabel = n.label;
+
+                    // Creating an index of node labels to IDs for filtering
+                    nodeID[n.label] = n.id;
+
                 });
                 sigma.graph.edges().forEach(function(e) {
                     e.originalColor = e.color;
-                });
 
+                    // Make an index of nodes to context
+                    if (contextNodeID[e.edge_context]) {
+                        if (contextNodeID[e.edge_context].indexOf(e.source) < 0)
+                            contextNodeID[e.edge_context].push(e.source);
+                        if (contextNodeID[e.edge_context].indexOf(e.target) < 0)
+                            contextNodeID[e.edge_context].push(e.target);
+                    }
+                    else {
+                        contextNodeID[e.edge_context] = [];
+                        contextNodeID[e.edge_context].push(e.source);
+                        contextNodeID[e.edge_context].push(e.target);
+                    }
+
+                });
 
                 // Do ForceAtlasLayout
 
@@ -129,7 +153,7 @@
                         $('.entry').hide();
                         $('.entry:contains('+nodeClicked+')').show();
                         return false;
-                    })
+                    });
 
 
                     sigma.graph.nodes().forEach(function(n) {
@@ -240,8 +264,9 @@
     }
 
 
-
+    // Creating the context index
     var contextNodes = [];
+
 
     // Remove context filters function - launched only when the first context is added into filters
 
@@ -277,15 +302,16 @@
                 contextNodes.push(e.target);
                 e.color = e.originalColor;
 
+
             }
             else {
                 // Otherwise color the edge invisible
                 e.color = '#ddd';
             }
 
+            contextNodes = $.unique(contextNodes);
 
         });
-
 
 
 
@@ -329,11 +355,23 @@
                 // Extract the context to remove
                 var to_remove = e.srcElement.innerText;
 
+                // Extract the clean context name to remove
+                var to_remove_clean = e.srcElement.innerText.substr(1);
+
                 // Find its index in contexts array and remove it
                 var index = contexts.indexOf(to_remove);
                 if (index > -1) {
                     contexts.splice(index, 1);
                 }
+
+                // Let's remove the nodes that belong to the removed context from the contextNodes
+                contextNodeID[to_remove_clean].forEach(function(element){
+                    var index = $.inArray(element, contextNodes);
+                    if (index>=0) contextNodes.splice(index, 1);
+                });
+
+                console.log("Left in context: "+contextNodes);
+
 
                 // Create context query for jQuery
                 var contextstring = '';
