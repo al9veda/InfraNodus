@@ -264,13 +264,22 @@
     }
 
 
-    // Creating the context index
-    var contextNodes = [];
+
+
+
 
 
     // Remove context filters function - launched only when the first context is added into filters
 
     function removeContext() {
+
+        // Creating the context index
+        var contextNodes = [];
+
+        // Nodes to hide from the view
+        var removeNodes = [];
+
+        var removeEdges = [];
 
 
         // Reset variable - we fill it in below
@@ -281,28 +290,62 @@
             cleancontexts.push(contexts[m].substr(1));
         }
 
-        // First let's reiterate the graph and only show nodes that belong to the context created
+        console.log("Clean contexts operating: " + cleancontexts);
+
+        // First, let's reiterate the graph and make a list of nodes and edges to be removed
+
+        if (cleancontexts.length > 0) {
+
+            sigma.instances(0).graph.edges().forEach(function(e) {
+
+                // See if the node id fails to be present in at least one context
+                cleancontexts.forEach(function(element){
+                    if (contextNodeID[element].indexOf(e.source) == -1) {
+                        removeNodes.push(e.source);
+                    }
+                    if (contextNodeID[element].indexOf(e.target) == -1) {
+                        removeNodes.push(e.target);
+                    }
+                });
+
+                // See if the edge context fails to be in at least one of them
+
+                if (cleancontexts.indexOf(e.edge_context) == -1) {
+                    removeEdges.push(e.id);
+                }
+
+
+            });
+        }
+
+        removeNodes = $.unique(removeNodes);
+
+        removeEdges = $.unique(removeEdges);
+
+        console.log("Nodes to remove: " + removeNodes);
+
+        console.log("Edges to remove: " + removeEdges);
+
+        // Then let's reiterate the graph and only show nodes that belong to the contexts created
 
         sigma.instances(0).graph.edges().forEach(function(e) {
-
-
-
-
-            var index = cleancontexts.indexOf(e.edge_context);
-
-            // Does the edge belong to the currently chosen contexts?
 
             if (cleancontexts.length == 0) {
                 // Show the edge if there's no contexts at all
                 e.color = e.originalColor;
             }
 
-            else if (index > -1) {
-                // Let's get the IDs of the nodes to keep
-                contextNodes.push(e.source);
-                contextNodes.push(e.target);
+            else if (removeEdges.indexOf(e.id) == -1) {
+
                 e.color = e.originalColor;
 
+                if (removeNodes.indexOf(e.source) == -1) {
+                    contextNodes.push(e.source);
+                }
+
+                if (removeNodes.indexOf(e.target) == -1) {
+                    contextNodes.push(e.target);
+                }
 
             }
             else {
@@ -315,33 +358,6 @@
         });
 
         contextNodes = $.unique(contextNodes);
-
-        // We need to remove the nodes that don't belong to ALL contexts we've chosen
-        var removeNodes = [];
-
-        // Iterate through all nodes that are in the contexts chosen, see if those chosen contexts have those nodes
-
-        contextNodes.forEach(function(element){
-           cleancontexts.forEach(function(value){
-                    if (contextNodeID[value].indexOf(element) == -1) {
-                        // The node that was in our list is not in the index of nodes belonging to the context filtered
-                        removeNodes.push(element);
-                    }
-           });
-        });
-
-        removeNodes = $.unique(removeNodes);
-
-        // Remove each node from nodes list that doesn't belong to the contexts filtered
-
-        removeNodes.forEach(function(element){
-            if (contextNodes.indexOf(element) > -1) {
-                contextNodes.splice(contextNodes.indexOf(element),1);
-            }
-        });
-
-        console.log("New contextualized nodes: "+contextNodes);
-
 
         // Now that we know which nodes and edges to keep, let's reiterate through them all
 
