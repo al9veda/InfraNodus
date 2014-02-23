@@ -160,10 +160,19 @@
                     // Keep the clicked node itself
                     toKeep[nodeId] = e.data.node;
 
+                    // Create context query for jQuery
+                    var conceptstring = ":contains('" + nodeClicked + "')";
 
-                    // Filter statements
+                    if (contexts.length >= 0) {
+                    for (var l=0;l<contexts.length;++l) {
+                        conceptstring += ":contains('"+contexts[l]+"')";
+                    }
+                    }
+
+                    // Filter text statements
                     $('.entry').hide();
-                    $('.entry:contains('+nodeClicked+')').show();
+                    $('.entry'+conceptstring).show();
+
 
 
                     // Reiterate through the nodes and edges to show/hide them
@@ -189,6 +198,9 @@
                     // call the refresh method to make the colors
                     // update effective.
                     sigma.refresh();
+
+                    toKeepHistory = toKeep;
+
                 });
 
                 // When the stage is clicked, we just color each
@@ -281,8 +293,6 @@
             cleancontexts.push(contexts[m].substr(1));
         }
 
-        console.log("Clean contexts operating: " + cleancontexts);
-
         // First, let's reiterate the graph and make a list of nodes and edges to be removed
 
         if (cleancontexts.length > 0) {
@@ -312,10 +322,6 @@
         removeNodes = $.unique(removeNodes);
 
         removeEdges = $.unique(removeEdges);
-
-        console.log("Nodes to remove: " + removeNodes);
-
-        console.log("Edges to remove: " + removeEdges);
 
         // Then let's reiterate the graph and only show nodes that belong to the contexts created
 
@@ -383,7 +389,6 @@
         for (var j=0;j<remove_context_links.length;++j) {
             remove_context_links[j].addEventListener('click', function(e) {
 
-                console.log(document.getElementById('contexts').innerHTML);
                 // Do not follow the link, to change that after for Public view
                 e.preventDefault();
 
@@ -405,7 +410,6 @@
                     if (index>=0) contextNodes.splice(index, 1);
                 });
 
-                console.log("Left in context: "+contextNodes);
 
 
                 // Create context query for jQuery
