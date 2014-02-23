@@ -176,26 +176,9 @@
                     $('.entry'+conceptstring).show();
 
 
-                    // Find intersections between what's visible now and what was visible before
-
-                    var toKeepInterim = [];
-
-                    toKeepInterim = _.intersection(toKeep,toKeepHistory);
-
-                    for (var j = 0;j<toKeepInterim.length;++j) {
-                        toKeepOperational[toKeepInterim[j].id] = toKeepInterim[j];
-                    }
-
-
-                    if (toKeepOperational.length === 0) {
-                        toKeepOperational = toKeep;
-                    }
-
-                    console.log(toKeepOperational);
-
                     // Reiterate through the nodes and edges to show/hide them
                     sigma.graph.nodes().forEach(function(n) {
-                        if (toKeepOperational[n.id])  {
+                        if (toKeep[n.id])  {
                             n.color = n.originalColor;
                             n.label = n.originalLabel;
                         }
@@ -206,7 +189,7 @@
                     });
 
                     sigma.graph.edges().forEach(function(e) {
-                        if (toKeepOperational[e.source] && toKeepOperational[e.target])
+                        if (toKeep[e.source] && toKeep[e.target])
                             e.color = e.originalColor;
                         else
                             e.color = '#ddd';
@@ -217,12 +200,31 @@
                     // update effective.
                     sigma.refresh();
 
-                    toKeepHistory = toKeepOperational;
 
                 });
 
-                // When the stage is clicked, we just color each
-                // node and edge with its original color.
+
+                // Show node's label when we're over it
+
+                sigma.bind('overNode', function(e) {
+                    e.data.node.label = e.data.node.originalLabel;
+                    sigma.refresh();
+                });
+
+
+
+                // Hide node's label when we're out of it
+
+                sigma.bind('outNode', function(e) {
+                    if (e.data.node.color != e.data.node.originalColor) {
+                        e.data.node.label = '';
+                    }
+                    sigma.refresh();
+                });
+
+
+
+
             }
     );
 
