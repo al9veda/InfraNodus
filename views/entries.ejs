@@ -154,61 +154,19 @@
                             nodeClickedClean = S(e.data.node.originalLabel).dasherize().chompLeft('-').s,
                             nodeClicked = "#" + nodeClickedClean;
 
-                    console.log(toKeep);
-
-
-                    // Save clicked node label into array
-                    if (conceptsClicked.indexOf(nodeClickedClean) < 0) {
-                        conceptsClicked.push(nodeClickedClean);
-                    }
-
-
-
-                    // Create context query for jQuery
-                    var conceptstring = '';
-                    for (var l=0;l<conceptsClicked.length;++l) {
-                        conceptstring += ":contains('"+conceptsClicked[l]+"')";
-                    }
-
-                    // Filter statements
-
-                    $('.entry').hide();
-                    $('.entry'+conceptstring).show();
-
-
-                    // Display @contexts above the statements
-
-                    var concept_filters = '';
-
-                    conceptsClicked.forEach(function(n) {
-                        concept_filters += '<a href="javascript:" class="remove-concept">'+n+'</a> ';
-                    });
-
-                    document.getElementById('concepts').innerHTML = 'concepts: ' + concept_filters;
-
-
-
-                    // Save clicked node ID into array
-                    if (conceptsClickedID.indexOf(nodeId) < 0) {
-                        conceptsClickedID.push(nodeId);
-                    }
-
                     // Let's get which neighbors to keep
                     var toKeep = sigma.graph.neighbors(nodeId);
 
                     // Keep the clicked node itself
                     toKeep[nodeId] = e.data.node;
 
-                    // Add to the history of nodes to keep
+
+                    // Filter statements
+                    $('.entry').hide();
+                    $('.entry:contains('+nodeClicked+')').show();
 
 
-                    toKeepHistory = toKeepHistory.concat(toKeep);
-
-
-
-
-
-
+                    // Reiterate through the nodes and edges to show/hide them
                     sigma.graph.nodes().forEach(function(n) {
                         if (toKeep[n.id])  {
                             n.color = n.originalColor;
