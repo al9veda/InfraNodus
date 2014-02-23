@@ -176,6 +176,8 @@
                     $('.entry'+conceptstring).show();
 
 
+                    // TODO Maybe the graph filtering below should be driven by statements, not filters
+
                     // Reiterate through the nodes and edges to show/hide them
                     sigma.graph.nodes().forEach(function(n) {
                         if (toKeep[n.id])  {
@@ -221,8 +223,6 @@
                     }
                     sigma.refresh();
                 });
-
-
 
 
             }
@@ -483,11 +483,18 @@
 
             var filter = e.srcElement.innerText.substr(1);
 
+            // Create context query for jQuery
+            var conceptstring = ":contains('" + filter + "')";
 
-            // Filter statements
+            if (contexts.length >= 0) {
+                for (var l=0;l<contexts.length;++l) {
+                    conceptstring += ":contains('"+contexts[l]+"')";
+                }
+            }
+
+            // Filter text statements
             $('.entry').hide();
-            $('.entry:contains('+filter+')').show();
-
+            $('.entry'+conceptstring).show();
 
 
             // TODO Create index of nodes ID to avoid iteration within iteration
