@@ -38,6 +38,7 @@
 <script src="/javascripts/sigma/plugins/sigma.layout.forceAtlas2.min.js"></script>
 <script src="/javascripts/jquery.min.js"></script>
 <script src="/javascripts/string.min.js"></script>
+<script src="/javascripts/underscore-min.js"></script>
 
 <script>
 
@@ -65,10 +66,11 @@
 
 
     // Track which concepts have been clicked so far
-    var conceptsClicked = [];
-    var conceptsClickedID = [];
+    var dummy = [];
 
     var toKeepHistory = [];
+
+    var toKeepOperational = [];
 
     // Initialize JSON parser
 
@@ -174,10 +176,26 @@
                     $('.entry'+conceptstring).show();
 
 
+                    // Find intersections between what's visible now and what was visible before
+
+                    var toKeepInterim = [];
+
+                    toKeepInterim = _.intersection(toKeep,toKeepHistory);
+
+                    for (var j = 0;j<toKeepInterim.length;++j) {
+                        toKeepOperational[toKeepInterim[j].id] = toKeepInterim[j];
+                    }
+
+
+                    if (toKeepOperational.length === 0) {
+                        toKeepOperational = toKeep;
+                    }
+
+                    console.log(toKeepOperational);
 
                     // Reiterate through the nodes and edges to show/hide them
                     sigma.graph.nodes().forEach(function(n) {
-                        if (toKeep[n.id])  {
+                        if (toKeepOperational[n.id])  {
                             n.color = n.originalColor;
                             n.label = n.originalLabel;
                         }
@@ -188,7 +206,7 @@
                     });
 
                     sigma.graph.edges().forEach(function(e) {
-                        if (toKeep[e.source] && toKeep[e.target])
+                        if (toKeepOperational[e.source] && toKeepOperational[e.target])
                             e.color = e.originalColor;
                         else
                             e.color = '#ddd';
@@ -199,7 +217,7 @@
                     // update effective.
                     sigma.refresh();
 
-                    toKeepHistory = toKeep;
+                    toKeepHistory = toKeepOperational;
 
                 });
 
