@@ -40,6 +40,11 @@
 <script src="/javascripts/string.min.js"></script>
 <script src="/javascripts/underscore-min.js"></script>
 
+<!-- Support for autocomplete -->
+<script src="/javascripts/autocomplete/jquery-ui.js" type="text/javascript"></script>
+<script src="/javascripts/autocomplete/textinputs_jquery_src.js" type="text/javascript"></script>
+<script src="/javascripts/autocomplete/jquery.textarea-input-support.js" type="text/javascript"></script>
+
 <script>
 
 
@@ -71,6 +76,9 @@
         $("#statement").val(replacedString);
 
     });
+
+
+
 
     // Add a method to the graph model that returns an
     // object with every neighbors of a node inside:
@@ -568,7 +576,13 @@
 
     }
 
+// Support for autocomplete
+    var availableTags = ["ActionScript","AppleScript","Asp","BASIC","C","C++","Clojure","COBOL","ColdFusion","Erlang","Fortran",
+        "Groovy","Haskell","Java","JavaScript","Perl","PHP","Python","Ruby","Scala","Scheme"];
 
+$('#statement').textareainputsupport({
+    source: availableTags
+});
 
 
 
