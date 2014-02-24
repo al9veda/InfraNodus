@@ -10,7 +10,7 @@
  *
  * You are very welcome to reuse this code if you keep this notice.
  *
- * Written by Dmitry Paranyushkin | Nodus Labs, you, you and you!
+ * Written by Dmitry Paranyushkin | Nodus Labs and hopefully you also...
  * www.noduslabs.com | info AT noduslabs DOT com
  *
  *
