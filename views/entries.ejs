@@ -40,6 +40,8 @@
 <script src="/javascripts/string.min.js"></script>
 <script src="/javascripts/underscore-min.js"></script>
 <script src="/javascripts/jquery.textcomplete.js"></script>
+<script src="/javascripts/jquery.overlay.js"></script>
+
 
 <script>
 
@@ -597,7 +599,14 @@
                     return '#' + word + ' ';
                 }
             }
-        ]);
+        ]).overlay([
+                    {
+                        match: /\B#\w+/g,
+                        css: {
+                            'background-color': '#d8dfea'
+                        }
+                    }
+         ]);
     }
 
 
