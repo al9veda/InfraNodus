@@ -15,7 +15,7 @@
 
     <form action='/post' method='post'>
 
-       <textarea rows=4 cols="45" name='entry[body]' placeholder='Enter a note here, marking the most important words with a #hashtag'></textarea>
+       <textarea rows=4 cols="45" name='entry[body]' id="statement" placeholder='Enter a note here, marking the most important words with a #hashtag and the context with @mention'></textarea>
        <br>
        <input type='submit' value='Post' />
 
@@ -42,6 +42,32 @@
 
 <script>
 
+
+    // Textarea select conversion to hashtags
+
+    var getSelected = function(){
+        var t = '';
+        if(window.getSelection) {
+            t = window.getSelection();
+        } else if(document.getSelection) {
+            t = document.getSelection();
+        } else if(document.selection) {
+            t = document.selection.createRange().text;
+        }
+        return t;
+    }
+
+    $("#statement").select(function(eventObject) {
+        var selectedText = getSelected().toString();
+        var statementReplace = $("#statement").val();
+
+        // TODO make sure double-selection doesn't occur (##)
+        // TODO check words for morphology (if found, alert)
+
+        var replacedString = statementReplace.replace(selectedText,"#" + selectedText);
+        $("#statement").val(replacedString);
+
+    });
 
     // Add a method to the graph model that returns an
     // object with every neighbors of a node inside:
