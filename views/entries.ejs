@@ -60,11 +60,12 @@
     $("#statement").select(function(eventObject) {
         var selectedText = getSelected().toString();
         var statementReplace = $("#statement").val();
+        var regex = RegExp(selectedText, "g");
 
         // TODO make sure double-selection doesn't occur (##)
         // TODO check words for morphology (if found, alert)
 
-        var replacedString = statementReplace.replace(selectedText,"#" + selectedText);
+        var replacedString = statementReplace.replace(regex,"#" + selectedText);
         $("#statement").val(replacedString);
 
     });
