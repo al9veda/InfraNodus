@@ -92,18 +92,16 @@
 
 
     // Create node ID - Name index for filtering
-    var nodeID = [];
+    var nodeIDs = [];
+
+
+    // What are the concepts displayed - the opposite of above
+    var nodeNames = [];
 
     // Create context-node index for filtering
     var contextNodeID = [];
 
 
-    // Track which concepts have been clicked so far
-    var dummy = [];
-
-    var toKeepHistory = [];
-
-    var toKeepOperational = [];
 
     // Initialize JSON parser
 
@@ -146,7 +144,7 @@
                     n.originalLabel = n.label;
 
                     // Creating an index of node labels to IDs for filtering
-                    nodeID[n.label] = n.id;
+                    nodeIDs[n.label] = n.id;
 
                 });
                 sigma.graph.edges().forEach(function(e) {
@@ -166,6 +164,13 @@
                     }
 
                 });
+
+
+                // Make a list of all the node labels displayed in the graph (for Autocomplete)
+
+                nodeNames = _.keys(nodeIDs);
+                autocomplete(nodeNames);
+
 
                 // Do ForceAtlasLayout
 
@@ -573,23 +578,27 @@
     }
 
 
-   // Autocomplete
+    // Autocomplete initialized only after Sigma above loaded and populated all the nodes
 
-    $('#statement').textcomplete([
-        { // tech companies
-            words: ['apple', 'google', 'facebook', 'github'],
-            match: /\b(\w{2,})$/,
-            search: function (term, callback) {
-                callback($.map(this.words, function (word) {
-                    return word.indexOf(term) === 0 ? word : null;
-                }));
-            },
-            index: 1,
-            replace: function (word) {
-                return '#' + word + ' ';
+    function autocomplete(nodeNames) {
+
+
+        $('#statement').textcomplete([
+            { // tech companies
+                words: nodeNames,
+                match: /\b(\w{2,})$/,
+                search: function (term, callback) {
+                    callback($.map(this.words, function (word) {
+                        return word.indexOf(term) === 0 ? word : null;
+                    }));
+                },
+                index: 1,
+                replace: function (word) {
+                    return '#' + word + ' ';
+                }
             }
-        }
-    ]);
+        ]);
+    }
 
 
 
