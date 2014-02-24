@@ -39,11 +39,7 @@
 <script src="/javascripts/jquery.min.js"></script>
 <script src="/javascripts/string.min.js"></script>
 <script src="/javascripts/underscore-min.js"></script>
-
-<!-- Support for autocomplete -->
-<script src="/javascripts/autocomplete/jquery-ui.js" type="text/javascript"></script>
-<script src="/javascripts/autocomplete/textinputs_jquery_src.js" type="text/javascript"></script>
-<script src="/javascripts/autocomplete/jquery.textarea-input-support.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.textcomplete.js"></script>
 
 <script>
 
@@ -576,13 +572,24 @@
 
     }
 
-// Support for autocomplete
-    var availableTags = ["ActionScript","AppleScript","Asp","BASIC","C","C++","Clojure","COBOL","ColdFusion","Erlang","Fortran",
-        "Groovy","Haskell","Java","JavaScript","Perl","PHP","Python","Ruby","Scala","Scheme"];
 
-$('#statement').textareainputsupport({
-    source: availableTags
-});
+   // Autocomplete
+
+    $('#statement').textcomplete([
+        { // tech companies
+            words: ['apple', 'google', 'facebook', 'github'],
+            match: /\b(\w{2,})$/,
+            search: function (term, callback) {
+                callback($.map(this.words, function (word) {
+                    return word.indexOf(term) === 0 ? word : null;
+                }));
+            },
+            index: 1,
+            replace: function (word) {
+                return '#' + word + ' ';
+            }
+        }
+    ]);
 
 
 
