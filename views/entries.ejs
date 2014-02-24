@@ -63,9 +63,11 @@
         var statementReplace = $("#statement").val();
         var regex = RegExp(selectedText, "g");
 
+        var dasherized = S(selectedText).dasherize().chompLeft('-').s;
+
         // TODO check words for morphology (if found, alert)
 
-        var replacedString = statementReplace.replace(regex,"#" + selectedText).replace(/##/g,'#');
+        var replacedString = statementReplace.replace(regex,"#" + dasherized).replace(/##/g,'#');
         $("#statement").val(replacedString);
 
     });
