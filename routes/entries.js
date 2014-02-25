@@ -28,8 +28,7 @@ exports.list = function(req, res, next){
     }
 
 
-
-    Entry.getRange(res.locals.user.neo_uid, function(err, entries) {
+    Entry.getRange(res.locals.user.neo_uid, req.params.context, function(err, entries) {
         if (err) return next(err);
 
         // Add a link to @context tags

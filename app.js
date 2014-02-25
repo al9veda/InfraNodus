@@ -93,6 +93,7 @@ app.get('/api/user/nodes', api.nodes);
 app.get('/api/user/statements', api.entries);
 app.get('/api/user/:id', api.user);
 app.post('/api/entry', entries.submit);
+app.get('/contexts/:context?', entries.list);
 app.get('/', entries.list);
 
 
