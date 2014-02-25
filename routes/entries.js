@@ -88,7 +88,7 @@ exports.submit = function(req, res, next){
         if (req.remoteUser) {
             res.json({message: 'Entry added.'});
         } else {
-            if (default_context == 'undefined' || typeof default_context === 'undefined') {
+            if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
                 res.redirect('/');
             }
             else {
