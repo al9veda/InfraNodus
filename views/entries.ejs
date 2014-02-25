@@ -107,11 +107,12 @@
     var contextNames = [];
 
 
+    var jsonpath = '/api/user/nodes/<%= context %>';
 
-    // Initialize JSON parser
+        // Initialize JSON parser
 
     sigma.parsers.json(
-            '/api/user/nodes',
+            jsonpath,
             {
                 container: 'graph-container',
                 renderer: {

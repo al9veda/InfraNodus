@@ -27,8 +27,11 @@ exports.list = function(req, res, next){
         return;
     }
 
+    var context = req.params.context;
 
-    Entry.getRange(res.locals.user.neo_uid, req.params.context, function(err, entries) {
+
+
+    Entry.getRange(res.locals.user.neo_uid, context, function(err, entries) {
         if (err) return next(err);
 
         // Add a link to @context tags
@@ -39,9 +42,12 @@ exports.list = function(req, res, next){
 
         console.log("Showing statements for user "+ res.locals.user.neo_uid);
 
+        console.log(context);
+
         res.render('entries', {
             title: 'Entries',
             entries: entries,
+            context: context
         });
     });
 };
