@@ -79,12 +79,20 @@ exports.submit = function(req, res, next){
 
     // Now that the object is created, we can call upon the save function
 
+    var default_context = req.body.context;
+
     entry.save(function(err) {
         if (err) return next(err);
         if (req.remoteUser) {
             res.json({message: 'Entry added.'});
         } else {
-            res.redirect('/');
+            if (default_context == 'undefined' || typeof default_context === 'undefined') {
+                res.redirect('/');
+            }
+            else {
+                res.redirect('/contexts/' + default_context);
+            }
+
         }
     });
 };
