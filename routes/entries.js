@@ -22,7 +22,8 @@ exports.list = function(req, res, next){
     if (typeof res.locals.user === 'undefined') {
         res.render('entries', {
             title: 'Entries',
-            entries: []
+            entries: [],
+            context: ''
         });
         return;
     }

@@ -19,7 +19,7 @@
 
        <textarea rows=4 cols="45" name='entry[body]' id="statement" placeholder='Enter a note here, marking the most important words with a #hashtag and the context with @mention'></textarea>
        <br>
-       <input type='submit' value='Post' />
+       <input type='submit' value='Post' />  <input type="hidden" name="context" value="<%= context %>">
 
     </form>   <br>
 <div id="contexts">&nbsp;</div>
