@@ -24,7 +24,7 @@
 
     </form>   &nbsp;<br>&nbsp;<br>
 
-<div id="contexts">contexts: <a href="/contexts/<%= context %>">current</a> &nbsp;&nbsp;</div>
+<div id="contexts">contexts: <a href="/contexts/<%= context %>">current</a> &nbsp;<a href="/">all</a> &nbsp;&nbsp;</div>
 <% entries.forEach(function(entry) { %>
 <div class='entry' data-hashtags='<%= entry.name %>'>
     <p><%- entry.text %></p>
@@ -331,7 +331,7 @@
                 context_filters += '<a href="/contexts/' + n.substr(1) + '">' + n + '</a> <a href="javascript:" class="remove-context"><img src="/images/trash.png" border="0" alt="' + n + '"></a> ';
             });
 
-            document.getElementById('contexts').innerHTML = 'contexts: <a href="/contexts/<%= context %>">current</a> &nbsp;&nbsp;' + context_filters;
+            document.getElementById('contexts').innerHTML = 'contexts: <a href="/contexts/<%= context %>">current</a> &nbsp;<a href="/">all</a> &nbsp;&nbsp;' + context_filters;
 
             console.log(contexts);
 
@@ -515,10 +515,10 @@
                         context_filters += '<a href="/contexts/' + n.substr(1) + '">' + n + '</a> <a href="javascript:" class="remove-context"><img src="/images/trash.png" border="0" alt="' + n + '"></a> ';
                     });
 
-                    document.getElementById('contexts').innerHTML = 'contexts: <a href="/contexts/<%= context %>">current</a> &nbsp;&nbsp;' + context_filters;
+                    document.getElementById('contexts').innerHTML = 'contexts: <a href="/contexts/<%= context %>">current</a> &nbsp;<a href="/">all</a> &nbsp;&nbsp;' + context_filters;
                 }
                 else {
-                    document.getElementById('contexts').innerHTML = 'contexts: <a href="/contexts/<%= context %>">current</a> &nbsp;&nbsp;';
+                    document.getElementById('contexts').innerHTML = 'contexts: <a href="/contexts/<%= context %>">current</a> &nbsp;<a href="/">all</a> &nbsp;&nbsp;';
                 }
 
                 // Launch itself to update the @contexts cache
