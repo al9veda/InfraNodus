@@ -48,7 +48,14 @@ exports.entries = function(req, res, next){
 
 exports.nodes = function(req, res, next){
     var page = req.page;
-    Entry.getNodes(res.locals.user.neo_uid, req.params.context, function(err, entries){
+
+    var context = 'undefined';
+
+    if (req.params.context != 'undefined' && req.params.context != '') {
+        var context = req.params.context;
+    }
+
+    Entry.getNodes(res.locals.user.neo_uid, context, function(err, entries){
         if (err) return next(err);
 
         // Change the result we obtained into a nice json we need

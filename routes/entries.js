@@ -43,7 +43,9 @@ exports.list = function(req, res, next){
 
         console.log("Showing statements for user "+ res.locals.user.neo_uid);
 
-        console.log(context);
+        if (context == 'undefined' || typeof context === 'undefined') {
+            context = '';
+        }
 
         res.render('entries', {
             title: 'Entries',
