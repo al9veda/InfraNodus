@@ -122,8 +122,8 @@ a:hover.app-context-link {
     color: #999;
 }
 #contexts a:hover {
-    text-decoration: line-through;
-    color: #f00;
+    text-decoration: underline;
+    color: #4b9dff;
 }
 
 #concepts {
