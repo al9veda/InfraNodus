@@ -11,16 +11,16 @@
 
 <% include messages %>
 
-<form action='/login' method='post'>
-    <p>
+<form action='/login' method='post' class="pure-form pure-form-stacked">
+        <p>
         <input type='text' name='user[name]' placeholder='Username' />
-    </p>
-    <p>
+        </p>
+        <p>
         <input type='password' name='user[pass]' placeholder='Password' />
-    </p>
-    <p>
-        <input type='submit' value='Login' />
-    </p>
+        </p>
+        <p>
+        <button type='submit' class="pure-button pure-button-primary">Login</button>
+        </p>
 </form>
 </div>
 </body>

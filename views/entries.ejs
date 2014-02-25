@@ -15,7 +15,7 @@
 
     <% include messages %>
 
-    <form action='/post' method='post'>
+    <form action='/post' method='post' class='pure-form'>
 
             <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='Enter a note here, marking the most important words with a #hashtag and the context with @mention'></textarea>
             <input type="hidden" name="context" value="<%= context %>">
