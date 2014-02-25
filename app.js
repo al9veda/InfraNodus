@@ -57,7 +57,7 @@ app.use(express.cookieParser('your secret here'));
 app.use(express.session());
 app.use(express.static(path.join(__dirname, 'public')));
 // This makes sure that when someone accesses /api they are authenticated first
-app.use('/api', api.auth);
+//app.use('/api', api.auth);
 app.use(user);
 app.use(messages);
 app.use(app.router);
