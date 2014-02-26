@@ -116,12 +116,13 @@
 
     <% if (addcontext) { %>
         var jsonpath = '/api/user/nodes/<%= context %>?addcontext=<%= addcontext %>';
+        var addcontext = "<%= addcontext %>";
     <% } else { %>
         var jsonpath = '/api/user/nodes/<%= context %>';
+        var addcontext = "";
     <% }  %>
 
      // Initialize JSON parser
-
     sigma.parsers.json(
             jsonpath,
             {
@@ -140,6 +141,8 @@
                 var i,
                         timeout = 2000,
                         nodes = sigma.graph.nodes(),
+                        color_context = '#666',
+                        color_addcontext = '#666688',
                         len = nodes.length;
 
                 // This is a fix for JSON
@@ -149,22 +152,14 @@
                     nodes[i].x = Math.random();
                     nodes[i].y = Math.random();
                     nodes[i].size = sigma.graph.degree(nodes[i].id);
-                    nodes[i].color = nodes[i].center ? '#333' : '#666';
+                    nodes[i].color = color_context;
                 }
-
 
                 // We first need to save the original colors and LABELS of our
                 // nodes and edges, like this:
 
-                sigma.graph.nodes().forEach(function(n) {
-                    n.originalColor = n.color;
-                    n.originalLabel = n.label;
-
-                    // Creating an index of node labels to IDs for filtering
-                    nodeIDs[n.label] = n.id;
-
-                });
                 sigma.graph.edges().forEach(function(e) {
+
                     e.originalColor = e.color;
 
                     // Make an index of nodes to context
@@ -181,6 +176,28 @@
                     }
 
                 });
+
+
+
+
+                sigma.graph.nodes().forEach(function(n) {
+
+                    // Check if the node is in additional context and if yes, give it a different color
+                    if (addcontext) {
+                        if (contextNodeID[addcontext].indexOf(n.id) > -1) {
+                            n.color = color_addcontext;
+                        }
+                    }
+
+                    // Save node's default color, for hide and show later
+                    n.originalColor = n.color;
+                    n.originalLabel = n.label;
+
+                    // Creating an index of node labels to IDs for filtering
+                    nodeIDs[n.label] = n.id;
+
+                });
+
 
 
                 // Make a list of all the node labels displayed in the graph (for Autocomplete)
