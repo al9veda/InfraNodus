@@ -53,7 +53,8 @@ exports.list = function(req, res, next){
         res.render('entries', {
             title: 'Entries',
             entries: entries,
-            context: contexts[0]
+            context: contexts[0],
+            addcontext: req.query.addcontext
         });
     });
 };

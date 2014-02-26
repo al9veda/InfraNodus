@@ -114,10 +114,13 @@
 
     var contextNames = [];
 
+    <% if (addcontext) { %>
+        var jsonpath = '/api/user/nodes/<%= context %>?addcontext=<%= addcontext %>';
+    <% } else { %>
+        var jsonpath = '/api/user/nodes/<%= context %>';
+    <% }  %>
 
-    var jsonpath = '/api/user/nodes/<%= context %>';
-
-        // Initialize JSON parser
+     // Initialize JSON parser
 
     sigma.parsers.json(
             jsonpath,

@@ -49,13 +49,15 @@ exports.entries = function(req, res, next){
 exports.nodes = function(req, res, next){
     var page = req.page;
 
-    var context = 'undefined';
+    var contexts = [];
+    contexts.push(req.params.context);
 
-    if (req.params.context != 'undefined' && req.params.context != '') {
-        var context = req.params.context;
-    }
+    if (req.query.addcontext) contexts.push(req.query.addcontext);
 
-    Entry.getNodes(res.locals.user.neo_uid, context, function(err, entries){
+    console.log("Contexts for nodes");
+    console.log(contexts);
+
+    Entry.getNodes(res.locals.user.neo_uid, contexts, function(err, entries){
         if (err) return next(err);
 
         // Change the result we obtained into a nice json we need
