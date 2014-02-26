@@ -30,7 +30,7 @@ exports.list = function(req, res, next){
 
     var context = req.params.context;
 
-
+    // TODO: We can pass on contexts as an array
 
     Entry.getRange(res.locals.user.neo_uid, context, function(err, entries) {
         if (err) return next(err);
@@ -46,6 +46,8 @@ exports.list = function(req, res, next){
         if (context == 'undefined' || typeof context === 'undefined') {
             context = '';
         }
+
+        console.log(req.query.addcontext);
 
         res.render('entries', {
             title: 'Entries',
