@@ -19,22 +19,44 @@ var FlowdockText = require("flowdock-text");
 
 exports.list = function(req, res, next){
 
-    if (typeof res.locals.user === 'undefined') {
-        res.render('entries', {
-            title: 'Entries',
-            entries: [],
-            context: '',
-            addcontext: ''
-        });
-        return;
+    // The one who sees the statements (hello Tengo @1Q84 #Murakami)
+    var receiver = '';
+
+    // The one who made the statements (hello Fuka-Eri @1Q84 #Murakami)
+    var perceiver = '';
+
+    // Is the user logged in? Then he is the receiver
+
+    if (res.locals.user) {
+        receiver = res.locals.user.neo_uid;
     }
+
+    // Is there user in the URL and we know their ID already? Then the receiver will see their graph...
+
+    if (req.params.user && res.locals.viewuser) {
+        perceiver = res.locals.viewuser;
+    }
+
+    // Otherwise they see their own
+
+    else {
+        if (res.locals.user) {
+            perceiver = res.locals.user.neo_uid;
+        }
+    }
+
+    // Let's see what context the user wants to view if there is one
 
     var contexts = [];
         contexts.push(req.params.context);
 
+    // Do we want to compare it with another ?addcontext=... ?
+
     if (req.query.addcontext) contexts.push(req.query.addcontext);
 
-    Entry.getRange(res.locals.user.neo_uid, contexts, function(err, entries) {
+    // Now let's arrange what users we want to see and what information
+
+    Entry.getRange(receiver, perceiver, contexts, function(err, entries) {
         if (err) return next(err);
 
         // Add a link to @context tags
@@ -43,7 +65,8 @@ exports.list = function(req, res, next){
               entries[i].text = FlowdockText.autoLinkHashtags(entries[i].text,{hashtagUrlBase:"/concept/",hashtagClass:"app-concept-link"});
         }
 
-        console.log("Showing statements for user "+ res.locals.user.neo_uid);
+        console.log("Showing statements for user "+ receiver);
+        console.log("Statements made by "+ perceiver);
 
         for (var s=0;s<contexts.length;++s) {
             if (contexts[s] == 'undefined' || typeof contexts[s] === 'undefined') {
