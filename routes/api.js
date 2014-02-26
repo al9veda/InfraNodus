@@ -50,14 +50,37 @@ exports.nodes = function(req, res, next){
     var page = req.page;
 
     var contexts = [];
+
+    // The one who sees the statements (hello Tengo @1Q84 #Murakami)
+    var receiver = '';
+    // The one who made the statements (hello Fuka-Eri @1Q84 #Murakami)
+    var perceiver = '';
+
+    // Let's define the contexts from URL if exist
     contexts.push(req.params.context);
 
+    // And is there one to compare with also?
     if (req.query.addcontext) contexts.push(req.query.addcontext);
 
     console.log("Contexts for nodes");
     console.log(contexts);
 
-    Entry.getNodes(res.locals.user.neo_uid, contexts, function(err, entries){
+    // Is the user logged in? Then he is the receiver
+    if (res.locals.user) {
+        receiver = res.locals.user.neo_uid;
+    }
+    // Is there user in the URL and we know their ID already? Then the receiver will see their graph...
+    if (req.params.user && res.locals.viewuser) {
+        perceiver = res.locals.viewuser;
+    }
+    // Otherwise they see their own
+    else {
+        if (res.locals.user) {
+            perceiver = res.locals.user.neo_uid;
+        }
+    }
+
+    Entry.getNodes(receiver, perceiver, contexts, function(err, entries){
         if (err) return next(err);
 
         // Change the result we obtained into a nice json we need

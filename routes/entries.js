@@ -21,24 +21,21 @@ exports.list = function(req, res, next){
 
     // The one who sees the statements (hello Tengo @1Q84 #Murakami)
     var receiver = '';
-
     // The one who made the statements (hello Fuka-Eri @1Q84 #Murakami)
     var perceiver = '';
 
-    // Is the user logged in? Then he is the receiver
+    var perceivername = null;
 
+    // Is the user logged in? Then he is the receiver
     if (res.locals.user) {
         receiver = res.locals.user.neo_uid;
     }
-
     // Is there user in the URL and we know their ID already? Then the receiver will see their graph...
-
     if (req.params.user && res.locals.viewuser) {
         perceiver = res.locals.viewuser;
+        perceivername = req.params.user;
     }
-
     // Otherwise they see their own
-
     else {
         if (res.locals.user) {
             perceiver = res.locals.user.neo_uid;
@@ -78,7 +75,8 @@ exports.list = function(req, res, next){
             title: 'Entries',
             entries: entries,
             context: contexts[0],
-            addcontext: req.query.addcontext
+            addcontext: req.query.addcontext,
+            perceivername: perceivername
         });
     });
 };

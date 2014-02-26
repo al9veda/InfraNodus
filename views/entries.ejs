@@ -40,7 +40,7 @@
 <% }) %>
 </div>
 
-<% if (locals.user) { %>
+
 <div id="graph-container"></div>
 
 <script src="/javascripts/sigma/sigma.min.js"></script>
@@ -131,6 +131,10 @@
         var jsonpath = '/api/user/nodes/<%= context %>';
         var addcontext = "";
     <% }  %>
+
+    <% if (perceivername) { %>
+        jsonpath = '/api/public/nodes/<%= perceivername %>';
+    <% } %>
 
      // Initialize JSON parser
     sigma.parsers.json(
@@ -701,7 +705,6 @@
 
 
 </script>
-<% } %>
 
 </body>
 </html>
