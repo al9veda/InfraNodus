@@ -23,7 +23,8 @@ exports.list = function(req, res, next){
         res.render('entries', {
             title: 'Entries',
             entries: [],
-            context: ''
+            context: '',
+            addcontext: ''
         });
         return;
     }

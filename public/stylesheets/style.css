@@ -112,16 +112,17 @@ a:hover.app-context-link {
     color: #999;
 }
 
-#contexts {
+
+.contexts {
     font: 17px 'IstokWeb-Bold',sans-serif;
     color: #666;
 }
 
-#contexts a {
+.contexts a {
     text-decoration: none;
     color: #999;
 }
-#contexts a:hover {
+.contexts a:hover {
     text-decoration: underline;
     color: #4b9dff;
 }

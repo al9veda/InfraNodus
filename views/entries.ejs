@@ -24,7 +24,14 @@
 
     </form>   &nbsp;<br>&nbsp;<br>
 
-<div id="contexts">contexts: <a href="/">all</a> &nbsp;<a href="/contexts/<%= context %>"><%= context %></a> <textarea cols="5" rows="1" id="addcontext" style="display:block;max-width:100px;"></textarea> &nbsp;&nbsp;</div>
+<div class="contexts" id="contexts">contexts: <a href="/">all</a> &nbsp;<a href="/contexts/<%= context %>"><%= context %></a>  &nbsp;&nbsp;</div>
+
+<% if (addcontext) { %>
+<div class="contexts" id="showaddcontext_host"><a href="javascript:" id="showaddcontext"><img src="/images/shuffle.png" border=""></a> &nbsp; <a href="javascript:" class="app-context-link">@<%= addcontext %></a></div>
+<% } else { %>
+<div class="contexts" id="showaddcontext_host"><a href="javascript:" id="showaddcontext"><img src="/images/shuffle.png" border=""></a> &nbsp; </div>
+<% } %>
+
 <% entries.forEach(function(entry) { %>
 <div class='entry' data-hashtags='<%= entry.name %>'>
     <p><%- entry.text %></p>
@@ -48,6 +55,9 @@
 
 
 <script>
+
+
+
 
     // Auto-resize to fill content;
 
@@ -211,6 +221,8 @@
                 contextNames = _.keys(contextNodeID);
 
                 autocomplete(nodeNames,contextNames);
+
+                jqshowaddcontext();
 
 
                 // Do ForceAtlasLayout
@@ -618,6 +630,20 @@
 
     }
 
+    // Show addcontext textfield when button clicked
+
+    function jqshowaddcontext () {
+
+        $('#showaddcontext').click(function(){
+
+            document.getElementById('showaddcontext_host').innerHTML = '<textarea cols="5" rows="1" id="addcontext" placeholder="type in a context to compare..." style="display:block;max-width:100px;"></textarea>';
+            autocomplete(nodeNames,contextNames);
+            return false;
+
+        });
+
+    }
+
 
     // Autocomplete initialized only after Sigma above loaded and populated all the nodes
 
@@ -665,6 +691,7 @@
                 index: 1,
                 replace: function (mention) {
                     window.open("?addcontext=" + mention, "_self");
+                    return '@' + mention + '';
                 }
             }
         ]);
