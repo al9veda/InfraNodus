@@ -94,7 +94,7 @@ app.get('/api/user/statements', api.entries);
 app.get('/api/user/:id', api.user);
 app.post('/api/entry', entries.submit);
 app.get('/contexts/:context?', entries.list);
-app.get('/users/:user?', validate.getUserID(), entries.list);
+app.get('/public/:user?', validate.getUserID(), entries.list);
 app.get('/', entries.list);
 
 
