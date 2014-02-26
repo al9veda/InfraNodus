@@ -28,11 +28,12 @@ exports.list = function(req, res, next){
         return;
     }
 
-    var context = req.params.context;
+    var contexts = [];
+        contexts.push(req.params.context);
 
-    // TODO: We can pass on contexts as an array
+    if (req.query.addcontext) contexts.push(req.query.addcontext);
 
-    Entry.getRange(res.locals.user.neo_uid, context, function(err, entries) {
+    Entry.getRange(res.locals.user.neo_uid, contexts, function(err, entries) {
         if (err) return next(err);
 
         // Add a link to @context tags
@@ -43,16 +44,16 @@ exports.list = function(req, res, next){
 
         console.log("Showing statements for user "+ res.locals.user.neo_uid);
 
-        if (context == 'undefined' || typeof context === 'undefined') {
-            context = '';
+        for (var s=0;s<contexts.length;++s) {
+            if (contexts[s] == 'undefined' || typeof contexts[s] === 'undefined') {
+                contexts[s] = '';
+            }
         }
-
-        console.log(req.query.addcontext);
 
         res.render('entries', {
             title: 'Entries',
             entries: entries,
-            context: context
+            context: contexts[0]
         });
     });
 };
