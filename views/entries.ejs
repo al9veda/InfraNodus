@@ -15,12 +15,13 @@
 
     <% include messages %>
 
-    <form action='/post' method='post' class='pure-form'>
+    <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
-            <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='Enter a note here, marking the most important words with a #hashtag and the context with @mention'></textarea>
+            <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here, marking the most important words with a #hashtag and the context with @mention'></textarea>
             <input type="hidden" name="context" value="<%= context %>">
+            <input type="hidden" name="statement" value="">
             &nbsp;<br>
-            <button type='submit' class="pure-button pure-button-primary">Add</button>
+            <input type='submit' name="submit" value="save" class="pure-button pure-button-primary">
 
     </form>   &nbsp;<br>&nbsp;<br>
 
@@ -33,9 +34,8 @@
 <% } %>
 
 <% entries.forEach(function(entry) { %>
-<div class='entry' data-hashtags='<%= entry.name %>'>
+<div class='entry' data-uid='<%= entry.uid %>' data-hashtags='<%= entry.name %>'>
     <p><%- entry.text %></p>
-    <!-- UID: <%= entry.uid %> -->
 </div>
 <% }) %>
 </div>
@@ -64,6 +64,30 @@
     $(document).ready(function(){
         $('textarea').autosize();
     });
+
+
+    // Statement edit / delete functionality
+
+    $(".entry").on('dblclick', function(e) {
+        $("#statement").val(e.currentTarget.innerText);
+        document.submitform.statement.value = e.currentTarget.dataset.uid;
+        document.submitform.submit.value = "edit";
+        if (!document.submitform.delete) {
+            $("#submitform").append('<input type="submit" name="delete" value="delete" class="pure-button"> <input type="submit" name="cancel" value="cancel" onclick="clear_form(); return false;" class="pure-button">');
+        }
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+    });
+
+
+    // Clear form if canceled
+
+    function clear_form () {
+        $("#statement").val('');
+        document.submitform.submit.value = "save";
+        document.submitform.delete.remove();
+        document.submitform.cancel.remove();
+    }
+
 
     // Textarea select conversion to hashtags
 
