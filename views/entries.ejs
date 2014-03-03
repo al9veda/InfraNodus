@@ -19,7 +19,7 @@
 
             <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here, marking the most important words with a #hashtag and the context with @mention'></textarea>
             <input type="hidden" name="context" value="<%= context %>">
-            <input type="hidden" name="statement" value="">
+            <input type="hidden" name="statementid" value="">
             &nbsp;<br>
             <input type='submit' name="submit" value="save" class="pure-button pure-button-primary">
 
@@ -69,17 +69,26 @@
     // Statement edit / delete functionality
 
     $(".entry").on('dblclick', function(e) {
+
+        // Get the statement into the edit box at the top
         $("#statement").val(e.currentTarget.innerText);
-        document.submitform.statement.value = e.currentTarget.dataset.uid;
+        console.log(e.currentTarget.dataset.uid);
+
+        // Retrieve that statement's ID into the hidden field (for edit or delete)
+        $('input[name="statementid"]').val(e.currentTarget.dataset.uid);
+
+        // Chang / add buttons
         document.submitform.submit.value = "edit";
         if (!document.submitform.delete) {
             $("#submitform").append('<input type="submit" name="delete" value="delete" class="pure-button"> <input type="submit" name="cancel" value="cancel" onclick="clear_form(); return false;" class="pure-button">');
         }
+
+        // Smoothly scroll up
         $("html, body").animate({ scrollTop: 0 }, "slow");
     });
 
 
-    // Clear form if canceled
+    // Clear the form if canceled and refresh buttons
 
     function clear_form () {
         $("#statement").val('');
