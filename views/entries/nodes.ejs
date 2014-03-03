@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.2draft" version="1.2">
+    <meta>
+        <creator>InfraNodus</creator>
+        <description>Concept nodes graph</description>
+    </meta>
+    <graph mode="static" defaultedgetype="directed">
+        <nodes>
+            <% graph.nodes.forEach(function(node){ %>
+            <node id="<%= node.id %>" label="<%= node.label %>"></node>
+             <% }) %>
+        </nodes>
+        <edges>
+            <% graph.edges.forEach(function(edge){ %>
+            <edge id="<%= edge.id %>" source="<%= edge.source %>" target="<%= edge.target %>" edge_context="<%= edge.edge_context %>"></edge>
+            <% }) %>
+        </edges>
+    </graph>
+</gexf>

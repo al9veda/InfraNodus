@@ -80,17 +80,21 @@ exports.nodes = function(req, res, next){
         }
     }
 
-    Entry.getNodes(receiver, perceiver, contexts, function(err, entries){
+    Entry.getNodes(receiver, perceiver, contexts, function(err, graph){
         if (err) return next(err);
 
         // Change the result we obtained into a nice json we need
 
-        res.format({
-            json: function(){
-                res.send(entries);
-            }
 
-
-        });
+        if (req.query.gexf) {
+            res.render('entries/nodes', { graph: graph });
+        }
+        else {
+            res.format({
+                json: function(){
+                    res.send(graph);
+                }
+            });
+        }
     });
 };
