@@ -80,11 +80,11 @@ app.get('/post', entries.form);
 app.post(
     '/post',
     validate.isLoggedIn(),
-    validate.isToDelete(),
     validate.required('entry[body]'),
     validate.lengthAbove('entry[body]', 4),
     validate.sanitize('entry[body]'),
     validate.getHashtags('entry[body]'),
+    validate.isToDelete(),
     validate.getContext('entry[body]'),
     entries.submit
 );
