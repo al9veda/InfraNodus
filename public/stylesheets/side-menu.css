@@ -5,7 +5,23 @@
     height: auto;
 }
 
+#layout {
+    position: relative;
+    padding-left: 0;
+    max-width: 320px
+}
+#layout.active {
+    position: relative;
+    left: 150px;
+}
+#layout.active #menu {
+    left: 150px;
+    width: 150px;
+}
 
+#layout.active .menu-link {
+    left: 150px;
+}
 
 /*
 The `#menu` `<div>` is the parent `<div>` that contains the `.pure-menu` that
@@ -22,6 +38,7 @@ appears on the left side of the page.
     background: #191818;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    z-index: 5;
 }
     /*
     All anchors inside the menu should be styled like this.
@@ -97,10 +114,11 @@ small screens.
     left: 0; /* "#menu width" */
     background: #000;
     background: rgba(0,0,0,0.7);
-    font-size: 10px; /* change this value to increase/decrease button size */
+    font-size: 9px; /* change this value to increase/decrease button size */
     width: 2em;
     height: auto;
     padding: 2.1em 1.6em;
+    z-index: 5;
 }
 
     .menu-link:hover,
@@ -140,11 +158,6 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 */
 @media (min-width: 48em) {
 
-    .header,
-    .content {
-        padding-left: 2em;
-        padding-right: 2em;
-    }
 
     #layout {
         padding-left: 150px; /* left col width "#menu" */

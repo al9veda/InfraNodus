@@ -36,9 +36,9 @@ a {
 
 textarea {
     font: 16px 'IstokWeb-Bold',sans-serif;
+    position: relative;
     resize: vertical;
-    width: 100%;
-    min-width: 320px;
+    width: 320px;
     overflow: auto; /* 1 */
     vertical-align: top; /* 2 */
     padding: 0.5em 0.6em;
@@ -56,6 +56,7 @@ textarea {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
+    z-index: 10;
 }
 
 textarea:focus {
@@ -71,6 +72,7 @@ textarea:focus {
 .entry {
     font: 17px 'IstokWeb-Bold',sans-serif;
     color: #000;
+    width: 320px;
 }
 
 a.app-concept-link {
@@ -126,11 +128,19 @@ a:hover.app-context-link {
 
 #content {
     position: relative;
-    top: 60px;
-    max-width: 320px;
+    top: 0px;
+    width: 320px;
     margin: 0 0;
-    padding: 0 2em;
     line-height: 1.6em;
+    z-index: 1;
+}
+
+#statements {
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 360px;
+    padding-left: 50px;
+    z-index: 1;
 }
 
 #submenu {
@@ -154,6 +164,11 @@ a:hover.app-context-link {
     left: 0;
     right: 0;
     position: fixed;
+    z-index: -1;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 40px;
+    padding-bottom: 40px;
 }
 
 
@@ -1006,7 +1021,9 @@ Forms Core
 /* HEADINGS */
 .pure-menu .pure-menu-heading {
     color: #262626;
+/*
     text-transform: uppercase;
+*/
     font-size: 90%;
     margin-top: 0.5em;
     border-bottom: solid 1px #ededed;

@@ -35,7 +35,7 @@
 <% include submenu %>
 <div id='content'>
 
-
+<div id='statements'>
     <% include messages %>
 
     <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
@@ -61,14 +61,15 @@
     <p><%- entry.text %></p>
 </div>
 <% }) %>
-
-
 </div>
-
 <div id="graph-container"></div>
+</div>
+
+
 
 
 </div>
+
 <script src="/javascripts/sigma/sigma.min.js"></script>
 <script src="/javascripts/sigma/plugins/sigma.parsers.json.min.js"></script>
 <script src="/javascripts/sigma/plugins/sigma.layout.forceAtlas2.min.js"></script>
