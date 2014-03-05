@@ -88,6 +88,19 @@
     });
 
 
+    // Highlight statement if clicked once
+
+    $(".entry").on('click', function(e) {
+
+        $(".entry").each(function(){
+            $(this).css('opacity', '0.3');
+        });
+
+        $(this).css('opacity','1');
+
+    });
+
+
     // Clear the form if canceled and refresh buttons
 
     function clear_form () {
@@ -179,8 +192,9 @@
                     type: 'canvas'
                 },
                 settings: {
-                    minNodeSize: 8,
-                    maxNodeSize: 16
+                    minNodeSize: 6,
+                    maxNodeSize: 16,
+                    labelThreshold: 10
                 }
             },
             function(sigma) {
@@ -191,6 +205,7 @@
                         color_context = '#666',
                         color_addcontext = '#666688',
                         len = nodes.length;
+
 
                 // This is a fix for JSON
                 // Sigma requires that nodes have X, Y, Size and Color properties which our JSON doesn't have. So we add them.
@@ -287,7 +302,8 @@
                     // Let's get which neighbors to keep
                     var toKeep = sigma.graph.neighbors(nodeId);
 
-                    // Keep the clicked node itself
+                    console.log('x: ' + e.data.node['renderer1:x'] + ', y:' + e.data.node['renderer1:y'], ', size: ' + e.data.node['renderer1:size']);
+
                     toKeep[nodeId] = e.data.node;
 
                     // Create context query for jQuery
