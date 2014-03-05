@@ -57,48 +57,329 @@
 <script>
 
 
+// Add a method to the graph model that returns an
+// object with every neighbors of a node inside:
+
+sigma.classes.graph.addMethod('neighbors', function(nodeId) {
+    var k,
+            neighbors = {},
+            index = this.allNeighborsIndex[nodeId] || {};
+
+    for (k in index)
+        neighbors[k] = this.nodesIndex[k];
+
+    return neighbors;
+});
 
 
-    // Auto-resize to fill content;
+// Create node ID - Name index for filtering
+var nodeIDs = [];
+
+
+// What are the concepts displayed - the opposite of above
+var nodeNames = [];
+
+// Create context-node index for filtering
+var contextNodeID = [];
+
+var contextNames = [];
+
+<% if (addcontext) { %>
+    var jsonpath = '/api/user/nodes/<%= context %>?addcontext=<%= addcontext %>';
+    var addcontext = "<%= addcontext %>";
+<% } else { %>
+    var jsonpath = '/api/user/nodes/<%= context %>';
+    var addcontext = "";
+<% }  %>
+
+<% if (perceivername) { %>
+    jsonpath = '/api/public/nodes/<%= perceivername %>';
+<% } %>
+
+// Initialize JSON parser
+sigma.parsers.json(
+        jsonpath,
+        {
+            container: 'graph-container',
+            renderer: {
+                container: document.getElementById('graph-container'),
+                type: 'canvas'
+            },
+            settings: {
+                minNodeSize: 6,
+                maxNodeSize: 16,
+                labelThreshold: 10
+            }
+        },
+        function(sigma) {
+
+            var i,
+                    timeout = 2000,
+                    nodes = sigma.graph.nodes(),
+                    color_context = '#666',
+                    color_addcontext = '#666688',
+                    len = nodes.length;
+
+
+            // This is a fix for JSON
+            // Sigma requires that nodes have X, Y, Size and Color properties which our JSON doesn't have. So we add them.
+
+            for (i = 0; i < len; i++) {
+                nodes[i].x = Math.random();
+                nodes[i].y = Math.random();
+                nodes[i].size = sigma.graph.degree(nodes[i].id);
+                nodes[i].color = color_context;
+            }
+
+            // We first need to save the original colors and LABELS of our
+            // nodes and edges, like this:
+
+            sigma.graph.edges().forEach(function(e) {
+
+                e.originalColor = e.color;
+
+                // Make an index of nodes to context
+                if (contextNodeID[e.edge_context]) {
+                    if (contextNodeID[e.edge_context].indexOf(e.source) < 0)
+                        contextNodeID[e.edge_context].push(e.source);
+                    if (contextNodeID[e.edge_context].indexOf(e.target) < 0)
+                        contextNodeID[e.edge_context].push(e.target);
+                }
+                else {
+                    contextNodeID[e.edge_context] = [];
+                    contextNodeID[e.edge_context].push(e.source);
+                    contextNodeID[e.edge_context].push(e.target);
+                }
+
+            });
+
+
+
+
+            sigma.graph.nodes().forEach(function(n) {
+
+                // Check if the node is in additional context and if yes, give it a different color
+                if (addcontext) {
+                    if (contextNodeID[addcontext].indexOf(n.id) > -1) {
+                        n.color = color_addcontext;
+                    }
+                }
+
+                // Save node's default color, for hide and show later
+                n.originalColor = n.color;
+                n.originalLabel = n.label;
+
+                // Creating an index of node labels to IDs for filtering
+                nodeIDs[n.label] = n.id;
+
+            });
+
+
+
+            // Make a list of all the node labels displayed in the graph (for Autocomplete)
+
+            nodeNames = _.keys(nodeIDs);
+
+            for (var w=0;w<nodeNames.length;w++) {
+                nodeNames[w] = S(nodeNames[w]).dasherize().chompLeft('-').s;
+            }
+
+            contextNames = _.keys(contextNodeID);
+
+            autocomplete(nodeNames,contextNames);
+
+            jqshowaddcontext();
+
+
+            // Do ForceAtlasLayout
+
+            sigma.startForceAtlas2();
+
+            // Don't run it forever not to overheat :)
+
+            setTimeout(function() {
+                sigma.stopForceAtlas2();
+            },timeout);
+
+            // When a node is clicked, we check for each node
+            // if it is a neighbor of the clicked one. If not,
+            // we set its color as grey, and else, it takes its
+            // original color.
+            // We do the same for the edges, and we only keep
+            // edges that have both extremities colored.
+
+            sigma.bind('clickNode', function(e) {
+                var nodeId = e.data.node.id,
+                        nodeClickedClean = S(e.data.node.originalLabel).dasherize().chompLeft('-').s,
+                        nodeClicked = "#" + nodeClickedClean;
+
+                // Let's get which neighbors to keep
+                var toKeep = sigma.graph.neighbors(nodeId);
+
+                console.log('x: ' + e.data.node['renderer1:x'] + ', y:' + e.data.node['renderer1:y'], ', size: ' + e.data.node['renderer1:size']);
+
+                toKeep[nodeId] = e.data.node;
+
+                // Create context query for jQuery
+                var conceptstring = ":contains('" + nodeClicked + "')";
+
+                if (contexts.length >= 0) {
+                    for (var l=0;l<contexts.length;++l) {
+                        conceptstring += ":contains('"+contexts[l]+"')";
+                    }
+                }
+
+                // Filter text statements
+                $('.entry').hide();
+                $('.entry'+conceptstring).show();
+
+
+                // TODO Maybe the graph filtering below should be driven by statements, not filters
+
+                // Reiterate through the nodes and edges to show/hide them
+                sigma.graph.nodes().forEach(function(n) {
+                    if (toKeep[n.id])  {
+                        n.color = n.originalColor;
+                        n.label = n.originalLabel;
+                    }
+                    else  {
+                        n.color = '#ddd';
+                        n.label = '';
+                    }
+                });
+
+                sigma.graph.edges().forEach(function(e) {
+                    if (toKeep[e.source] && toKeep[e.target])
+                        e.color = e.originalColor;
+                    else
+                        e.color = '#ddd';
+                });
+
+                // Since the data has been modified, we need to
+                // call the refresh method to make the colors
+                // update effective.
+                sigma.refresh();
+
+
+            });
+
+
+            // Show node's label when we're over it
+
+            sigma.bind('overNode', function(e) {
+                e.data.node.label = e.data.node.originalLabel;
+                sigma.refresh();
+            });
+
+
+
+            // Hide node's label when we're out of it
+
+            sigma.bind('outNode', function(e) {
+                if (e.data.node.color != e.data.node.originalColor) {
+                    e.data.node.label = '';
+                }
+                sigma.refresh();
+            });
+
+
+        }
+);
+
+
+
+// Auto-resize to fill content;
 
     $(document).ready(function(){
+
+        // Make texarea automatically resizeable
         $('textarea').autosize();
-    });
 
+        // Statement edit / delete functionality
 
-    // Statement edit / delete functionality
+        $(".entry").on('dblclick', function(e) {
 
-    $(".entry").on('dblclick', function(e) {
+            // Get the statement into the edit box at the top
+            $("#statement").val(e.currentTarget.innerText);
+            console.log(e.currentTarget.dataset.uid);
 
-        // Get the statement into the edit box at the top
-        $("#statement").val(e.currentTarget.innerText);
-        console.log(e.currentTarget.dataset.uid);
+            // Retrieve that statement's ID into the hidden field (for edit or delete)
+            $('input[name="statementid"]').val(e.currentTarget.dataset.uid);
 
-        // Retrieve that statement's ID into the hidden field (for edit or delete)
-        $('input[name="statementid"]').val(e.currentTarget.dataset.uid);
+            // Chang / add buttons
+            document.submitform.submit.value = "edit";
+            if (!document.submitform.delete) {
+                $("#submitform").append('<input type="submit" name="delete" value="delete" class="pure-button"> <input type="submit" name="cancel" value="cancel" onclick="clear_form(); return false;" class="pure-button">');
+            }
 
-        // Chang / add buttons
-        document.submitform.submit.value = "edit";
-        if (!document.submitform.delete) {
-            $("#submitform").append('<input type="submit" name="delete" value="delete" class="pure-button"> <input type="submit" name="cancel" value="cancel" onclick="clear_form(); return false;" class="pure-button">');
-        }
-
-        // Smoothly scroll up
-        $("html, body").animate({ scrollTop: 0 }, "slow");
-    });
-
-
-    // Highlight statement if clicked once
-
-    $(".entry").on('click', function(e) {
-
-        $(".entry").each(function(){
-            $(this).css('opacity', '0.3');
+            // Smoothly scroll up
+            $("html, body").animate({ scrollTop: 0 }, "slow");
         });
 
-        $(this).css('opacity','1');
 
+        // Highlight statement if clicked once
+
+        $(".entry").on('click', function(e) {
+
+            // Make all entries semitrasparent
+
+            $(".entry").each(function(){
+                $(this).css('opacity', '0.3');
+            });
+
+            // The one clicked is not transparent
+
+            $(this).css('opacity','1');
+
+            var keepStatementID = e.currentTarget.dataset.uid;
+
+            var nodesOfStatement = [];
+
+            console.log(keepStatementID);
+            // Make only those edges visible that belong to the statement selected
+
+            sigma.instances(0).graph.edges().forEach(function(e) {
+
+                if (e.statement_id == keepStatementID) {
+                    e.color = e.originalColor;
+                    nodesOfStatement.push(e.source);
+                    nodesOfStatement.push(e.target);
+                }
+                else {
+                    e.color = '#ddd';
+                }
+
+            });
+
+            console.log(nodesOfStatement);
+
+            // Make only those nodes visible that belong to the statement selected
+
+            sigma.instances(0).graph.nodes().forEach(function(n) {
+
+                // Is there no contexts at all? Show the node.
+                if (nodesOfStatement.length == 0) {
+                    n.color = n.originalColor;
+                    n.label = n.originalLabel;
+                }
+
+                else if (nodesOfStatement.indexOf(n.id) < 0)  {
+                    n.color = '#ddd';
+                    n.label = '';
+                }
+                else {
+                    n.color = n.originalColor;
+                    n.label = n.originalLabel;
+                }
+            });
+
+            sigma.instances(0).refresh();
+
+        });
     });
+
+
+
 
 
     // Clear the form if canceled and refresh buttons
@@ -142,235 +423,6 @@
 
 
 
-
-    // Add a method to the graph model that returns an
-    // object with every neighbors of a node inside:
-
-    sigma.classes.graph.addMethod('neighbors', function(nodeId) {
-        var k,
-                neighbors = {},
-                index = this.allNeighborsIndex[nodeId] || {};
-
-        for (k in index)
-            neighbors[k] = this.nodesIndex[k];
-
-        return neighbors;
-    });
-
-
-    // Create node ID - Name index for filtering
-    var nodeIDs = [];
-
-
-    // What are the concepts displayed - the opposite of above
-    var nodeNames = [];
-
-    // Create context-node index for filtering
-    var contextNodeID = [];
-
-    var contextNames = [];
-
-    <% if (addcontext) { %>
-        var jsonpath = '/api/user/nodes/<%= context %>?addcontext=<%= addcontext %>';
-        var addcontext = "<%= addcontext %>";
-    <% } else { %>
-        var jsonpath = '/api/user/nodes/<%= context %>';
-        var addcontext = "";
-    <% }  %>
-
-    <% if (perceivername) { %>
-        jsonpath = '/api/public/nodes/<%= perceivername %>';
-    <% } %>
-
-     // Initialize JSON parser
-    sigma.parsers.json(
-            jsonpath,
-            {
-                container: 'graph-container',
-                renderer: {
-                    container: document.getElementById('graph-container'),
-                    type: 'canvas'
-                },
-                settings: {
-                    minNodeSize: 6,
-                    maxNodeSize: 16,
-                    labelThreshold: 10
-                }
-            },
-            function(sigma) {
-
-                var i,
-                        timeout = 2000,
-                        nodes = sigma.graph.nodes(),
-                        color_context = '#666',
-                        color_addcontext = '#666688',
-                        len = nodes.length;
-
-
-                // This is a fix for JSON
-                // Sigma requires that nodes have X, Y, Size and Color properties which our JSON doesn't have. So we add them.
-
-                for (i = 0; i < len; i++) {
-                    nodes[i].x = Math.random();
-                    nodes[i].y = Math.random();
-                    nodes[i].size = sigma.graph.degree(nodes[i].id);
-                    nodes[i].color = color_context;
-                }
-
-                // We first need to save the original colors and LABELS of our
-                // nodes and edges, like this:
-
-                sigma.graph.edges().forEach(function(e) {
-
-                    e.originalColor = e.color;
-
-                    // Make an index of nodes to context
-                    if (contextNodeID[e.edge_context]) {
-                        if (contextNodeID[e.edge_context].indexOf(e.source) < 0)
-                            contextNodeID[e.edge_context].push(e.source);
-                        if (contextNodeID[e.edge_context].indexOf(e.target) < 0)
-                            contextNodeID[e.edge_context].push(e.target);
-                    }
-                    else {
-                        contextNodeID[e.edge_context] = [];
-                        contextNodeID[e.edge_context].push(e.source);
-                        contextNodeID[e.edge_context].push(e.target);
-                    }
-
-                });
-
-
-
-
-                sigma.graph.nodes().forEach(function(n) {
-
-                    // Check if the node is in additional context and if yes, give it a different color
-                    if (addcontext) {
-                        if (contextNodeID[addcontext].indexOf(n.id) > -1) {
-                            n.color = color_addcontext;
-                        }
-                    }
-
-                    // Save node's default color, for hide and show later
-                    n.originalColor = n.color;
-                    n.originalLabel = n.label;
-
-                    // Creating an index of node labels to IDs for filtering
-                    nodeIDs[n.label] = n.id;
-
-                });
-
-
-
-                // Make a list of all the node labels displayed in the graph (for Autocomplete)
-
-                nodeNames = _.keys(nodeIDs);
-
-                for (var w=0;w<nodeNames.length;w++) {
-                    nodeNames[w] = S(nodeNames[w]).dasherize().chompLeft('-').s;
-                }
-
-                contextNames = _.keys(contextNodeID);
-
-                autocomplete(nodeNames,contextNames);
-
-                jqshowaddcontext();
-
-
-                // Do ForceAtlasLayout
-
-                sigma.startForceAtlas2();
-
-                // Don't run it forever not to overheat :)
-
-                setTimeout(function() {
-                    sigma.stopForceAtlas2();
-                },timeout);
-
-                // When a node is clicked, we check for each node
-                // if it is a neighbor of the clicked one. If not,
-                // we set its color as grey, and else, it takes its
-                // original color.
-                // We do the same for the edges, and we only keep
-                // edges that have both extremities colored.
-
-                sigma.bind('clickNode', function(e) {
-                    var nodeId = e.data.node.id,
-                            nodeClickedClean = S(e.data.node.originalLabel).dasherize().chompLeft('-').s,
-                            nodeClicked = "#" + nodeClickedClean;
-
-                    // Let's get which neighbors to keep
-                    var toKeep = sigma.graph.neighbors(nodeId);
-
-                    console.log('x: ' + e.data.node['renderer1:x'] + ', y:' + e.data.node['renderer1:y'], ', size: ' + e.data.node['renderer1:size']);
-
-                    toKeep[nodeId] = e.data.node;
-
-                    // Create context query for jQuery
-                    var conceptstring = ":contains('" + nodeClicked + "')";
-
-                    if (contexts.length >= 0) {
-                    for (var l=0;l<contexts.length;++l) {
-                        conceptstring += ":contains('"+contexts[l]+"')";
-                    }
-                    }
-
-                    // Filter text statements
-                    $('.entry').hide();
-                    $('.entry'+conceptstring).show();
-
-
-                    // TODO Maybe the graph filtering below should be driven by statements, not filters
-
-                    // Reiterate through the nodes and edges to show/hide them
-                    sigma.graph.nodes().forEach(function(n) {
-                        if (toKeep[n.id])  {
-                            n.color = n.originalColor;
-                            n.label = n.originalLabel;
-                        }
-                        else  {
-                            n.color = '#ddd';
-                            n.label = '';
-                        }
-                    });
-
-                    sigma.graph.edges().forEach(function(e) {
-                        if (toKeep[e.source] && toKeep[e.target])
-                            e.color = e.originalColor;
-                        else
-                            e.color = '#ddd';
-                    });
-
-                    // Since the data has been modified, we need to
-                    // call the refresh method to make the colors
-                    // update effective.
-                    sigma.refresh();
-
-
-                });
-
-
-                // Show node's label when we're over it
-
-                sigma.bind('overNode', function(e) {
-                    e.data.node.label = e.data.node.originalLabel;
-                    sigma.refresh();
-                });
-
-
-
-                // Hide node's label when we're out of it
-
-                sigma.bind('outNode', function(e) {
-                    if (e.data.node.color != e.data.node.originalColor) {
-                        e.data.node.label = '';
-                    }
-                    sigma.refresh();
-                });
-
-
-            }
-    );
 
 
 
