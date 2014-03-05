@@ -449,6 +449,9 @@ sigma.parsers.json(
             // Do not follow the link, to change that after for Public view
             e.preventDefault();
 
+            // If the context is clicked, we're just dealing with that event
+            e.stopPropagation();
+
             // Extract filter label
             var filter = e.srcElement.innerText.substr(1);
 
