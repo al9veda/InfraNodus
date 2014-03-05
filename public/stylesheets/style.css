@@ -140,20 +140,26 @@ a:hover.app-context-link {
     background-color: rgba(255, 255, 255, 0.8);
     width: 360px;
     padding-left: 50px;
+    padding-bottom: 50px;
     z-index: 1;
 }
 
 #submenu {
     position: fixed;
     bottom: 15px;
-    right: 50px;
+    left: 10px;
     font-size: 12px;
-    color: #888;
+    z-index: 5;
+    color: #999;
 }
 
 #submenu a {
     text-decoration: none;
-    color: black;
+    color: #999;
+}
+#submenu a:hover {
+    text-decoration: underline;
+    color: #9999cc;
 }
 
 /* Sigma.Js style */

@@ -3,25 +3,31 @@
 <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/side-menu.css">
+
 </head>
 <body>
+<div id="layout">
 <% include menu %>
 <div id="content">
+    <div id="statements">
 <p>Please, log in or <a href="/register">register</a> if you don't have an account yet:</p>
 
 <% include messages %>
 
 <form action='/login' method='post' class="pure-form pure-form-stacked">
         <p>
-        <input type='text' name='user[name]' placeholder='Username' />
+        <input type='text' name='user[name]' placeholder='username' />
         </p>
         <p>
-        <input type='password' name='user[pass]' placeholder='Password' />
+        <input type='password' name='user[pass]' placeholder='password' />
         </p>
         <p>
-        <button type='submit' class="pure-button pure-button-primary">Login</button>
+        <button type='submit' class="pure-button pure-button-primary">enter the vortex</button>
         </p>
 </form>
+</div>
+</div>
 </div>
 </body>
 </html>

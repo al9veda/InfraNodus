@@ -15,6 +15,7 @@
     <!-- Hamburger icon -->
     <span></span>
 </a>
+<div id="graph-link">&nbsp;<a href="#"><img src="/images/graph.png" border="0"></a></div>
 <div id="menu">
     <div class="pure-menu pure-menu-open">
         <a class="pure-menu-heading" href="/">infranodus</a>
@@ -85,6 +86,11 @@
 
 <script>
 
+
+$("#graph-link").click(function(e) {
+    e.preventDefault();
+    $("#statements").fadeToggle();
+});
 
 // Add a method to the graph model that returns an
 // object with every neighbors of a node inside:

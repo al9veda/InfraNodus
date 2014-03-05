@@ -1,13 +1,16 @@
-<% if (locals.user) { %>
-<div id='menu'>
-    <a href='/'>infranodus</a>&nbsp;&nbsp;&nbsp;
-    <span class='name'><%= user.name %></span>
-    <a href='/logout'>logout</a>
+<div id="menu">
+    <div class="pure-menu pure-menu-open">
+        <a class="pure-menu-heading" href="/">infranodus</a>
+        <% if (locals.user) { %>
+        <ul>
+            <li class="menu-item-divided pure-menu-selected"><a href="/"><%= user.name %></a></li>
+            <li><a href="/logout">logout</a></li>
+        </ul>
+        <% } else { %>
+        <ul>
+            <li><a href="/login">login</a></li>
+            <li><a href="/register">register</a></li>
+        </ul>
+        <% } %>
+    </div>
 </div>
-<% } else { %>
-<div id='menu'>
-    <a href='/'>infranodus</a>&nbsp;&nbsp;&nbsp;
-    <a href='/login'>login</a>
-    <a href='/register'>register</a>
-</div>
-<% } %>

@@ -3,25 +3,29 @@
 <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/side-menu.css">
 </head>
 <body>
+<div id="layout">
 <% include menu %>
-<div id="content">
-<p>Please, create your own private space here:</p>
+<div id="content">  <div id="statements">
+<p>Please, create a user account, so you can start building your graph:</p>
 
 <% include messages %>
 
 <form action='/register' method='post' class="pure-form pure-form-stacked">
     <p>
-        <input type='text' name='user[name]' placeholder='Username' />
+        <input type='text' name='user[name]' placeholder='username' />
     </p>
     <p>
-        <input type='password' name='user[pass]' placeholder='Password' />
+        <input type='password' name='user[pass]' placeholder='password' />
     </p>
     <p>
-        <button type='submit' class="pure-button pure-button-primary">Sign Up</button>
+        <button type='submit' class="pure-button pure-button-primary">create account</button>
     </p>
 </form>
+</div>
+</div>
 </div>
 </body>
 </html>
