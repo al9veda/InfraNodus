@@ -225,57 +225,59 @@ sigma.parsers.json(
             // edges that have both extremities colored.
 
             sigma.bind('clickNode', function(e) {
-                var nodeId = e.data.node.id,
-                        nodeClickedClean = S(e.data.node.originalLabel).dasherize().chompLeft('-').s,
-                        nodeClicked = "#" + nodeClickedClean;
 
-                // Let's get which neighbors to keep
-                var toKeep = sigma.graph.neighbors(nodeId);
+                var nodeId = e.data.node.id;
+
+                var toKeep = [];
 
                 console.log('x: ' + e.data.node['renderer1:x'] + ', y:' + e.data.node['renderer1:y'], ', size: ' + e.data.node['renderer1:size']);
 
-                toKeep[nodeId] = e.data.node;
 
-                // Create context query for jQuery
-                var conceptstring = ":contains('" + nodeClicked + "')";
+                // Which statements the node is in? (so we can keep them on the graph
 
-                if (contexts.length >= 0) {
-                    for (var l=0;l<contexts.length;++l) {
-                        conceptstring += ":contains('"+contexts[l]+"')";
-                    }
+                var statementsToKeep = [];
+
+                for (var index in nodesOfStatement) {
+                    if (nodesOfStatement[index].indexOf(nodeId) > -1) statementsToKeep.push(index);
                 }
 
-                // Filter text statements
-                $('.entry').hide();
-                $('.entry'+conceptstring).show();
-
-
-                // TODO Maybe the graph filtering below should be driven by statements, not filters
-
-                // Reiterate through the nodes and edges to show/hide them
-                sigma.graph.nodes().forEach(function(n) {
-                    if (toKeep[n.id])  {
-                        n.color = n.originalColor;
-                        n.label = n.originalLabel;
-                    }
-                    else  {
-                        n.color = '#ddd';
-                        n.label = '';
-                    }
-                });
-
                 sigma.graph.edges().forEach(function(e) {
-                    if (toKeep[e.source] && toKeep[e.target])
+                    if (statementsToKeep.indexOf(e.statement_id) > -1) {
+                        toKeep.push(e.source);
+                        toKeep.push(e.target);
                         e.color = e.originalColor;
-                    else
+                    }
+                    else {
                         e.color = '#ddd';
+                    }
                 });
 
-                // Since the data has been modified, we need to
-                // call the refresh method to make the colors
-                // update effective.
+                sigma.graph.nodes().forEach(function(n) {
+                    if (toKeep.indexOf(n.id) > -1) {
+                        n.color = n.originalColor;
+                    }
+                    else {
+                        n.color = '#ddd';
+                    }
+                });
+
                 sigma.refresh();
 
+
+
+                $(".entry").each(function(){
+                    var currentDiv = $(this).attr('data-uid');
+
+                    if (statementsToKeep.indexOf(currentDiv) > -1) {
+                        $(this).show();
+                    }
+                    else {
+                        $(this).hide();
+                    }
+
+
+
+                });
 
             });
 
@@ -336,6 +338,8 @@ sigma.parsers.json(
         // Highlight statement if clicked once
 
         $(".entry").on('click', function(e) {
+
+            // Check if it was actually the app-context-link that was clicked on
 
             // Make all entries semitrasparent
 
@@ -699,10 +703,9 @@ sigma.parsers.json(
             $('.entry'+conceptstring).show();
 
 
-            // TODO Create index of nodes ID to avoid iteration within iteration
-            // TODO move the node hiding code into a separate function for re-use
+            // TODO Maybe revive this code below later for node double-click to show a more general neighborhood
 
-            sigma.instances(0).graph.nodes().filter(function(n) {
+            /*sigma.instances(0).graph.nodes().filter(function(n) {
                 if (n.originalLabel === filter) {
                     var nodeId = n.id,
                             toKeep = sigma.instances(0).graph.neighbors(nodeId);
@@ -731,7 +734,7 @@ sigma.parsers.json(
                     // update effective.
                     sigma.instances(0).refresh();
                 }
-            });
+            });*/
 
 
 
