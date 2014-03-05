@@ -82,6 +82,9 @@ var nodeNames = [];
 // Create context-node index for filtering
 var contextNodeID = [];
 
+// Create statement-node index for filtering
+var nodesOfStatement = [];
+
 var contextNames = [];
 
 <% if (addcontext) { %>
@@ -149,6 +152,19 @@ sigma.parsers.json(
                     contextNodeID[e.edge_context] = [];
                     contextNodeID[e.edge_context].push(e.source);
                     contextNodeID[e.edge_context].push(e.target);
+                }
+
+                // Make an index of nodes to statement
+                if (nodesOfStatement[e.statement_id]) {
+                    if (nodesOfStatement[e.statement_id].indexOf(e.source) < 0)
+                        nodesOfStatement[e.statement_id].push(e.source);
+                    if (nodesOfStatement[e.statement_id].indexOf(e.target) < 0)
+                        nodesOfStatement[e.statement_id].push(e.target);
+                }
+                else {
+                    nodesOfStatement[e.statement_id] = [];
+                    nodesOfStatement[e.statement_id].push(e.source);
+                    nodesOfStatement[e.statement_id].push(e.target);
                 }
 
             });
@@ -333,7 +349,6 @@ sigma.parsers.json(
 
             var keepStatementID = e.currentTarget.dataset.uid;
 
-            var nodesOfStatement = [];
 
             console.log(keepStatementID);
             // Make only those edges visible that belong to the statement selected
@@ -342,8 +357,6 @@ sigma.parsers.json(
 
                 if (e.statement_id == keepStatementID) {
                     e.color = e.originalColor;
-                    nodesOfStatement.push(e.source);
-                    nodesOfStatement.push(e.target);
                 }
                 else {
                     e.color = '#ddd';
@@ -351,19 +364,12 @@ sigma.parsers.json(
 
             });
 
-            console.log(nodesOfStatement);
-
             // Make only those nodes visible that belong to the statement selected
 
             sigma.instances(0).graph.nodes().forEach(function(n) {
 
                 // Is there no contexts at all? Show the node.
-                if (nodesOfStatement.length == 0) {
-                    n.color = n.originalColor;
-                    n.label = n.originalLabel;
-                }
-
-                else if (nodesOfStatement.indexOf(n.id) < 0)  {
+                if (nodesOfStatement[keepStatementID].indexOf(n.id) < 0)  {
                     n.color = '#ddd';
                     n.label = '';
                 }
