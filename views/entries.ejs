@@ -484,13 +484,15 @@ sigma.parsers.json(
 
         var contextsToFilter = [];
 
-        var triggeredFromStatement = null;
 
-        var addFilter = null;
-
-        var removeFilter = null;
 
         $(".app-context-link").on('click', function(e) {
+
+                var triggeredFromStatement = null;
+
+                var addFilter = null;
+
+                var removeFilter = null;
 
                 // Do not follow the link, to change that after for Public view
                 e.preventDefault();
@@ -589,6 +591,7 @@ sigma.parsers.json(
 
                 }
 
+                console.log(contextsToFilter);
                 // Add some remove @context functionality
                 renderGraph(contextsToFilter);
 
