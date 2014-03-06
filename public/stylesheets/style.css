@@ -87,13 +87,13 @@ a:hover.app-concept-link {
 
 a.app-context-link {
     text-decoration: none;
-    color: #ddd;
+    color: #999;
     font: 'IstokWeb-Regular',sans-serif;
 
 }
 a:hover.app-context-link {
     text-decoration: underline;
-    color: #999;
+    color: #666;
 }
 
 

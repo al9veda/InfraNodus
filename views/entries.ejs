@@ -18,17 +18,24 @@
 <div id="graph-link">&nbsp;<a href="#"><img src="/images/graph.png" border="0"></a></div>
 <div id="menu">
     <div class="pure-menu pure-menu-open">
-        <a class="pure-menu-heading" href="/">infranodus</a>
         <% if (locals.user) { %>
-        <ul>
-            <li class="menu-item-divided pure-menu-selected"><a href="/"><%= user.name %></a></li>
-            <li><a href="/logout">logout</a></li>
-        </ul>
+        <a class="pure-menu-heading" href="/"><%= user.name %></a>
+
+            <ul id="contexts" class="contexts">
+                <li>
+                    <a href="/">all</a>
+                </li>
+                <% if (context.length > 0) { %>
+                <li class="menu-item-divided pure-menu-selected">
+                    <a href="/contexts/<%= context %>"><%= context %></a>
+                </li>
+                <% } %>
+            </ul>
+        &nbsp;<br><br>
+        <a href="/logout">logout</a>
         <% } else { %>
-        <ul>
-            <li><a href="/login">login</a></li>
-            <li><a href="/register">register</a></li>
-        </ul>
+            <% include menu %>
+
         <% } %>
     </div>
     <% include submenu %>
@@ -50,13 +57,8 @@
 
     </form>   &nbsp;<br>&nbsp;<br>
 
-<div class="contexts" id="contexts">contexts: <a href="/">all</a> &nbsp;<a href="/contexts/<%= context %>"><%= context %></a>  &nbsp;&nbsp;</div>
 
-<% if (addcontext) { %>
-<div class="contexts" id="showaddcontext_host"><a href="javascript:" id="showaddcontext"><img src="/images/shuffle.png" border=""></a> &nbsp; <a href="javascript:" class="app-context-link">@<%= addcontext %></a></div>
-<% } else { %>
-<div class="contexts" id="showaddcontext_host"><a href="javascript:" id="showaddcontext"><img src="/images/shuffle.png" border=""></a> &nbsp; </div>
-<% } %>
+
 
 <% entries.forEach(function(entry) { %>
 <div class='entry' data-uid='<%= entry.uid %>' data-hashtags='<%= entry.name %>'>
@@ -123,13 +125,8 @@ var nodesOfStatement = [];
 
 var contextNames = [];
 
-<% if (addcontext) { %>
-    var jsonpath = '/api/user/nodes/<%= context %>?addcontext=<%= addcontext %>';
-    var addcontext = "<%= addcontext %>";
-<% } else { %>
-    var jsonpath = '/api/user/nodes/<%= context %>';
-    var addcontext = "";
-<% }  %>
+var jsonpath = '/api/user/nodes/<%= context %>';
+var addcontext = "";
 
 <% if (perceivername) { %>
     jsonpath = '/api/public/nodes/<%= perceivername %>';
@@ -153,7 +150,7 @@ sigma.parsers.json(
         function(sigma) {
 
             var i,
-                    timeout = 2000,
+                    timeout = 3000,
                     nodes = sigma.graph.nodes(),
                     color_context = '#666',
                     color_addcontext = '#666688',
@@ -346,7 +343,7 @@ sigma.parsers.json(
 // Auto-resize to fill content;
 
     $(document).ready(function(){
-
+        console.log(contextNames);
         // Make texarea automatically resizeable
         $('textarea').autosize();
 
@@ -515,10 +512,14 @@ sigma.parsers.json(
             var context_filters = '';
 
             contexts.forEach(function(n) {
-                context_filters += '<a href="/contexts/' + n.substr(1) + '">' + n + '</a> <a href="javascript:" class="remove-context"><img src="/images/trash.png" border="0" alt="' + n + '"></a> ';
+                context_filters += '<li><a href="/contexts/' + n.substr(1) + '">' + n + '</a> <a href="javascript:" class="remove-context"><img src="/images/trash.png" border="0" alt="' + n + '"></a></li>';
             });
 
-            document.getElementById('contexts').innerHTML = 'contexts: <a href="/">all</a> &nbsp;<a href="/contexts/<%= context %>"><%= context %></a> &nbsp;&nbsp;' + context_filters;
+            document.getElementById('contexts').innerHTML = '<li><a href="/">all</a></li>' +
+                                                            <% if (context.length > 0) { %>
+                                                            '<li class="menu-item-divided pure-menu-selected"><a href="/contexts/<%= context %>"><%= context %></a></li>' +
+                                                            <% } %>
+                                                            context_filters;
 
             console.log(contexts);
 
