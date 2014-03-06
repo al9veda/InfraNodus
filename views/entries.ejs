@@ -563,6 +563,10 @@ sigma.parsers.json(
                     $('.entry'+contextstring).show();
 
 
+                    if (contextsToFilter.length < 1 && !$('#listall').hasClass('pure-menu-selected')) {
+                        $('#listall').addClass('pure-menu-selected');
+                    }
+
                 }
                 else {
                     if (!addFilter) {
@@ -587,6 +591,9 @@ sigma.parsers.json(
                     // TODO 2. Reiterate through the nodes and select only the parts that belong to the contextsToFilter
                     // TODO 3. Reiterate through the result and see which contexts exist, remove those that are not there from the menu
 
+                    if ($('#listall').hasClass('pure-menu-selected')) {
+                        $('#listall').removeClass('pure-menu-selected');
+                    }
 
 
                 }
