@@ -484,6 +484,12 @@ sigma.parsers.json(
 
         var contextsToFilter = [];
 
+        var triggeredFromStatement = null;
+
+        var addFilter = null;
+
+        var removeFilter = null;
+
         $(".app-context-link").on('click', function(e) {
 
                 // Do not follow the link, to change that after for Public view
@@ -495,14 +501,40 @@ sigma.parsers.json(
                 // Extract filter label
                 var filter = $(e.target).text();
 
+                // Remove the first @ in case it's @mentions clicked from the statements
+                if (filter.charAt(0) == '@') {
+                    filter = filter.substr(1);
+                    triggeredFromStatement = 1;
+                }
+
+                // Some tricks to make context switch from statements emulate menu items behavior
+                if (triggeredFromStatement) {
+                    $(".menu-item-divided").each(function() {
+                         if (S($(this).html()).stripTags().s == filter) {
+                             if ($(this).hasClass('pure-menu-selected')) {
+                                 $(this).removeClass('pure-menu-selected');
+                                 removeFilter = 1;
+                             }
+                             else {
+                                 $(this).addClass('pure-menu-selected');
+                                 addFilter = 1;
+                             }
+                         }
+
+                    });
+                }
+
                 // Index of that filter in our current contextsToFilter array
                 var filterIndex = contextsToFilter.indexOf(filter);
 
                 // Toggle menu highlights
-                if ($(this).hasClass('pure-menu-selected')) {
+                if ($(this).hasClass('pure-menu-selected') || removeFilter) {
+
 
                     // The context is to be removed
-                    $(this).removeClass('pure-menu-selected');
+                    if (!removeFilter) {
+                        $(this).removeClass('pure-menu-selected');
+                    }
 
                     // Does it exist in the list of contexts to filter?
                     if (filterIndex > -1) {
@@ -531,8 +563,9 @@ sigma.parsers.json(
 
                 }
                 else {
-
-                    $(this).addClass('pure-menu-selected');
+                    if (!addFilter) {
+                        $(this).addClass('pure-menu-selected');
+                    }
 
                     // Add this context to a list of contextToFilter
                     if (filterIndex < 0) {
