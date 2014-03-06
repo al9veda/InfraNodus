@@ -20,16 +20,9 @@
     <div class="pure-menu pure-menu-open">
         <% if (locals.user) { %>
         <a class="pure-menu-heading" href="/"><%= user.name %></a>
-
+            <br>
             <ul id="contexts" class="contexts">
-                <li>
-                    <a href="/">all</a>
-                </li>
-                <% if (context.length > 0) { %>
-                <li class="menu-item-divided pure-menu-selected">
-                    <a href="/contexts/<%= context %>"><%= context %></a>
-                </li>
-                <% } %>
+
             </ul>
         &nbsp;<br><br>
         <a href="/logout">logout</a>
@@ -90,6 +83,8 @@
 <script>
 
 
+// The button to hide / show statements
+
 $("#graph-link").click(function(e) {
     e.preventDefault();
     $("#statements").fadeToggle();
@@ -113,7 +108,6 @@ sigma.classes.graph.addMethod('neighbors', function(nodeId) {
 // Create node ID - Name index for filtering
 var nodeIDs = [];
 
-
 // What are the concepts displayed - the opposite of above
 var nodeNames = [];
 
@@ -123,16 +117,24 @@ var contextNodeID = [];
 // Create statement-node index for filtering
 var nodesOfStatement = [];
 
+// What are the concepts present in the graph?
 var contextNames = [];
 
+// Path to the JSON graph file (specific context or a general one)
 var jsonpath = '/api/user/nodes/<%= context %>';
+
+// A context for comparison
 var addcontext = "";
+
+
+// Is the user going to look at somebody else's graph?
 
 <% if (perceivername) { %>
     jsonpath = '/api/public/nodes/<%= perceivername %>';
 <% } %>
 
-// Initialize JSON parser
+// Initialize JSON parser for SIGMA visualization
+
 sigma.parsers.json(
         jsonpath,
         {
@@ -233,12 +235,17 @@ sigma.parsers.json(
                 nodeNames[w] = S(nodeNames[w]).dasherize().chompLeft('-').s;
             }
 
+            // Get the context names - all the contexts that exist in the graph we just loaded
             contextNames = _.keys(contextNodeID);
 
+            // Initialize autocomplete for hashtags and contexts
             autocomplete(nodeNames,contextNames);
 
+            // Show add context comparison field
             jqshowaddcontext();
 
+            // Put the contexts into the menu
+            populateContextMenu(contextNames);
 
             // Do ForceAtlasLayout
 
@@ -343,7 +350,6 @@ sigma.parsers.json(
 // Auto-resize to fill content;
 
     $(document).ready(function(){
-        console.log(contextNames);
         // Make texarea automatically resizeable
         $('textarea').autosize();
 
@@ -469,71 +475,92 @@ sigma.parsers.json(
 
 
 
+    function addContextTriggers() {
 
+    // TODO Add case for clicking viewAll, so it doesn't reload the page, but simply removes all filters
 
     // Find @Contexts and make them filter statements when clicked
 
-    var contexts = [];
+        var contextsToFilter = [];
 
-    var context_links = document.getElementsByClassName('app-context-link');
+        $(".app-context-link").on('click', function(e) {
 
-    for (var k=0;k<context_links.length;++k) {
-        context_links[k].addEventListener('click', function(e) {
+                // Do not follow the link, to change that after for Public view
+                e.preventDefault();
 
-            // Do not follow the link, to change that after for Public view
-            e.preventDefault();
+                // If the context is clicked inside the statement, we're just dealing with that event, not others
+                e.stopPropagation();
 
-            // If the context is clicked, we're just dealing with that event
-            e.stopPropagation();
+                // Extract filter label
+                var filter = $(e.target).text();
 
-            // Extract filter label
-            var filter = e.srcElement.innerText.substr(1);
+                // Index of that filter in our current contextsToFilter array
+                var filterIndex = contextsToFilter.indexOf(filter);
 
-            // Save it in contexts if it's not there yet
-            var index = contexts.indexOf(e.srcElement.innerText);
-            if (index < 0) {
-                contexts.push('@'+filter);
-            }
+                // Toggle menu highlights
+                if ($(this).hasClass('pure-menu-selected')) {
 
-            // Create context query for jQuery
-            var contextstring = '';
-            for (var l=0;l<contexts.length;++l) {
-                contextstring += ":contains('"+contexts[l]+"')";
-            }
+                    // The context is to be removed
+                    $(this).removeClass('pure-menu-selected');
 
-            // Filter text statements
-            $('.entry').hide();
-            $('.entry'+contextstring).show();
+                    // Does it exist in the list of contexts to filter?
+                    if (filterIndex > -1) {
+                        contextsToFilter.splice(filterIndex, 1);
+                    }
 
-
-
-            // Display @contexts above the statements
-
-            var context_filters = '';
-
-            contexts.forEach(function(n) {
-                context_filters += '<li><a href="/contexts/' + n.substr(1) + '">' + n + '</a> <a href="javascript:" class="remove-context"><img src="/images/trash.png" border="0" alt="' + n + '"></a></li>';
-            });
-
-            document.getElementById('contexts').innerHTML = '<li><a href="/">all</a></li>' +
-                                                            <% if (context.length > 0) { %>
-                                                            '<li class="menu-item-divided pure-menu-selected"><a href="/contexts/<%= context %>"><%= context %></a></li>' +
-                                                            <% } %>
-                                                            context_filters;
-
-            console.log(contexts);
-
-            // Add some remove @context functionality
-            removeContext();
+                    //TODO WTF is that?
+                  /*  // Let's remove the nodes that belong to the removed context from the contextNodes
+                    contextNodeID[to_remove_clean].forEach(function(element){
+                        var index = $.inArray(element, contextNodes);
+                        if (index>=0) contextNodes.splice(index, 1);
+                    });*/
 
 
+                     // Create context query for jQuery
+                    var contextstring = '';
+                    for (var l=0;l<contextsToFilter.length;++l) {
+                        contextstring += ":contains('@"+contextsToFilter[l]+"')";
+                    }
+
+                    // Filter statements according to the new contexts list
+
+                    $('.entry').hide();
+                    $('.entry'+contextstring).show();
+
+
+                }
+                else {
+
+                    $(this).addClass('pure-menu-selected');
+
+                    // Add this context to a list of contextToFilter
+                    if (filterIndex < 0) {
+                        contextsToFilter.push(filter);
+                    }
+
+                    // Create context query for jQuery to filter statements
+                    var contextstring = '';
+                    for (var l=0;l<contextsToFilter.length;++l) {
+                        contextstring += ":contains('@"+contextsToFilter[l]+"')";
+                    }
+
+                    // Filter text statements
+                    $('.entry').hide();
+                    $('.entry'+contextstring).show();
+
+                    // TODO 2. Reiterate through the nodes and select only the parts that belong to the contextsToFilter
+                    // TODO 3. Reiterate through the result and see which contexts exist, remove those that are not there from the menu
 
 
 
-        });
+                }
+
+                // Add some remove @context functionality
+                removeContext(contextsToFilter);
+
+         });
+
     }
-
-
 
 
 
@@ -541,7 +568,7 @@ sigma.parsers.json(
 
     // Remove context filters function - launched only when the first context is added into filters
 
-    function removeContext() {
+    function removeContext(contexts) {
 
         // Creating the context index
         var contextNodes = [];
@@ -557,8 +584,9 @@ sigma.parsers.json(
 
         // Clean up the context from @ sign
         for (var m=0;m<contexts.length;++m) {
-            cleancontexts.push(contexts[m].substr(1));
+            cleancontexts.push(contexts[m]);
         }
+
 
         // First, let's reiterate the graph and make a list of nodes and edges to be removed
 
@@ -650,140 +678,31 @@ sigma.parsers.json(
         sigma.instances(0).refresh();
 
 
-
-        var remove_context_links = document.getElementsByClassName('remove-context');
-
-        for (var j=0;j<remove_context_links.length;++j) {
-            remove_context_links[j].addEventListener('click', function(e) {
-
-                // Do not follow the link, to change that after for Public view
-                e.preventDefault();
-
-                // Extract the context to remove from img alt property
-                var to_remove = e.srcElement.alt;
-
-                // Extract the clean context name to remove
-                var to_remove_clean = to_remove.substr(1);
-
-                // Find its index in contexts array and remove it
-                var index = contexts.indexOf(to_remove);
-                if (index > -1) {
-                    contexts.splice(index, 1);
-                }
-
-                // Let's remove the nodes that belong to the removed context from the contextNodes
-                contextNodeID[to_remove_clean].forEach(function(element){
-                    var index = $.inArray(element, contextNodes);
-                    if (index>=0) contextNodes.splice(index, 1);
-                });
-
-
-
-                // Create context query for jQuery
-                var contextstring = '';
-                for (var l=0;l<contexts.length;++l) {
-                    contextstring += ":contains('"+contexts[l]+"')";
-                }
-
-                // Filter statements according to the new contexts list
-
-                $('.entry').hide();
-                $('.entry'+contextstring).show();
-
-
-
-
-                // Update the filters list after the removal
-
-                if (contexts.length > 0) {
-
-                    var context_filters = '';
-
-                    contexts.forEach(function(n) {
-                        context_filters += '<a href="/contexts/' + n.substr(1) + '">' + n + '</a> <a href="javascript:" class="remove-context"><img src="/images/trash.png" border="0" alt="' + n + '"></a> ';
-                    });
-
-                    document.getElementById('contexts').innerHTML = 'contexts: <a href="/">all</a> &nbsp;<a href="/contexts/<%= context %>"><%= context %></a> &nbsp;&nbsp;' + context_filters;
-                }
-                else {
-                    document.getElementById('contexts').innerHTML = 'contexts: <a href="/">all</a> &nbsp;<a href="/contexts/<%= context %>"><%= context %></a> &nbsp;&nbsp;';
-                }
-
-                // Launch itself to update the @contexts cache
-                removeContext();
-
-            });
-        }
     }
 
 
-    // Find #Concepts and make them filter statements when clicked
-
-    var concept_links = document.getElementsByClassName('app-concept-link');
 
 
-    for (var k=0;k<concept_links.length;++k) {
+    // Populate context menu
 
-        concept_links[k].addEventListener('click', function(e) {
-
-            e.preventDefault();
-
-            var filter = e.srcElement.innerText.substr(1);
-
-            // Create context query for jQuery
-            var conceptstring = ":contains('" + filter + "')";
-
-            if (contexts.length >= 0) {
-                for (var l=0;l<contexts.length;++l) {
-                    conceptstring += ":contains('"+contexts[l]+"')";
-                }
-            }
-
-            // Filter text statements
-            $('.entry').hide();
-            $('.entry'+conceptstring).show();
+    function populateContextMenu (contextNames) {
 
 
-            // TODO Maybe revive this code below later for node double-click to show a more general neighborhood
+        var context_filters = '';
 
-            /*sigma.instances(0).graph.nodes().filter(function(n) {
-                if (n.originalLabel === filter) {
-                    var nodeId = n.id,
-                            toKeep = sigma.instances(0).graph.neighbors(nodeId);
-                    toKeep[nodeId] = n;
-
-                    sigma.instances(0).graph.nodes().forEach(function(n) {
-                        if (toKeep[n.id])  {
-                            n.color = n.originalColor;
-                            n.label = n.originalLabel;
-                        }
-                        else  {
-                            n.color = '#ddd';
-                            n.label = '';
-                        }
-                    });
-
-                    sigma.instances(0).graph.edges().forEach(function(e) {
-                        if (toKeep[e.source] && toKeep[e.target])
-                            e.color = e.originalColor;
-                        else
-                            e.color = '#ddd';
-                    });
-
-                    // Since the data has been modified, we need to
-                    // call the refresh method to make the colors
-                    // update effective.
-                    sigma.instances(0).refresh();
-                }
-            });*/
-
-
-
-
-
+        contextNames.forEach(function(n) {
+            context_filters += '<li class="app-context-link menu-item-divided "><a href="/contexts/' + n + '">' + n + '</a></li>';
         });
 
+        document.getElementById('contexts').innerHTML = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/">all lists</a></li>' +
+                                                        context_filters;
+
+        // Now time to trigger the actions we want to have when user clicks on the contexts
+        addContextTriggers();
+
     }
+
+
 
     // Show addcontext textfield when button clicked
 
