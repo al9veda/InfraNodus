@@ -72,7 +72,7 @@ exports.list = function(req, res, next){
         }
 
         res.render('entries', {
-            title: 'Entries',
+            title: 'InfraNodus',
             entries: entries,
             context: contexts[0],
             addcontext: req.query.addcontext,

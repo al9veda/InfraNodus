@@ -147,9 +147,11 @@ a:hover.app-context-link {
 #submenu {
     position: fixed;
     bottom: 15px;
+    right: 15px;
     font-size: 12px;
     z-index: 5;
-    color: #999;
+    text-align: right;
+    color: #666;
 }
 
 #submenu a {

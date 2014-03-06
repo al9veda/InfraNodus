@@ -15,6 +15,7 @@
     <!-- Hamburger icon -->
     <span></span>
 </a>
+<% include submenu %>
 <div id="graph-link">&nbsp;<a href="#"><img src="/images/graph.png" border="0"></a></div>
 <div id="menu">
     <div class="pure-menu pure-menu-open">
@@ -25,13 +26,13 @@
 
             </ul>
         &nbsp;<br><br>
-        <a href="/logout">logout</a>
+
         <% } else { %>
             <% include menu %>
 
         <% } %>
     </div>
-    <% include submenu %>
+
 </div>
 
 
@@ -556,7 +557,7 @@ sigma.parsers.json(
                 }
 
                 // Add some remove @context functionality
-                removeContext(contextsToFilter);
+                renderGraph(contextsToFilter);
 
          });
 
@@ -566,47 +567,42 @@ sigma.parsers.json(
 
 
 
-    // Remove context filters function - launched only when the first context is added into filters
+    // Remove context filters function - launched only when a context is clicked
 
-    function removeContext(contexts) {
+    function renderGraph(contextsToFilter) {
 
         // Creating the context index
-        var contextNodes = [];
+        var nodesToKeep = [];
 
         // Nodes to hide from the view
         var removeNodes = [];
 
+        // Edges to hide from the view
         var removeEdges = [];
-
-
-        // Reset variable - we fill it in below
-        cleancontexts = [];
-
-        // Clean up the context from @ sign
-        for (var m=0;m<contexts.length;++m) {
-            cleancontexts.push(contexts[m]);
-        }
-
 
         // First, let's reiterate the graph and make a list of nodes and edges to be removed
 
-        if (cleancontexts.length > 0) {
+        if (contextsToFilter.length > 0) {
 
             sigma.instances(0).graph.edges().forEach(function(e) {
 
-                // See if the node id fails to be present in at least one context
-                cleancontexts.forEach(function(element){
+                // Reiterating through edges, leaving only the nodes that appear in all filtered contexts
+
+                contextsToFilter.forEach(function(element){
+
                     if (contextNodeID[element].indexOf(e.source) == -1) {
                         removeNodes.push(e.source);
                     }
+
                     if (contextNodeID[element].indexOf(e.target) == -1) {
                         removeNodes.push(e.target);
                     }
+
                 });
 
-                // See if the edge context fails to be in at least one of them
+                // Check each edge and mark for removal those not present at least in one filtered contexts
 
-                if (cleancontexts.indexOf(e.edge_context) == -1) {
+                if (contextsToFilter.indexOf(e.edge_context) == -1) {
                     removeEdges.push(e.id);
                 }
 
@@ -614,34 +610,36 @@ sigma.parsers.json(
             });
         }
 
-        removeNodes = $.unique(removeNodes);
+        // Uniqualize to avoid duplicates
 
+        removeNodes = $.unique(removeNodes);
         removeEdges = $.unique(removeEdges);
 
-        // Then let's reiterate the graph and only show nodes that belong to the contexts created
+        // Then let's reiterate the graph edges and only show nodes that belong to the contexts created
 
         sigma.instances(0).graph.edges().forEach(function(e) {
 
-            if (cleancontexts.length == 0) {
+            if (contextsToFilter.length == 0) {
                 // Show the edge if there's no contexts at all
                 e.color = e.originalColor;
             }
 
             else if (removeEdges.indexOf(e.id) == -1) {
-
+                // The edge is NOT in the list for removal. Show it normal color.
                 e.color = e.originalColor;
 
+                // The source of the edge is not in the list of removal, so we will keep it.
                 if (removeNodes.indexOf(e.source) == -1) {
-                    contextNodes.push(e.source);
+                    nodesToKeep.push(e.source);
                 }
-
+                // The target of the edge is not in the list of removal, so we will keep it also.
                 if (removeNodes.indexOf(e.target) == -1) {
-                    contextNodes.push(e.target);
+                    nodesToKeep.push(e.target);
                 }
-
+                // PS We only do this check for the nodes that belong to the edges that we keep
             }
             else {
-                // Otherwise color the edge invisible
+                // Otherwise (the edge IS in the list for removal), so we color the edge invisible
                 e.color = '#ddd';
             }
 
@@ -649,22 +647,26 @@ sigma.parsers.json(
 
         });
 
-        contextNodes = $.unique(contextNodes);
+        // Ensure no duplicates
+        nodesToKeep = $.unique(nodesToKeep);
 
-        // Now that we know which nodes and edges to keep, let's reiterate through them all
+        // Now that we know which nodes to keep, let's reiterate through them all
 
         sigma.instances(0).graph.nodes().forEach(function(n) {
 
             // Is there no contexts at all? Show the node.
-            if (cleancontexts.length == 0) {
+            if (contextsToFilter.length == 0) {
                 n.color = n.originalColor;
                 n.label = n.originalLabel;
             }
 
-            else if (contextNodes.indexOf(n.id) < 0)  {
+            // The node is not in the list to keep? Hide it!
+            else if (nodesToKeep.indexOf(n.id) < 0)  {
                 n.color = '#ddd';
                 n.label = '';
             }
+
+            // Looks like there is a filtering context function AND the node is in the keep list, so make it show!
             else {
                 n.color = n.originalColor;
                 n.label = n.originalLabel;
@@ -672,9 +674,7 @@ sigma.parsers.json(
         });
 
 
-        // Since the data has been modified, we need to
-        // call the refresh method to make the colors
-        // update effective.
+        // Refresh the graph (we do it through instances(0) as we're a bit outside of Sigma now)
         sigma.instances(0).refresh();
 
 
