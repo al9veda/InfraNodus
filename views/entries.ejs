@@ -613,12 +613,27 @@ sigma.parsers.json(
                         contextstring += ":contains('@"+contextsToFilter[l]+"')";
                     }
 
+                    // TODO 0: Could be that intersections are nice:
+                    // TODO 0: Maybe when there's no more entries but there are nodes, the system writes a suggestion DIV:
+                    // TODO 0: "There is something between #forms, #patterns and #tension that connects @fashion, @health and @bodypractices..."
+                    // TODO 0: if nothing: "Nothing in all of those categories
+
+                    // TODO DECIDED - OR view will give an understanding of gaps. AND view can be implemented on /context/ level -
+                    // TODO IMPORTANT !so do not delete anything, just make another logic for OR view and keep this one for context view
+                    // TODO LOOKS LIKE  - also the thing is that even on /context/ view it makes much more sense to implement the OR view
+
+                    // TODO WHEN NEXT - Make another branch to try things out!
+
+                    // TODO 1. Double click will show only the contexts that are encountered with the chosen (AND)
+                    // TODO 2. By default make an OR (graph filter + statements .show for each single context below
+                    // TODO 3. Add new context with a button
+                    // TODO 4. When in the context filter of the OR kind, automatically add those @mentions into the statement holder
+
+
                     // Filter text statements
                     $('.entry').hide();
                     $('.entry'+contextstring).show();
 
-                    // TODO 2. Reiterate through the nodes and select only the parts that belong to the contextsToFilter
-                    // TODO 3. Reiterate through the result and see which contexts exist, remove those that are not there from the menu
 
                     if ($('#listall').hasClass('pure-menu-selected')) {
                         $('#listall').removeClass('pure-menu-selected');
