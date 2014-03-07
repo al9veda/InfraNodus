@@ -121,6 +121,9 @@ var nodesOfStatement = [];
 // What are the concepts present in the graph?
 var contextNames = [];
 
+// What are the concepts present in the graph?
+var statementsOfContext = [];
+
 // Path to the JSON graph file (specific context or a general one)
 var jsonpath = '/api/user/nodes/<%= context %>';
 
@@ -203,8 +206,16 @@ sigma.parsers.json(
                     nodesOfStatement[e.statement_id].push(e.target);
                 }
 
-            });
+                if (statementsOfContext[e.edge_context]) {
+                    if (statementsOfContext[e.edge_context].indexOf(e.statement_id) < 0)
+                        statementsOfContext[e.edge_context].push(e.statement_id);
+                }
+                else {
+                    statementsOfContext[e.edge_context] = [];
+                    statementsOfContext[e.edge_context].push(e.statement_id);
+                }
 
+            });
 
 
 
@@ -273,6 +284,7 @@ sigma.parsers.json(
 
                 console.log('x: ' + e.data.node['renderer1:x'] + ', y:' + e.data.node['renderer1:y'], ', size: ' + e.data.node['renderer1:size']);
 
+                var contextsToHighlight = [];
 
                 // Which statements the node is in? (so we can keep them on the graph
 
@@ -281,6 +293,23 @@ sigma.parsers.json(
                 for (var index in nodesOfStatement) {
                     if (nodesOfStatement[index].indexOf(nodeId) > -1) statementsToKeep.push(index);
                 }
+
+                // What contexts does this statement appear in?
+
+/*
+                for (var index in statementsOfContext) {
+                    for (var s=0;s<statementsToKeep.length;++s) {
+                         if (statementsOfContext[index].indexOf(statementsToKeep[s]) > -1) contextsToHighlight.push(index);
+                    }
+                }
+
+                contextsToHighlight = $.unique(contextsToHighlight);
+
+                console.log(contextsToHighlight);
+*/
+
+
+
 
                 sigma.graph.edges().forEach(function(e) {
                     if (statementsToKeep.indexOf(e.statement_id) > -1) {
@@ -599,6 +628,7 @@ sigma.parsers.json(
                 }
 
                 console.log(contextsToFilter);
+
                 // Add some remove @context functionality
                 renderGraph(contextsToFilter);
 
@@ -622,6 +652,9 @@ sigma.parsers.json(
 
         // Edges to hide from the view
         var removeEdges = [];
+
+        // New lists of contexts (while ContextNodeID and its derivative contextNames have all the contexts)
+        var visibleContexts = [];
 
         // First, let's reiterate the graph and make a list of nodes and edges to be removed
 
@@ -689,6 +722,8 @@ sigma.parsers.json(
 
 
         });
+
+
 
         // Ensure no duplicates
         nodesToKeep = $.unique(nodesToKeep);
