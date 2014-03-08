@@ -514,6 +514,20 @@ sigma.parsers.json(
         var contextsToFilter = [];
 
 
+        // If double click on the menu, open it
+
+        $(".app-context-link").on('dblclick', function(e) {
+
+            e.preventDefault();
+
+            e.stopPropagation();
+
+            window.location = e.target.href;
+
+        });
+
+
+        // If only one click, filter it
 
         $(".app-context-link").on('click', function(e) {
 
