@@ -83,29 +83,6 @@
 
 <script>
 
-
-// The button to hide / show statements
-
-$("#graph-link").click(function(e) {
-    e.preventDefault();
-    $("#statements").fadeToggle();
-});
-
-// Add a method to the graph model that returns an
-// object with every neighbors of a node inside:
-
-sigma.classes.graph.addMethod('neighbors', function(nodeId) {
-    var k,
-            neighbors = {},
-            index = this.allNeighborsIndex[nodeId] || {};
-
-    for (k in index)
-        neighbors[k] = this.nodesIndex[k];
-
-    return neighbors;
-});
-
-
 // Create node ID - Name index for filtering
 var nodeIDs = [];
 
@@ -130,12 +107,38 @@ var jsonpath = '/api/user/nodes/<%= context %>';
 // A context for comparison
 var addcontext = "";
 
+// Get current context
+var path = window.location.pathname;
+var current_context = path.match(/([^\/]*)\/*$/)[1];
+
 
 // Is the user going to look at somebody else's graph?
 
 <% if (perceivername) { %>
     jsonpath = '/api/public/nodes/<%= perceivername %>';
 <% } %>
+
+
+// The button to hide / show statements
+
+$("#graph-link").click(function(e) {
+    e.preventDefault();
+    $("#statements").fadeToggle();
+});
+
+// Add a method to the graph model that returns an
+// object with every neighbors of a node inside:
+
+sigma.classes.graph.addMethod('neighbors', function(nodeId) {
+    var k,
+            neighbors = {},
+            index = this.allNeighborsIndex[nodeId] || {};
+
+    for (k in index)
+        neighbors[k] = this.nodesIndex[k];
+
+    return neighbors;
+});
 
 // Initialize JSON parser for SIGMA visualization
 
@@ -527,6 +530,7 @@ sigma.parsers.json(
         });
 
 
+
         // If only one click, filter it
 
         $(".app-context-link").on('click', function(e) {
@@ -606,7 +610,7 @@ sigma.parsers.json(
                     $('.entry'+contextstring).show();
 
 
-                    if (contextsToFilter.length < 1 && !$('#listall').hasClass('pure-menu-selected')) {
+                    if (contextsToFilter.length < 1 && !$('#listall').hasClass('pure-menu-selected') && !(current_context)) {
                         $('#listall').addClass('pure-menu-selected');
                     }
 
@@ -797,11 +801,21 @@ sigma.parsers.json(
 
         var context_filters = '';
 
+        var currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/">all lists</a></li>';
+
         contextNames.forEach(function(n) {
-            context_filters += '<li class="app-context-link menu-item-divided "><a href="/contexts/' + n + '">' + n + '</a></li>';
+            if (n == current_context) {
+                context_filters += '<li class="app-context-link menu-item-divided pure-menu-selected"><a href="/contexts/' + n + '">' + n + '</a></li>';
+                currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/">all lists</a></li>';
+            }
+            else {
+                context_filters += '<li class="app-context-link menu-item-divided "><a href="/contexts/' + n + '">' + n + '</a></li>';
+            }
         });
 
-        document.getElementById('contexts').innerHTML = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/">all lists</a></li>' +
+
+
+        document.getElementById('contexts').innerHTML = currentContextURL +
                                                         context_filters;
 
         // Now time to trigger the actions we want to have when user clicks on the contexts
