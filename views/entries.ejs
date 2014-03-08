@@ -342,11 +342,11 @@ sigma.parsers.json(
                     var currentDiv = $(this).attr('data-uid');
 
                     if (statementsToKeep.indexOf(currentDiv) > -1) {
-                        $(this).show();
+                        $(this).removeClass('hidden');
                         $(this).css('opacity','1');
                     }
                     else {
-                        $(this).hide();
+                        $(this).addClass('hidden');
                     }
 
 
@@ -600,14 +600,21 @@ sigma.parsers.json(
 
                      // Create context query for jQuery
                     var contextstring = '';
-                    for (var l=0;l<contextsToFilter.length;++l) {
-                        contextstring += ":contains('@"+contextsToFilter[l]+"')";
+
+                    if (contextsToFilter.length >= 0) {
+                        contextstring += ".entry:contains('@"+contextsToFilter[0]+"')";
+
+                        for (var l=1;l<contextsToFilter.length;++l) {
+                            contextstring += ", .entry:contains('@"+contextsToFilter[l]+"')";
+                        }
+
+                        $('.entry').addClass('hidden');
+                        $(contextstring).removeClass('hidden');
+
                     }
-
-                    // Filter statements according to the new contexts list
-
-                    $('.entry').hide();
-                    $('.entry'+contextstring).show();
+                    else {
+                        $('.entry').removeClass('hidden');
+                    }
 
 
                     if (contextsToFilter.length < 1 && !$('#listall').hasClass('pure-menu-selected') && !(current_context)) {
@@ -625,16 +632,22 @@ sigma.parsers.json(
                         contextsToFilter.push(filter);
                     }
 
-
-                    // Hide all statements
-                    $('.entry').hide();
-
                     // Show only those that have the context
 
                     var contextstring = '';
-                    for (var l=0;l<contextsToFilter.length;++l) {
-                        contextstring += ":contains('@"+contextsToFilter[l]+"')";
-                        $('.entry'+contextstring).show();
+                    if (contextsToFilter.length >= 0) {
+                        contextstring += ".entry:contains('@"+contextsToFilter[0]+"')";
+
+                        for (var l=1;l<contextsToFilter.length;++l) {
+                            contextstring += ", .entry:contains('@"+contextsToFilter[l]+"')";
+                        }
+
+                        $('.entry').addClass('hidden');
+                        $(contextstring).removeClass('hidden');
+
+                    }
+                    else {
+                        $('.entry').removeClass('hidden');
                     }
 
                     // TODO 0: Could be that intersections are nice:
@@ -681,18 +694,9 @@ sigma.parsers.json(
         // Creating the context index
         var nodesToKeep = [];
 
-        // Nodes to hide from the view
-        var removeNodes = [];
-
         var keepNodes = [];
 
-        // Edges to hide from the view
-        var removeEdges = [];
-
         var keepEdges = [];
-
-        // New lists of contexts (while ContextNodeID and its derivative contextNames have all the contexts)
-        var visibleContexts = [];
 
         // First, let's reiterate the graph and make a list of nodes and edges to keep
 

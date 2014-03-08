@@ -187,6 +187,8 @@ a:hover.app-context-link {
    */
 
 
+.hidden {display:none}
+
 body {
     background-color: #ffffff;
 }
