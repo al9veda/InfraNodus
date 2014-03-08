@@ -625,10 +625,16 @@ sigma.parsers.json(
                         contextsToFilter.push(filter);
                     }
 
-                    // Create context query for jQuery to filter statements
+
+                    // Hide all statements
+                    $('.entry').hide();
+
+                    // Show only those that have the context
+
                     var contextstring = '';
                     for (var l=0;l<contextsToFilter.length;++l) {
                         contextstring += ":contains('@"+contextsToFilter[l]+"')";
+                        $('.entry'+contextstring).show();
                     }
 
                     // TODO 0: Could be that intersections are nice:
@@ -646,11 +652,6 @@ sigma.parsers.json(
                     // TODO 2. By default make an OR (graph filter + statements .show for each single context below
                     // TODO 3. Add new context with a button
                     // TODO 4. When in the context filter of the OR kind, automatically add those @mentions into the statement holder
-
-
-                    // Filter text statements
-                    $('.entry').hide();
-                    $('.entry'+contextstring).show();
 
 
                     if ($('#listall').hasClass('pure-menu-selected')) {
@@ -683,36 +684,40 @@ sigma.parsers.json(
         // Nodes to hide from the view
         var removeNodes = [];
 
+        var keepNodes = [];
+
         // Edges to hide from the view
         var removeEdges = [];
+
+        var keepEdges = [];
 
         // New lists of contexts (while ContextNodeID and its derivative contextNames have all the contexts)
         var visibleContexts = [];
 
-        // First, let's reiterate the graph and make a list of nodes and edges to be removed
+        // First, let's reiterate the graph and make a list of nodes and edges to keep
 
         if (contextsToFilter.length > 0) {
 
             sigma.instances(0).graph.edges().forEach(function(e) {
 
-                // Reiterating through edges, leaving only the nodes that appear in all filtered contexts
+                // Reiterating through edges, leaving only the nodes that appear in at least one filtered context
 
                 contextsToFilter.forEach(function(element){
 
-                    if (contextNodeID[element].indexOf(e.source) == -1) {
-                        removeNodes.push(e.source);
+                    if (contextNodeID[element].indexOf(e.source) > -1) {
+                        keepNodes.push(e.source);
                     }
 
-                    if (contextNodeID[element].indexOf(e.target) == -1) {
-                        removeNodes.push(e.target);
+                    if (contextNodeID[element].indexOf(e.target) > -1) {
+                        keepNodes.push(e.target);
                     }
 
                 });
 
-                // Check each edge and mark for removal those not present at least in one filtered contexts
+                // Keep edges that are in at least one of the filtered contexts
 
-                if (contextsToFilter.indexOf(e.edge_context) == -1) {
-                    removeEdges.push(e.id);
+                if (contextsToFilter.indexOf(e.edge_context) > -1) {
+                    keepEdges.push(e.id);
                 }
 
 
@@ -721,8 +726,8 @@ sigma.parsers.json(
 
         // Uniqualize to avoid duplicates
 
-        removeNodes = $.unique(removeNodes);
-        removeEdges = $.unique(removeEdges);
+        keepNodes = $.unique(keepNodes);
+        keepEdges = $.unique(keepEdges);
 
         // Then let's reiterate the graph edges and only show nodes that belong to the contexts created
 
@@ -733,16 +738,16 @@ sigma.parsers.json(
                 e.color = e.originalColor;
             }
 
-            else if (removeEdges.indexOf(e.id) == -1) {
-                // The edge is NOT in the list for removal. Show it normal color.
+            else if (keepEdges.indexOf(e.id) > -1) {
+                // The edge is in the list to keep => show it normal color
                 e.color = e.originalColor;
 
-                // The source of the edge is not in the list of removal, so we will keep it.
-                if (removeNodes.indexOf(e.source) == -1) {
+                // The source of the edge is in the list to keep, so we will keep it.
+                if (keepNodes.indexOf(e.source) > -1) {
                     nodesToKeep.push(e.source);
                 }
-                // The target of the edge is not in the list of removal, so we will keep it also.
-                if (removeNodes.indexOf(e.target) == -1) {
+                // The target of the edge is in the list to keep, so we will keep it also.
+                if (keepNodes.indexOf(e.target) > -1) {
                     nodesToKeep.push(e.target);
                 }
                 // PS We only do this check for the nodes that belong to the edges that we keep
