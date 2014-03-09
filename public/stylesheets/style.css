@@ -75,6 +75,10 @@ textarea:focus {
     font: 16px 'IstokWeb-Bold',sans-serif;
 }
 
+.ui-menuitem {
+    font: 16px 'IstokWeb-Bold',sans-serif;
+}
+
 
 .entry {
     font: 17px 'IstokWeb-Bold',sans-serif;

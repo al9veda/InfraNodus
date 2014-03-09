@@ -2,10 +2,11 @@
 <html>
 <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel='stylesheet' href='/stylesheets/jquery.textcomplete.css' />
     <link rel="stylesheet" href="/stylesheets/side-menu.css">
     <link rel="stylesheet" href="/stylesheets/jquery-ui.min.css">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
 
 
 </head>
@@ -913,17 +914,53 @@ sigma.parsers.json(
         // Autocomplete for search input
          $("#search").autocomplete({
              source: nodeNames,
-             minLength: 3,
+             minLength: 1,
              messages: {
                  noResults: '',
                  results: function() {}
              },
              select: function(event, ui) {
-                 /*var url = ui.item.id;
-                 if(url != '#') {
-                     location.href = '/blog/' + url;
-                 }*/
-                 console.log(ui);
+
+                 var filter = ui.item.value;
+
+                 // Create context query for jQuery
+                 var conceptstring = ":contains('" + filter + "')";
+
+                 // Filter text statements
+                 $('.entry').addClass('hidden');
+                 $('.entry'+conceptstring).removeClass('hidden');
+
+
+                 sigma.instances(0).graph.nodes().filter(function(n) {
+                      if (n.originalLabel === filter) {
+                          var nodeId = n.id,
+                          toKeep = sigma.instances(0).graph.neighbors(nodeId);
+                          toKeep[nodeId] = n;
+
+                          sigma.instances(0).graph.nodes().forEach(function(n) {
+                              if (toKeep[n.id])  {
+                                  n.color = n.originalColor;
+                                  n.label = n.originalLabel;
+                              }
+                              else  {
+                                  n.color = '#ddd';
+                                  n.label = '';
+                              }
+                          });
+
+                          sigma.instances(0).graph.edges().forEach(function(e) {
+                              if (toKeep[e.source] && toKeep[e.target])
+                                  e.color = e.originalColor;
+                              else
+                                  e.color = '#ddd';
+                          });
+
+                          // Since the data has been modified, we need to
+                          // call the refresh method to make the colors
+                          // update effective.
+                          sigma.instances(0).refresh();
+                      }
+                  });
              }
          });
 
