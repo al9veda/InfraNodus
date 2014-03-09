@@ -71,6 +71,9 @@ textarea:focus {
 
 }
 
+.ui-autocomplete {
+    font: 16px 'IstokWeb-Bold',sans-serif;
+}
 
 
 .entry {

@@ -917,9 +917,14 @@ sigma.parsers.json(
              messages: {
                  noResults: '',
                  results: function() {}
+             },
+             select: function(event, ui) {
+                 /*var url = ui.item.id;
+                 if(url != '#') {
+                     location.href = '/blog/' + url;
+                 }*/
+                 console.log(ui);
              }
-         }).click(function () {
-             $(this).autocomplete('search')
          });
 
 
