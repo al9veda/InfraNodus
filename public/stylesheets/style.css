@@ -65,7 +65,11 @@ textarea:focus {
     border-color: #129FEA;
 }
 
+#search {
+    position: relative;
+    z-index: 100;
 
+}
 
 
 
