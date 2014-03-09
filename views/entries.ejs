@@ -413,12 +413,20 @@ sigma.parsers.json(
 
         $(".entry").on('click', function(e) {
 
-            // Check if it was actually the app-context-link that was clicked on
+            // A parameter to check if we're taking off the flag
+
+            var alreadyClicked = null;
 
             // Make all entries semitrasparent
 
-            $(".entry").each(function(){
-                $(this).css('opacity', '0.3');
+            $(".entry").each(function() {
+                if ($(this).css('opacity') < 1) {
+                    $(this).css('opacity', '1');
+                    alreadyClicked = 1;
+                }
+                else {
+                    $(this).css('opacity', '0.3');
+                }
             });
 
             // The one clicked is not transparent
@@ -429,33 +437,51 @@ sigma.parsers.json(
 
 
             console.log(keepStatementID);
+
             // Make only those edges visible that belong to the statement selected
 
-            sigma.instances(0).graph.edges().forEach(function(e) {
+            if (!alreadyClicked) {
 
-                if (e.statement_id == keepStatementID) {
-                    e.color = e.originalColor;
-                }
-                else {
-                    e.color = '#ddd';
-                }
+                sigma.instances(0).graph.edges().forEach(function(e) {
 
-            });
+                    if (e.statement_id == keepStatementID) {
+                        e.color = e.originalColor;
+                    }
+                    else {
+                        e.color = '#ddd';
+                    }
 
-            // Make only those nodes visible that belong to the statement selected
+                });
 
-            sigma.instances(0).graph.nodes().forEach(function(n) {
+                // Make only those nodes visible that belong to the statement selected
 
-                // Is there no contexts at all? Show the node.
-                if (nodesOfStatement[keepStatementID].indexOf(n.id) < 0)  {
-                    n.color = '#ddd';
-                    n.label = '';
-                }
-                else {
-                    n.color = n.originalColor;
-                    n.label = n.originalLabel;
-                }
-            });
+                sigma.instances(0).graph.nodes().forEach(function(n) {
+
+                    // Is there no contexts at all? Show the node.
+                    if (nodesOfStatement[keepStatementID].indexOf(n.id) < 0)  {
+                        n.color = '#ddd';
+                        n.label = '';
+                    }
+                    else {
+                        n.color = n.originalColor;
+                        n.label = n.originalLabel;
+                    }
+                });
+            }
+            else {
+
+                sigma.instances(0).graph.edges().forEach(function(e) {
+                        e.color = e.originalColor;
+                });
+
+                // Make only those nodes visible that belong to the statement selected
+
+                sigma.instances(0).graph.nodes().forEach(function(n) {
+                        n.color = n.originalColor;
+                        n.label = n.originalLabel;
+                });
+
+            }
 
             sigma.instances(0).refresh();
 
@@ -807,7 +833,7 @@ sigma.parsers.json(
 
         var context_filters = '';
 
-        var currentContextURL = '';
+        var currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/">all lists</a></li>';
 
         var addNewContext = '';
 
@@ -820,14 +846,12 @@ sigma.parsers.json(
                 }
                 else {
                     context_filters += '<li class="app-context-link menu-item-divided "><a href="/contexts/' + n + '">' + n + '</a></li>';
-                    currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/">all lists</a></li>';
                 }
             });
         }
         // No graph, so show private
         else {
             context_filters += '<li class="app-context-link menu-item-divided"><a href="/contexts/private">private</a></li>';
-            currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/">all lists</a></li>';
 
         }
 
