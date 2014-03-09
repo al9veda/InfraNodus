@@ -45,6 +45,7 @@
 
             <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here, marking the most important words with a #hashtag and the context with @mention'></textarea>
             <input type="hidden" name="context" value="<%= context %>">
+            <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
             <input type="hidden" name="statementid" value="">
             &nbsp;<br>
             <input type='submit' name="submit" value="save" class="pure-button pure-button-primary">
@@ -650,21 +651,8 @@ sigma.parsers.json(
                         $('.entry').removeClass('hidden');
                     }
 
-                    // TODO 0: Could be that intersections are nice:
-                    // TODO 0: Maybe when there's no more entries but there are nodes, the system writes a suggestion DIV:
-                    // TODO 0: "There is something between #forms, #patterns and #tension that connects @fashion, @health and @bodypractices..."
-                    // TODO 0: if nothing: "Nothing in all of those categories
-
-                    // TODO DECIDED - OR view will give an understanding of gaps. AND view can be implemented on /context/ level -
-                    // TODO IMPORTANT !so do not delete anything, just make another logic for OR view and keep this one for context view
-                    // TODO LOOKS LIKE  - also the thing is that even on /context/ view it makes much more sense to implement the OR view
-
-                    // TODO WHEN NEXT - Make another branch to try things out!
-
-                    // TODO 1. Double click will show only the contexts that are encountered with the chosen (AND)
-                    // TODO 2. By default make an OR (graph filter + statements .show for each single context below
-                    // TODO 3. Add new context with a button
-                    // TODO 4. When in the context filter of the OR kind, automatically add those @mentions into the statement holder
+                    // TODO 1. Add new context with a button
+                    // TODO 2. When in the context filter of the OR kind, automatically add those @mentions into the statement holder
 
 
                     if ($('#listall').hasClass('pure-menu-selected')) {
@@ -675,6 +663,11 @@ sigma.parsers.json(
                 }
 
                 console.log(contextsToFilter);
+
+                // Add contexts into the submission form
+                document.getElementById('selectedContexts').value = contextsToFilter.join(',');
+
+                console.log(document.getElementById('selectedContexts').value);
 
                 // Add some remove @context functionality
                 renderGraph(contextsToFilter);
