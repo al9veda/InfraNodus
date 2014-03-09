@@ -803,17 +803,27 @@ sigma.parsers.json(
 
         var context_filters = '';
 
-        var currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/">all lists</a></li>';
+        var currentContextURL = '';
 
-        contextNames.forEach(function(n) {
-            if (n == current_context) {
-                context_filters += '<li class="app-context-link menu-item-divided pure-menu-selected"><a href="/contexts/' + n + '">' + n + '</a></li>';
-                currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/">all lists</a></li>';
-            }
-            else {
-                context_filters += '<li class="app-context-link menu-item-divided "><a href="/contexts/' + n + '">' + n + '</a></li>';
-            }
-        });
+        // The graph exists already?
+        if (typeof contextNames[0] !== 'undefined' && contextNames[0] !== null) {
+            contextNames.forEach(function(n) {
+                if (n == current_context) {
+                    context_filters += '<li class="app-context-link menu-item-divided pure-menu-selected"><a href="/contexts/' + n + '">' + n + '</a></li>';
+                    currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/">all lists</a></li>';
+                }
+                else {
+                    context_filters += '<li class="app-context-link menu-item-divided "><a href="/contexts/' + n + '">' + n + '</a></li>';
+                    currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/">all lists</a></li>';
+                }
+            });
+        }
+        // No graph, so show private
+        else {
+            context_filters += '<li class="app-context-link menu-item-divided"><a href="/contexts/private">private</a></li>';
+            currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/">all lists</a></li>';
+
+        }
 
 
 
