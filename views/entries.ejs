@@ -494,14 +494,18 @@ sigma.parsers.json(
         var selectedText = getSelected().toString();
 
         var statementReplace = $("#statement").val();
-        var regex = RegExp(selectedText, "g");
 
-        var dasherized = S(selectedText).dasherize().chompLeft('-').s;
+        if ((statementReplace.indexOf('@'+selectedText) === -1) && (selectedText !== statementReplace)) {
 
-        // TODO check words for morphology (if found, alert)
+            var regex = RegExp(selectedText, "g");
 
-        var replacedString = statementReplace.replace(regex,"#" + dasherized).replace(/##/g,'#');
-        $("#statement").val(replacedString);
+            var dasherized = S(selectedText).dasherize().chompLeft('-').s;
+
+            // TODO check words for morphology (if found, alert)
+
+            var replacedString = statementReplace.replace(regex,"#" + dasherized).replace(/##/g,'#');
+            $("#statement").val(replacedString);
+        }
 
     });
 
@@ -805,6 +809,8 @@ sigma.parsers.json(
 
         var currentContextURL = '';
 
+        var addNewContext = '';
+
         // The graph exists already?
         if (typeof contextNames[0] !== 'undefined' && contextNames[0] !== null) {
             contextNames.forEach(function(n) {
@@ -825,10 +831,44 @@ sigma.parsers.json(
 
         }
 
+        addNewContext = '<li id="addNewContext" class="menu-item-divided"><a href="javascript:">+</a></li>';
+
 
 
         document.getElementById('contexts').innerHTML = currentContextURL +
-                                                        context_filters;
+                                                        context_filters +
+                                                        addNewContext;
+
+
+        // Select range in textarea function
+
+        $.fn.selectRange = function(start, end) {
+            return this.each(function() {
+                if (this.setSelectionRange) {
+                    this.focus();
+                    this.setSelectionRange(start, end);
+                } else if (this.createTextRange) {
+                    var range = this.createTextRange();
+                    range.collapse(true);
+                    range.moveEnd('character', end);
+                    range.moveStart('character', start);
+                    range.select();
+                }
+            });
+        };
+
+        // When add new context is clicked, add it into textarea and select it
+
+        $(document).on("click", "#addNewContext", function(e){
+
+            var beforeAdd = $("#statement").val();
+            var afterAdd = beforeAdd + ' @newlist';
+            var totalLength = afterAdd.length;
+            $("#statement").val(afterAdd);
+            $("#statement").focus();
+            $('#statement').selectRange(totalLength-7,totalLength);
+
+        });
 
         // Now time to trigger the actions we want to have when user clicks on the contexts
         addContextTriggers();
