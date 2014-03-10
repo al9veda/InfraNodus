@@ -30,6 +30,7 @@ exports.submit = function(req, res, next){
     passport.authenticate('local', function(err, user, info) {
         if (err) { return next(err) }
         if (!user) {
+            req.session.uid = user.uid;
             req.session.messages =  [info.message];
             return res.redirect('/login')
         }
