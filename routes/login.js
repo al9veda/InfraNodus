@@ -16,6 +16,8 @@
 
 // request methods available for User objects
 var User = require('../lib/user');
+var passport = require('passport');
+
 
 // when user accesses /login page with GET, populate login template view with data
 exports.form = function(req, res){
@@ -25,25 +27,18 @@ exports.form = function(req, res){
 // when user accesses /login page with POST, authenticate the user
 exports.submit = function(req, res, next){
 
-    // create variable data and populate it with user data from the submitted form
-    var data = req.body.user;
-
-    // call authenticate method for User object
-    User.authenticate(data.name, data.pass, function(err, user){
-        if (err) return next(err);
-
-        // user exists? add his id into the session parameters and redirect to the main page
-        if (user) {
-            req.session.uid = user.id;
-
-            req.session.context_uid = user.context_uid;
-
-            res.redirect('/');
-        } else {
-            res.error("Sorry! invalid credentials.");
-            res.redirect('back');
+    passport.authenticate('local', function(err, user, info) {
+        if (err) { return next(err) }
+        if (!user) {
+            req.session.messages =  [info.message];
+            return res.redirect('/login')
         }
-    });
+        req.logIn(user, function(err) {
+            if (err) { return next(err); }
+            return res.redirect('/');
+        });
+    })(req, res, next);
+
 };
 
 exports.logout = function(req, res){
