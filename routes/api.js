@@ -56,14 +56,15 @@ exports.nodes = function(req, res, next){
     // The one who made the statements (hello Fuka-Eri @1Q84 #Murakami)
     var perceiver = '';
 
+    // TODO think of how this is bypassed when API is functional
+    // Give this user a variable
+    res.locals.user = req.user;
+
     // Let's define the contexts from URL if exist
     contexts.push(req.params.context);
 
     // And is there one to compare with also?
     if (req.query.addcontext) contexts.push(req.query.addcontext);
-
-    console.log("Contexts for nodes");
-    console.log(contexts);
 
     // Is the user logged in? Then he is the receiver
     if (res.locals.user) {

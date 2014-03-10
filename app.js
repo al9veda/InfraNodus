@@ -157,7 +157,6 @@ app.post('/login', function(req, res, next) {
         }
         req.logIn(user, function(err) {
             if (err) { return next(err); }
-            console.log(user);
             return res.redirect('/');
 
         });
@@ -168,6 +167,7 @@ app.get('/logout', login.logout);
 app.get('/post', entries.form);
 app.post(
     '/post',
+    ensureAuthenticated,
     validate.isLoggedIn(),
     validate.required('entry[body]'),
     validate.lengthAbove('entry[body]', 4),
@@ -184,9 +184,9 @@ app.get('/api/user/statements', api.entries);
 app.get('/api/user/:id', api.user);
 app.get('/api/public/nodes/:user?', validate.getUserID(), api.nodes);
 app.post('/api/entry', entries.submit);
-app.get('/contexts/:context?', entries.list);
+app.get('/contexts/:context?', ensureAuthenticated, entries.list);
 app.get('/users/:user?', validate.getUserID(), entries.list);
-app.get('/', entries.list);
+app.get('/', ensureAuthenticated, entries.list);
 
 
 
@@ -209,6 +209,9 @@ http.createServer(app).listen(app.get('port'), function(){
 //   the request will proceed.  Otherwise, the user will be redirected to the
 //   login page.
 function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) { return next(); }
+    if (req.isAuthenticated()) {
+        res.locals.user = req.user;
+        return next();
+    }
     res.redirect('/login')
 }

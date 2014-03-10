@@ -26,7 +26,8 @@ exports.list = function(req, res, next){
 
     var perceivername = null;
 
-    console.log('user: ' + res.locals.user);
+    //res.locals.user = req.user;
+
     // Is the user logged in? Then he is the receiver
     if (res.locals.user) {
         receiver = res.locals.user.neo_uid;
