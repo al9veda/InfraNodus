@@ -7,9 +7,14 @@
 </head>
 <body>
 <div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
 <% include menu %>
 <div id="content">  <div id="statements">
-<p>Please, create a user account, so you can start building your graph:</p>
+<p>Please, create a user account:</p>
 
 <% include messages %>
 
@@ -24,6 +29,7 @@
         <button type='submit' class="pure-button pure-button-primary">create account</button>
     </p>
 </form>
+    <script src="/javascripts/ui.js"></script>
 </div>
 </div>
 </div>

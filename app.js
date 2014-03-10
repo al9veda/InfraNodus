@@ -31,7 +31,7 @@ var entries = require('./routes/entries');
 var Entry = require('./lib/entry');
 var page = require('./lib/middleware/page');
 var validate = require('./lib/middleware/validate');
-var user = require('./lib/middleware/user');
+//var user = require('./lib/middleware/user');
 var register = require('./routes/register');
 var login = require('./routes/login');
 var messages = require('./lib/messages');
@@ -129,7 +129,7 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 // This makes sure that when someone accesses /api they are authenticated first
 //app.use('/api', api.auth);
-app.use(user);
+//app.use(user);
 app.use(messages);
 app.use(app.router);
 app.use(routes.notfound);
