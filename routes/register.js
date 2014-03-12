@@ -28,21 +28,21 @@ exports.form = function(req, res){
 exports.submit = function(req, res, next){
 
     // define data as the parameters entered into the registration form
-    var data = req.body.user;
+    var data = req.body;
 
     // call getByName method from User class with the user.name from the form and check if it already exists
-    User.getByName(data.name, function(err, user){
+    User.getByName(data.username, function(err, user){
         if (err) return next(err);
 
-        if (user.id) {
+        if (user.uid) {
             res.error("Username already taken!");
             res.redirect('back');
         } else {
 
             // user does not exist? then create a new object User with the data from the form
             user = new User({
-                name: data.name,
-                pass: data.pass
+                name: data.username,
+                pepper: data.password
             });
 
             // save that object in redis database
@@ -50,7 +50,7 @@ exports.submit = function(req, res, next){
                 if (err) return next(err);
 
                 // save his ID into the session
-                req.session.uid = user.id;
+                req.session.uid = user.uid;
 
                 // redirect to the main page
                 res.redirect('/');
