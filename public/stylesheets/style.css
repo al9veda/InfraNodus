@@ -79,6 +79,9 @@ textarea:focus {
     font: 16px 'IstokWeb-Bold',sans-serif;
 }
 
+.warning {
+    color: #ff0000;
+}
 
 .entry {
     font: 17px 'IstokWeb-Bold',sans-serif;

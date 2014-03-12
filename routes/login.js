@@ -31,7 +31,10 @@ exports.submit = function(req, res, next){
         if (err) { return next(err) }
         if (!user) {
             req.session.uid = user.uid;
-            req.session.messages =  [info.message];
+
+            // req.session.messages =  [info.message];
+            res.error("Wrong username / password pair. Please, try again.");
+
             return res.redirect('/login')
         }
         req.logIn(user, function(err) {
