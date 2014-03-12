@@ -9,7 +9,6 @@
     "express": "3.4.8",
     "ejs": "*",
     "node-neo4j": "*",
-    "bcrypt": "0.7.3",
-    "redis": "0.7.2"
+    "bcrypt": "0.7.3"
   }
 }

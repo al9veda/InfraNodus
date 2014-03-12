@@ -42,18 +42,19 @@ exports.submit = function(req, res, next){
             // user does not exist? then create a new object User with the data from the form
             user = new User({
                 name: data.username,
-                pepper: data.password
+                pepper: data.password,
+                portal: data.email
             });
 
-            // save that object in redis database
+            // save that object in Neo4J database
             user.save(function(err){
                 if (err) return next(err);
 
                 // save his ID into the session
                 req.session.uid = user.uid;
 
-                // redirect to the main page
-                res.redirect('/');
+                // redirect to the login page
+                res.redirect('/login');
             });
         }
     });
