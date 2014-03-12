@@ -30,9 +30,9 @@ exports.user = function(req, res, next){
 
 exports.entries = function(req, res, next){
     var page = req.page;
-    Entry.getRange(res.locals.user.neo_uid, function(err, entries){
+    Entry.getRange(res.locals.user.uid, function(err, entries){
 
-        console.log("Getting nodes for " + res.locals.user.neo_id);
+        console.log("Getting nodes for " + res.locals.user.uid);
 
         if (err) return next(err);
 
@@ -68,7 +68,7 @@ exports.nodes = function(req, res, next){
 
     // Is the user logged in? Then he is the receiver
     if (res.locals.user) {
-        receiver = res.locals.user.neo_uid;
+        receiver = res.locals.user.uid;
     }
     // Is there user in the URL and we know their ID already? Then the receiver will see their graph...
     if (req.params.user && res.locals.viewuser) {
@@ -77,7 +77,7 @@ exports.nodes = function(req, res, next){
     // Otherwise they see their own
     else {
         if (res.locals.user) {
-            perceiver = res.locals.user.neo_uid;
+            perceiver = res.locals.user.uid;
         }
     }
 

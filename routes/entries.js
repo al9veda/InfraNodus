@@ -30,7 +30,7 @@ exports.list = function(req, res, next){
 
     // Is the user logged in? Then he is the receiver
     if (res.locals.user) {
-        receiver = res.locals.user.neo_uid;
+        receiver = res.locals.user.uid;
     }
     // Is there user in the URL and we know their ID already? Then the receiver will see their graph...
     if (req.params.user && res.locals.viewuser) {
@@ -40,7 +40,7 @@ exports.list = function(req, res, next){
     // Otherwise they see their own
     else {
         if (res.locals.user) {
-            perceiver = res.locals.user.neo_uid;
+            perceiver = res.locals.user.uid;
         }
     }
 
@@ -98,8 +98,8 @@ exports.submit = function(req, res, next){
     // We create various fields and values for that object and initialize it
 
     var entry = new Entry({
-        "by_uid": res.locals.user.neo_uid,
-        "by_id": res.locals.user.neo_id,
+        "by_uid": res.locals.user.uid,
+        "by_id": res.locals.user.uid,
         "by_name": res.locals.user.name,
         "contexts": data.contexts,
         "hashtags": data.hashtags,
