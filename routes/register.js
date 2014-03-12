@@ -13,33 +13,47 @@
  *
  */
 
-// get methods to operate on a User object
-
+// Get methods to operate on a User object
 var User = require('../lib/user');
 
-// the form route function renders the register.ejs template from views and adds 'Register' into the title field there
+// Get options for registration invitation code (if exist in config.json file)
+var options = require('../options');
+
+
+// The form route function renders the register.ejs template from views and adds 'Register' into the title field there
 
 exports.form = function(req, res){
     res.render('register', { title: 'Register' });
 };
 
-// this happens when the user accesses /register with a POST request
+// This happens when the user accesses /register with a POST request
 
 exports.submit = function(req, res, next){
 
-    // define data as the parameters entered into the registration form
+    // Define data as the parameters entered into the registration form
     var data = req.body;
 
-    // call getByName method from User class with the user.name from the form and check if it already exists
+    // Call getByName method from User class with the user.name from the form and check if it already exists
+
     User.getByName(data.username, function(err, user){
         if (err) return next(err);
 
+        // The user with this UID already exists?
         if (user.uid) {
             res.error("Username already taken!");
             res.redirect('back');
-        } else {
+        }
 
-            // user does not exist? then create a new object User with the data from the form
+        // We have a setting for invite-only registration and it doesn't match?
+        else if (options.invite.length > 0 && data.invite != options.invite) {
+            res.error("Please, enter or request your invitation code.");
+            res.redirect('back');
+        }
+
+        // The user doesn't exist? Then create a new object User with the data from the form
+        else {
+
+
             user = new User({
                 name: data.username,
                 pepper: data.password,
