@@ -16,37 +16,36 @@
         <!-- Hamburger icon -->
         <span></span>
     </a>
-<% include menu %>
+    <% include menu %>
+
     <div id="main">
         <div class="content">
 
-<!--
-    <div id="statements">
--->
-<p>Connecting your thoughts in time and space.</p>
+            <div id="content">
+                <div id="statements">
+                    <p>Please, log in below or <a href="http://noduslabs.com">request an invitation</a>.</p>
 
-<% include messages %>
+                    <% include messages %>
 
-        BLABLABLA
+                    <form action='/login' method='post' class="pure-form pure-form-stacked">
+                            <p>
+                            <input type='text' name='username' placeholder='username' />
+                            </p>
+                            <p>
+                            <input type='password' name='password' placeholder='password' />
+                            </p>
+                            <p>
+                            <button type='submit' class="pure-button pure-button-primary">log in</button>
+                            </p>
+                    </form>
 
-<!--<form action='/login' method='post' class="pure-form pure-form-stacked">
-        <p>
-        <input type='text' name='username' placeholder='username' />
-        </p>
-        <p>
-        <input type='password' name='password' placeholder='password' />
-        </p>
-        <p>
-        <button type='submit' class="pure-button pure-button-primary">log in</button>
-        </p>
-</form>-->
-        <script src="/javascripts/ui.js"></script>
-<!--
-</div>
--->
 
-</div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script src="/javascripts/ui.js"></script>
 </body>
 </html>
