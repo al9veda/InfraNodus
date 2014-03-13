@@ -38,7 +38,6 @@ textarea {
     font: 16px 'IstokWeb-Bold',sans-serif;
     position: relative;
     resize: vertical;
-    width: 320px;
     overflow: auto; /* 1 */
     vertical-align: top; /* 2 */
     padding: 0.5em 0.6em;
