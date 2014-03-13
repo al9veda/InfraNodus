@@ -20,8 +20,6 @@
     <span></span>
     </a>
 
-    <% include submenu %>
-
     <a href="javascript:" id="graph-link">
     <!-- Graph icon -->
     <span></span>
@@ -852,6 +850,8 @@ sigma.parsers.json(
 
         var addNewContext = '';
 
+        var auxLinks = '';
+
         // The graph exists already?
         if (typeof contextNames[0] !== 'undefined' && contextNames[0] !== null) {
             contextNames.forEach(function(n) {
@@ -870,18 +870,24 @@ sigma.parsers.json(
 
         }
 
-        addNewContext = '<li id="addNewContext" class="menu-item-divided"><a href="javascript:">+</a></li>';
+        addNewContext = '<li id="addNewContext" class="menu-item-divided"><a href="javascript:">+</a></li><li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
+
 
 
         search_field = '<form class="pure-form">' +
                        '&nbsp;<input type="text" id="search" size="9" maxlength="20" class="pure-input" placeholder="search">' +
                        '</form><br>';
 
+        auxLinks = '<br>' +
+                   '<li class="menu-item-small"><a href="/logout" target="_blank">logout</a></li>' +
+                   '<li class="menu-item-small"><a href="/api/user/nodes/<%= context %>?gexf=1" target="_blank">export</a></li>' +
+                   '<li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">help &amp; github</a></li>';
 
         document.getElementById('contexts').innerHTML = search_field +
                                                         currentContextURL +
                                                         context_filters +
-                                                        addNewContext;
+                                                        addNewContext +
+                                                        auxLinks;
 
 
         // Select range in textarea function

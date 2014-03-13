@@ -72,6 +72,10 @@ appears on the left side of the page.
             background: #333;
         }
 
+    #menu .menu-item-small {
+        font-size: 80%;
+    }
+
     /*
     This styles the selected menu item `<li>`.
     */
