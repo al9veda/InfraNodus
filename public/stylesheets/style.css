@@ -38,7 +38,7 @@ textarea {
     font: 16px 'IstokWeb-Bold',sans-serif;
     position: relative;
     resize: vertical;
-    width: 320px;
+    /*width: 320px;*/
     overflow: auto; /* 1 */
     vertical-align: top; /* 2 */
     padding: 0.5em 0.6em;
@@ -60,7 +60,6 @@ textarea {
 }
 
 textarea:focus {
-    outline: 0;
     outline: thin dotted \9; /* IE6-9 */
     border-color: #129FEA;
 }
@@ -86,7 +85,7 @@ textarea:focus {
 .entry {
     font: 17px 'IstokWeb-Bold',sans-serif;
     color: #000;
-    width: 320px;
+    max-width: 320px;
 }
 
 a.app-concept-link {
@@ -143,7 +142,7 @@ a:hover.app-context-link {
 #content {
     position: relative;
     top: 0px;
-    width: 320px;
+    max-width: 320px;
     margin: 0 0;
     line-height: 1.6em;
     z-index: 1;
@@ -152,7 +151,7 @@ a:hover.app-context-link {
 #statements {
     position: relative;
     background-color: rgba(255, 255, 255, 0.8);
-    width: 360px;
+    max-width: 320px;
     padding-left: 50px;
     padding-bottom: 50px;
     z-index: 1;
@@ -466,69 +465,7 @@ Forms Core
     overflow: auto; /* 1 */
     vertical-align: top; /* 2 */
 }
-/* ===============  forms-responsive.css =================*/
-@media only screen and (max-width : 480px) {
-    .pure-form button[type="submit"] {
-        margin: 0.7em 0 0;
-    }
 
-    .pure-form input[type="text"],
-    .pure-form input[type="password"],
-    .pure-form input[type="email"],
-    .pure-form input[type="url"],
-    .pure-form input[type="date"],
-    .pure-form input[type="month"],
-    .pure-form input[type="time"],
-    .pure-form input[type="datetime"],
-    .pure-form input[type="datetime-local"],
-    .pure-form input[type="week"],
-    .pure-form input[type="number"],
-    .pure-form input[type="search"],
-    .pure-form input[type="tel"],
-    .pure-form input[type="color"],
-    .pure-form label {
-        margin-bottom: 0.3em;
-        display: block;
-    }
-
-    .pure-group input[type="text"],
-    .pure-group input[type="password"],
-    .pure-group input[type="email"],
-    .pure-group input[type="url"],
-    .pure-group input[type="date"],
-    .pure-group input[type="month"],
-    .pure-group input[type="time"],
-    .pure-group input[type="datetime"],
-    .pure-group input[type="datetime-local"],
-    .pure-group input[type="week"],
-    .pure-group input[type="number"],
-    .pure-group input[type="search"],
-    .pure-group input[type="tel"],
-    .pure-group input[type="color"] {
-        margin-bottom: 0;
-    }
-
-    .pure-form-aligned .pure-control-group label {
-        margin-bottom: 0.3em;
-        text-align: left;
-        display: block;
-        width: 100%;
-    }
-
-    .pure-form-aligned .pure-controls {
-        margin: 1.5em 0 0 0;
-    }
-
-    /* NOTE: pure-help-inline is deprecated. Use .pure-form-message-inline instead. */
-    .pure-form .pure-help-inline,
-    .pure-form-message-inline,
-    .pure-form-message {
-        display: block;
-        font-size: 80%;
-        /* increased bottom padding to make it group with its related input element */
-        padding: 0.2em 0 0.8em;
-    }
-}
 
 /* ===============  forms.css =================================*/
 .pure-form input[type="text"],
@@ -1063,20 +1000,3 @@ Forms Core
     border-bottom: 1px solid #ededed;
 }
 /* end from PURE menu.css ***********************************/
-/* from PURE menu-responsive.css ****************************/
-/* RESPONSIVE */
-
-@media (max-width: 480px) {
-
-    .pure-menu-horizontal {
-        width:100%;
-    }
-
-    .pure-menu-children li {
-        display: block;
-        border-bottom:1px solid #ededed;
-    }
-
-}
-/* end from menu-responsive.css ******************/
-

@@ -8,7 +8,6 @@
 #layout {
     position: relative;
     padding-left: 0;
-    max-width: 320px
 }
 #layout.active {
     position: relative;
@@ -118,7 +117,7 @@ small screens.
     width: 2em;
     height: auto;
     padding: 2.1em 1.6em;
-    z-index: 5;
+    z-index: 10;
 }
 
     .menu-link:hover,
