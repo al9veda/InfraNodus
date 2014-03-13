@@ -84,7 +84,7 @@ textarea:focus {
 .entry {
     font: 17px 'IstokWeb-Bold',sans-serif;
     color: #000;
-    max-width: 300px;
+    max-width: 95%;
 }
 
 a.app-concept-link {
@@ -152,7 +152,7 @@ a:hover.app-context-link {
 #statements {
     position: relative;
     background-color: rgba(255, 255, 255, 0.8);
-    max-width: 320px;
+    max-width: 340px;
     padding-left: 50px;
     padding-bottom: 50px;
     z-index: 1;
