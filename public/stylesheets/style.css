@@ -38,7 +38,7 @@ textarea {
     font: 16px 'IstokWeb-Bold',sans-serif;
     position: relative;
     resize: vertical;
-    /*width: 320px;*/
+    width: 320px;
     overflow: auto; /* 1 */
     vertical-align: top; /* 2 */
     padding: 0.5em 0.6em;
@@ -60,7 +60,7 @@ textarea {
 }
 
 textarea:focus {
-    outline: thin dotted \9; /* IE6-9 */
+    outline: 0;
     border-color: #129FEA;
 }
 
@@ -153,7 +153,7 @@ a:hover.app-context-link {
 #statements {
     position: relative;
     background-color: rgba(255, 255, 255, 0.8);
-    max-width: 320px;
+    max-width: 360px;
     padding-left: 50px;
     padding-bottom: 50px;
     z-index: 1;
