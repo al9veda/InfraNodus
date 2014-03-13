@@ -89,6 +89,7 @@
 <script src="/javascripts/jquery.textcomplete.js"></script>
 <script src='/javascripts/jquery.autosize.js'></script>
 <script src="/javascripts/ui.js"></script>
+<script src="/javascripts/jquery.mobile-events.min.js"></script>
 
 
 
@@ -399,7 +400,7 @@ sigma.parsers.json(
 
         // Statement edit / delete functionality
 
-        $(".entry").on('dblclick', function(e) {
+        $(".entry").on('dblclick doubletap', function(e) {
 
             e.preventDefault();
 
@@ -565,7 +566,7 @@ sigma.parsers.json(
 
         // If double click on the menu, open it
 
-        $(".app-context-link").on('dblclick', function(e) {
+        $(".app-context-link").on('dblclick doubletap', function(e) {
 
             e.preventDefault();
 
@@ -879,7 +880,7 @@ sigma.parsers.json(
                        '</form><br>';
 
         auxLinks = '<br>' +
-                   '<li class="menu-item-small"><a href="/logout" target="_blank">logout</a></li>' +
+                   '<li class="menu-item-small"><a href="/logout">logout</a></li>' +
                    '<li class="menu-item-small"><a href="/api/user/nodes/<%= context %>?gexf=1" target="_blank">export</a></li>' +
                    '<li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">help &amp; github</a></li>';
 
