@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/jquery.textcomplete.css' />
     <link rel="stylesheet" href="/stylesheets/side-menu.css">
@@ -12,15 +14,18 @@
 </head>
 <body>
 <div id="layout">
-<!-- Menu toggle -->
-<a href="#menu" id="menuLink" class="menu-link">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
     <!-- Hamburger icon -->
     <span></span>
-</a>
-<% include submenu %>
-<div id="graph-link">&nbsp;<a href="#"><img src="/images/graph.png" border="0"></a></div>
-<div id="menu">
-    <div class="pure-menu pure-menu-open">
+    </a>
+
+    <% include submenu %>
+
+    <div id="graph-link">&nbsp;<a href="#"><img src="/images/graph.png" border="0"></a></div>
+
+    <div id="menu">
+        <div class="pure-menu pure-menu-open">
         <% if (locals.user) { %>
         <a class="pure-menu-heading" href="/"><%= user.name %></a>
             <br>
@@ -33,38 +38,40 @@
             <% include menu %>
 
         <% } %>
+        </div>
+
     </div>
 
-</div>
 
+    <div id='content'>
 
-<div id='content'>
+        <div id='statements'>
+            <% include messages %>
 
-<div id='statements'>
-    <% include messages %>
+            <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
-    <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
+                    <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here, marking the most important words with a #hashtag and the context with @mention'></textarea>
+                    <input type="hidden" name="context" value="<%= context %>">
+                    <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
+                    <input type="hidden" name="statementid" value="">
+                    &nbsp;<br>
+                    <input type='submit' name="submit" value="save" class="pure-button pure-button-primary">
 
-            <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here, marking the most important words with a #hashtag and the context with @mention'></textarea>
-            <input type="hidden" name="context" value="<%= context %>">
-            <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
-            <input type="hidden" name="statementid" value="">
-            &nbsp;<br>
-            <input type='submit' name="submit" value="save" class="pure-button pure-button-primary">
-
-    </form>   &nbsp;<br>&nbsp;<br>
+            </form>   &nbsp;<br>&nbsp;<br>
 
 
 
 
-<% entries.forEach(function(entry) { %>
-<div class='entry' data-uid='<%= entry.uid %>' data-hashtags='<%= entry.name %>'>
-    <p><%- entry.text %></p>
-</div>
-<% }) %>
-</div>
-<div id="graph-container"></div>
-</div>
+            <% entries.forEach(function(entry) { %>
+                <div class='entry' data-uid='<%= entry.uid %>' data-hashtags='<%= entry.name %>'>
+                    <p><%- entry.text %></p>
+                </div>
+            <% }) %>
+        </div>
+
+        <div id="graph-container"></div>
+
+    </div>
 
 
 

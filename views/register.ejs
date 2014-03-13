@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel="stylesheet" href="/stylesheets/side-menu.css">
@@ -12,33 +14,42 @@
         <!-- Hamburger icon -->
         <span></span>
     </a>
-<% include menu %>
-<div id="content">  <div id="statements">
-<p>Please, create a user account:</p>
 
-<% include messages %>
+    <% include menu %>
 
-<form action='/register' method='post' class="pure-form pure-form-stacked">
-    <p>
-        <input type='text' name='username' placeholder='username' />
-    </p>
-    <p>
-        <input type='password' name='password' placeholder='password' />
-    </p>
-    <p>
-        <input type='email' name='email' placeholder='email' />
-    </p>
+    <% include submenu %>
 
-    <p>
-        <input type='text' name='invite' placeholder='invitation code' />
-    </p>
-    <p>
-        <button type='submit' class="pure-button pure-button-primary">create account</button>
-    </p>
-</form>
-    <script src="/javascripts/ui.js"></script>
+    <div id="content">
+          <div id="statements">
+              <p>Please, create a user account or <a href="http://noduslabs.com">request an invite</a>.</p>
+
+              <% include messages %>
+
+                <form action='/register' method='post' class="pure-form pure-form-stacked">
+                    <p>
+                        <input type='text' name='username' placeholder='username' />
+                    </p>
+                    <p>
+                        <input type='password' name='password' placeholder='password' />
+                    </p>
+                    <p>
+                        <input type='email' name='email' placeholder='email' />
+                    </p>
+
+                    <p>
+                        <input type='text' name='invite' placeholder='invitation code' />
+                    </p>
+                    <p>
+                        <button type='submit' class="pure-button pure-button-primary">create account</button>
+                    </p>
+                </form>
+
+          </div>
+    </div>
+
 </div>
-</div>
-</div>
+
+<script src="/javascripts/ui.js"></script>
+
 </body>
 </html>
