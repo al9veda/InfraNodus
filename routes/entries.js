@@ -60,8 +60,8 @@ exports.list = function(req, res, next){
 
         // Add links to @contexts and #hashtags
         for (var i = 0; i < entries.length; ++ i) {
-              entries[i].text = FlowdockText.autoLinkMentions(entries[i].text,{hashtagUrlBase:"/context/",hashtagClass:"app-context-link"});
-              entries[i].text = FlowdockText.autoLinkHashtags(entries[i].text,{hashtagUrlBase:"/concept/",hashtagClass:"app-concept-link"});
+              entries[i].text = FlowdockText.autoLinkMentions(entries[i].text,{hashtagUrlBase:"/contexts/",hashtagClass:"app-context-link"});
+              entries[i].text = FlowdockText.autoLinkHashtags(entries[i].text,{hashtagUrlBase:"/concepts/",hashtagClass:"app-concept-link"});
         }
 
         console.log("Showing statements for user "+ receiver);
