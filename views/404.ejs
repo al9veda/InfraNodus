@@ -1,14 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 Not Found</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/side-menu.css">
 </head>
 <body>
-<% include menu %>
-<div id='content'>
-<h1>404 Not Found</h1>
-<p>Sorry we can't find that!</p>
+<div id="layout">
+
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+    <% include menu %>
+
+    <div id="main">
+
+        <% include menu %>
+        <div id='content'>
+            <div id="statements">
+
+                <h1>404 Not Found</h1>
+                <p>Sorry we can't find that! Please, <a href="javascript:history.back()">click here</a> to go back or if you think it's a problem, report it on
+                <a href="http://github.com/noduslabs/infranodus/issues">github</a>.</p>
+
+            </div>
+        </div>
+
+    </div>
+
 </div>
+<script src="/javascripts/ui.js"></script>
 </body>
 </html>
