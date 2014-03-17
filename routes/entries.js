@@ -103,7 +103,8 @@ exports.submit = function(req, res, next){
         "by_name": res.locals.user.name,
         "contexts": data.contexts,
         "hashtags": data.hashtags,
-        "text": data.body
+        "text": data.body,
+        "fullscan": res.locals.user.fullscan
 
     });
 
