@@ -1,12 +1,14 @@
 <div id="menu">
     <div class="pure-menu pure-menu-open">
-        <a class="pure-menu-heading" href="/">infranodus</a>
+
         <% if (locals.user) { %>
+        <a class="pure-menu-heading" href="/"><%= user.name %></a>
         <ul>
-            <li class="menu-item-divided pure-menu-selected"><a href="/"><%= user.name %></a></li>
+            <li class="menu-item-divided"><a href="/">all lists</a></li>
             <li><a href="/logout">logout</a></li>
         </ul>
         <% } else { %>
+        <a class="pure-menu-heading" href="/">infranodus</a>
         <ul>
             <li><a href="/login">login</a></li>
             <li><a href="/register">register</a></li>

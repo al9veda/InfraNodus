@@ -37,11 +37,11 @@ var login = require('./routes/login');
 var messages = require('./lib/messages');
 var http = require('http');
 var path = require('path');
-var leap = require('./routes/leap');
 
 var pass = require('./lib/pass')
 var passport = require('passport');
 
+var settings = require('./routes/settings');
 
 var app = express();
 
@@ -101,7 +101,6 @@ app.post(
     entries.submit
 );
 
-app.get('/leap', leap.render);
 app.get('/api/user/nodes/:context?', api.nodes);
 app.get('/api/user/statements', api.entries);
 app.get('/api/user/:id', api.user);
@@ -109,6 +108,8 @@ app.get('/api/public/nodes/:user?', validate.getUserID(), api.nodes);
 app.post('/api/entry', entries.submit);
 app.get('/contexts/:context?', pass.ensureAuthenticated, entries.list);
 app.get('/users/:user?', validate.getUserID(), entries.list);
+app.get('/settings', pass.ensureAuthenticated, settings.render);
+app.post('/settings', pass.ensureAuthenticated, settings.modify);
 app.get('/', pass.ensureAuthenticated, entries.list);
 
 

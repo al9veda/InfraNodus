@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/side-menu.css">
+
+</head>
+<body>
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+    <% include menu %>
+
+    <div id="main">
+
+
+        <div id="content">
+            <div id="statements">
+
+
+                <% include messages %>
+
+                <form action='/settings' method='post' class="pure-form pure-form-stacked">
+
+                    <legend>settings for user <i><%= user.name %></i></legend>
+                    <br>
+                    Words connect into graph, when they are
+                    <label for="wordscan-edit-1" class="pure-radio">
+                        <input id="wordscan-edit-1" type="radio" name="fullscan" value="0" <% if (user.fullscan=='0') { %> checked <% } %>>
+                        next to each other
+                    </label>
+
+                    <label for="wordscan-edit-2" class="pure-radio">
+                        <input id="wordscan-edit-2" type="radio" name="fullscan" value="1" <% if (user.fullscan=='1') { %> checked <% } %>>
+                        near each other
+                    </label>
+                    <br>
+
+                    Graph view shows only
+                    <label for="wordscan-view" class="pure-radio">
+                        <input id="wordscan-view" type="radio" name="fullview" value="0" <% if (user.fullview=='0') { %> checked <% } %>>
+                        "next to" connections
+                    </label>
+
+                    <label for="wordscan-view" class="pure-radio">
+                        <input id="wordscan-view" type="radio" name="fullview" value="1" <% if (user.fullview=='1') { %> checked <% } %>>
+                        "near" connections
+                    </label>
+                    <br>
+
+                    #Hashtags
+                    <label for="wordscan-view" class="pure-radio">
+                        <input id="wordscan-view" type="radio" name="morphemes" value="0" <% if (user.morphemes=='0') { %> checked <% } %>>
+                        stay how they are
+                    </label>
+
+                    <label for="wordscan-view" class="pure-radio">
+                        <input id="wordscan-view" type="radio" name="morphemes" value="1" <% if (user.morphemes=='1') { %> checked <% } %>>
+                        become morphemes
+                    </label>
+                    <br>
+
+                    <button type='submit' class="pure-button pure-button-primary">save settings</button>
+
+                </form>
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/javascripts/ui.js"></script>
+</body>
+</html>
