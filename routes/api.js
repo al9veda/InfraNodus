@@ -60,6 +60,10 @@ exports.nodes = function(req, res, next){
     // Give this user a variable
     res.locals.user = req.user;
 
+    // Do we want to see graphs that include "near" 4-word gap scan?
+    var fullview = res.locals.user.fullview;
+    if (fullview != 1) { fullview = null };
+
     // Let's define the contexts from URL if exist
     contexts.push(req.params.context);
 
@@ -81,7 +85,7 @@ exports.nodes = function(req, res, next){
         }
     }
 
-    Entry.getNodes(receiver, perceiver, contexts, function(err, graph){
+    Entry.getNodes(receiver, perceiver, contexts, fullview, function(err, graph){
         if (err) return next(err);
 
         // Change the result we obtained into a nice json we need
