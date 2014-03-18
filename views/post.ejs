@@ -1,26 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/side-menu.css">
 </head>
 <body>
+<div id="layout">
 
-<% include menu %>
-<div id='content'>
-<h1><%= title %></h1>
-<p>Fill in the form below to add a new post.</p>
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+    <% include menu %>
 
-<% include messages %>
+    <div id="main">
+          <div id='content'>
+              <div id='statements'>
+                  <% include messages %>
 
-<form action='/post' method='post'>
-    <p>
-        <textarea name='entry[body]' placeholder='Body'></textarea>
-    </p>
-    <p>
-        <input type='submit' value='Post' />
-    </p>
-</form>
+                  <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
+
+                      <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here, marking the most important words with a #hashtag and the context with @mention'></textarea>
+                      <input type="hidden" name="context" value="<%= context %>">
+                      <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
+                      <input type="hidden" name="statementid" value="">
+                      &nbsp;<br>
+                      <input type='submit' name="submit" value="save" class="pure-button pure-button-primary">
+
+                  </form>   &nbsp;<br>&nbsp;<br>
+
+
+              </div>
+    </div>
 </div>
+<script src="/javascripts/ui.js"></script>
 </body>
 </html>

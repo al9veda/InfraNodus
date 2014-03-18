@@ -94,6 +94,7 @@ app.post(
     validate.isLoggedIn(),
     validate.required('entry[body]'),
     validate.lengthAbove('entry[body]', 4),
+    validate.stackOverflow('entry[body'),
     validate.sanitize('entry[body]'),
     validate.getHashtags('entry[body]'),
     validate.isToDelete(),

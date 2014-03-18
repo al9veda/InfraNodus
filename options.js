@@ -22,7 +22,7 @@ exports.settings = {
     max_contexts: 5,
 
     // Max length of a statement text
-    max_text_length: 2000,
+    max_text_length: 4000,
 
     // Max number of tags in one statement
     max_hashtags: 60
