@@ -171,8 +171,8 @@ sigma.parsers.json(
             settings: {
                 minNodeSize: 5,
                 maxNodeSize: 16,
-                minEdgeSize: 0.05,
-                maxEdgeSize: 1.2,
+                minEdgeSize: 0.5,
+                maxEdgeSize: 2,
                 labelThreshold: 8
             }
         },
@@ -203,12 +203,29 @@ sigma.parsers.json(
 
             sigma.graph.edges().forEach(function(e) {
 
+                var unique_edge_id = '';
+
+                // Let's see if the edge source in alphabetical order is further than its target and change places
+
+                if (e.source > e.target) {
+                    unique_edge_id = e.target + '-' + e.source;
+                }
+                else {
+                    unique_edge_id = e.source + '-' + e.target;
+                }
 
 
-                e.size = e.weight;
+                // Let's make a unique list of edges to count how many there are of the same kind
 
-                if (e.size < 3) {
-                    e.color = "#ccc";
+                if (edgesList[unique_edge_id]) {
+                    ++edgesList[unique_edge_id];
+
+                    // TODO this is a bit of a workaround - in the future could be better to distribute the weight evenly
+                    e.size = e.weight + edgesList[unique_edge_id];
+                }
+                else {
+                    edgesList[unique_edge_id] = 1;
+                    e.size = e.weight;
                 }
 
 
@@ -251,8 +268,6 @@ sigma.parsers.json(
 
             });
 
-
-
             sigma.graph.nodes().forEach(function(n) {
 
                 // Check if the node is in additional context and if yes, give it a different color
@@ -270,7 +285,6 @@ sigma.parsers.json(
                 nodeIDs[n.label] = n.id;
 
             });
-
 
 
             // Make a list of all the node labels displayed in the graph (for Autofill)
