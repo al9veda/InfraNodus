@@ -181,10 +181,12 @@ sigma.parsers.json(
 
             // This is a fix for JSON
             // Sigma requires that nodes have X, Y, Size and Color properties which our JSON doesn't have. So we add them.
+            // We also make the initial graph layout circular, so that ForceAtlas always looks the same
 
             for (i = 0; i < len; i++) {
-                nodes[i].x = Math.random();
-                nodes[i].y = Math.random();
+                var angle = Math.PI * 2 * i / len;
+                nodes[i].x = Math.cos(angle);
+                nodes[i].y = Math.sin(angle);
                 nodes[i].size = sigma.graph.degree(nodes[i].id);
                 nodes[i].color = color_context;
             }
