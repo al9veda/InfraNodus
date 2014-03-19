@@ -102,6 +102,10 @@ var nodeIDs = [];
 // What are the concepts displayed - the opposite of above
 var nodeNames = [];
 
+// Let's record all the unique edges we've got
+
+var edgesList = [];
+
 // Create context-node index for filtering
 var contextNodeID = [];
 
@@ -123,6 +127,7 @@ var addcontext = "";
 // Get current context
 var path = window.location.pathname;
 var current_context = path.match(/([^\/]*)\/*$/)[1];
+
 
 
 // Is the user going to look at somebody else's graph?
@@ -166,6 +171,8 @@ sigma.parsers.json(
             settings: {
                 minNodeSize: 5,
                 maxNodeSize: 16,
+                minEdgeSize: 0.05,
+                maxEdgeSize: 1.2,
                 labelThreshold: 8
             }
         },
@@ -195,6 +202,15 @@ sigma.parsers.json(
             // nodes and edges, like this:
 
             sigma.graph.edges().forEach(function(e) {
+
+
+
+                e.size = e.weight;
+
+                if (e.size < 3) {
+                    e.color = "#ccc";
+                }
+
 
                 e.originalColor = e.color;
 
