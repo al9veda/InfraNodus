@@ -164,15 +164,15 @@ sigma.parsers.json(
                 type: 'canvas'
             },
             settings: {
-                minNodeSize: 6,
+                minNodeSize: 5,
                 maxNodeSize: 16,
-                labelThreshold: 10
+                labelThreshold: 8
             }
         },
         function(sigma) {
 
             var i,
-                    timeout = 3000,
+                    timeout = 4000,
                     nodes = sigma.graph.nodes(),
                     color_context = '#666',
                     color_addcontext = '#666688',
