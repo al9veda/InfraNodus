@@ -108,6 +108,16 @@ a:hover.app-context-link {
     color: #666;
 }
 
+a.app-url-link {
+    text-decoration: none;
+    color: #555;
+
+}
+a:hover.app-url-link {
+    text-decoration: underline;
+    color: #4b9dff;
+}
+
 
 .contexts {
     font: 17px 'IstokWeb-Bold',sans-serif;

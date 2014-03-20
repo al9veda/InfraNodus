@@ -606,6 +606,17 @@ sigma.parsers.json(
 
         });
 
+        // If double click on a link, open it
+
+        $(".app-url-link").on('click tap', function(e) {
+
+
+
+            e.stopPropagation();
+
+
+        });
+
 
 
         // If only one click, filter it
@@ -1014,8 +1025,6 @@ sigma.parsers.json(
 
 
     }
-
-
 
 
 
