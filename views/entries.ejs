@@ -594,26 +594,36 @@ sigma.parsers.json(
         var contextsToFilter = [];
 
 
+        $(".app-context-link").click(function(e) {
+            e.preventDefault();
+            var that = this;
+            setTimeout(function() {
+                var dblclick = parseInt($(that).data('double'), 10);
+                if (dblclick > 0) {
+                    $(that).data('double', dblclick-1);
+                } else {
+                    singleClick.call(that, e);
+                }
+            }, 300);
+        }).dblclick(function(e) {
+                    $(this).data('double', 2);
+                    doubleClick.call(this, e);
+                });
+
+
         // If double click on the menu, open it
 
-        $(".app-context-link").on('dblclick doubletap', function(e) {
-
-            e.preventDefault();
-
-            e.stopPropagation();
+        function singleClick (e) {
 
             window.location = e.target.href;
 
-        });
+        }
 
         // If double click on a link, open it
 
         $(".app-url-link").on('click tap', function(e) {
 
-
-
-            e.stopPropagation();
-
+              e.stopPropagation();
 
         });
 
@@ -621,19 +631,13 @@ sigma.parsers.json(
 
         // If only one click, filter it
 
-        $(".app-context-link").on('click', function(e) {
+        function doubleClick (e) {
 
                 var triggeredFromStatement = null;
 
                 var addFilter = null;
 
                 var removeFilter = null;
-
-                // Do not follow the link, to change that after for Public view
-                e.preventDefault();
-
-                // If the context is clicked inside the statement, we're just dealing with that event, not others
-                e.stopPropagation();
 
                 // Extract filter label
                 var filter = $(e.target).text();
@@ -646,6 +650,10 @@ sigma.parsers.json(
 
                 // Some tricks to make context switch from statements emulate menu items behavior
                 if (triggeredFromStatement) {
+
+                    // If the context is clicked inside the statement, we're just dealing with that event, not others
+                    e.stopPropagation();
+
                     $(".menu-item-divided").each(function() {
                          if (S($(this).html()).stripTags().s == filter) {
                              if ($(this).hasClass('pure-menu-selected')) {
@@ -756,7 +764,7 @@ sigma.parsers.json(
                 // Add some remove @context functionality
                 renderGraph(contextsToFilter);
 
-         });
+         }
 
     }
 
