@@ -79,7 +79,9 @@ exports.list = function(req, res, next){
             entries: entries,
             context: contexts[0],
             addcontext: req.query.addcontext,
-            perceivername: perceivername
+            perceivername: perceivername,
+            url: req.query.url,
+            urltitle: req.query.urltitle
         });
     });
 };

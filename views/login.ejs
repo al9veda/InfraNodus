@@ -22,11 +22,10 @@
 
             <div id="content">
                 <div id="statements">
-                    <p>Please, log in below or <a href="http://noduslabs.com">request an invitation</a>.</p>
-
+                    <p>Please, log in below or <a href="/register">register</a>.</p>
                     <% include messages %>
-
                     <form action='/login' method='post' class="pure-form pure-form-stacked">
+
                             <p>
                             <input type='text' name='username' placeholder='username' />
                             </p>
@@ -38,6 +37,9 @@
                             </p>
                     </form>
 
+                    &nbsp;<br>
+                    <p>Use InfraNodus for your bookmarks, drag this bookmarklet into your browser's toolbar: <a style="cursor: move;" href="javascript:var a=window,b=document,c=encodeURIComponent,s='';s=document.getSelection().toString();if(s!=''){d=a.open('http://infranodus.com/contexts/bookmarks?url='+c(b.location)+'&urltitle='+c(s),'bkmk_popup','left='+((a.screenX||a.screenLeft)+10)+',top='+((a.screenY||a.screenTop)+10)+',height=420px,width=550px,resizable=1,alwaysRaised=1');}else{d=a.open('http://infranodus.com/contexts/bookmarks?url='+c(b.location)+'&urltitle='+c(b.title),'bkmk_popup','left='+((a.screenX||a.screenLeft)+10)+',top='+((a.screenY||a.screenTop)+10)+',height=420px,width=550px,resizable=1,alwaysRaised=1');}a.setTimeout(function(){d.focus()},300);">GraphMark</a>
+                    </p>
 
                 </div>
             </div>

@@ -51,7 +51,7 @@
 
             <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
-                    <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here, marking the most important words with a #hashtag and the context with @mention'></textarea>
+                    <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here, marking the most important words with a #hashtag and the context with @mention'><% if (url) { %><%= urltitle %> <%= url %> @bookmarks<% } %></textarea>
                     <input type="hidden" name="context" value="<%= context %>">
                     <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
                     <input type="hidden" name="statementid" value="">
