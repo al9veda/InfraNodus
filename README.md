@@ -7,7 +7,7 @@
 =================
 
 
-[Watch a Video Demo](https://vimeo.com/89807920)
+[Watch a Video Demo](https://vimeo.com/89807920) - a 2-minute introduction
 
 [Try it Online](http://infranodus.com) - request invitation code through [Nodus Labs](http://noduslabs.com/contact/)
 
