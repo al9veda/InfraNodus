@@ -181,6 +181,20 @@ small screens.
     background-position:center;
 }
 
+#graph-tools {
+    position: fixed;
+    display: none; /* show this only on small screens */
+    bottom: 0;
+    right: 0; /* "#menu width" */
+    font-size: 8px; /* change this value to increase/decrease button size */
+   /* width: 2em;
+    height: auto;*/
+    padding: 2.1em 1.6em;
+    z-index: 10;
+}
+
+
+
 /* -- Responsive Styles (Media Queries) ------------------------------------- */
 
 /*
@@ -209,6 +223,10 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 
     #layout.active .menu-link {
         left: 150px;
+    }
+
+    #graph-tools {
+        display: block;
     }
 
 
