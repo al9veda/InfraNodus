@@ -13,6 +13,7 @@
 
 </head>
 <body>
+<% include statsabove %>
 <div id="layout">
     <!-- Menu toggle -->
     <a href="#menu" id="menuLink" class="menu-link">
@@ -98,6 +99,7 @@
 
 
 <script>
+;(function(){
 
 // Create node ID - Name index for filtering
 var nodeIDs = [];
@@ -1139,7 +1141,8 @@ sigma.parsers.json(
 
 
 
-
+})();
 </script>
+<% include statsbelow %>
 </body>
 </html>
