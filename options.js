@@ -54,5 +54,15 @@ else {
 }
 
 
+// Get a list of stopwords
+
+fs.readFile( __dirname + '/public/files/stopwords_en_en.txt', function (err, data) {
+    if (err) {
+        throw err;
+    }
+
+    exports.stopwords = data.toString().split("\n");
+
+});
 
 
