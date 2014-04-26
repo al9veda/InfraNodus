@@ -57,6 +57,18 @@
                     </label>
                     <br>
 
+                    The nodes in the graph represent
+                    <label for="wordscan-view" class="pure-radio">
+                        <input id="wordscan-view" type="radio" name="hashnodes" value="0" <% if (user.hashnodes=='0') { %> checked <% } %>>
+                        either words or hashtags
+                    </label>
+
+                    <label for="wordscan-view" class="pure-radio">
+                        <input id="wordscan-view" type="radio" name="hashnodes" value="1" <% if (user.hashnodes=='1') { %> checked <% } %>>
+                        both words and hashtags
+                    </label>
+                    <br>
+
                     #Hashtags
                     <label for="wordscan-view" class="pure-radio">
                         <input id="wordscan-view" type="radio" name="morphemes" value="0" <% if (user.morphemes=='0') { %> checked <% } %>>

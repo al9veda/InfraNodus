@@ -37,8 +37,10 @@ exports.modify = function(req, res) {
 
     var morphemes = req.body.morphemes;
 
+    var hashnodes = req.body.hashnodes;
 
-    User.modifySettings(user_id, fullscan, fullview, morphemes, function (err, answer) {
+
+    User.modifySettings(user_id, fullscan, fullview, morphemes, hashnodes, function (err, answer) {
 
         // Error? Go back and display it.
 
