@@ -472,8 +472,18 @@ sigma.parsers.json(
             // Chang / add buttons
             document.submitform.submit.value = "edit";
             if (!document.submitform.delete) {
-                $("#submitform").append('<input type="submit" name="delete" value="delete" class="pure-button"> <input type="submit" name="cancel" value="cancel" onclick="clear_form(); return false;" class="pure-button">');
-            }
+                $("#submitform").append('<input type="submit" name="delete" value="delete" class="pure-button"> <input type="submit" name="cancel" value="cancel" id="cancelbutton" class="pure-button">');
+
+                // Delete text from the form in case of Cancel, remove the buttons
+
+                document.getElementById('cancelbutton').addEventListener('click',function(){
+
+                    $("#statement").val('');
+                    document.submitform.submit.value = "save";
+                    document.submitform.delete.remove();
+                    document.submitform.cancel.remove();
+
+                },false);            }
 
             // Smoothly scroll up
             $("html, body").animate({ scrollTop: 0 }, "slow");
@@ -566,14 +576,6 @@ sigma.parsers.json(
 
 
 
-    // Clear the form if canceled and refresh buttons
-
-    function clear_form () {
-        $("#statement").val('');
-        document.submitform.submit.value = "save";
-        document.submitform.delete.remove();
-        document.submitform.cancel.remove();
-    }
 
 
     // Textarea select conversion to hashtags

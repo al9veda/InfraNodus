@@ -25,7 +25,7 @@ exports.settings = {
     max_text_length: 4500,
 
     // Max number of tags in one statement
-    max_hashtags: 80
+    max_hashtags: 100
 
 }
 
