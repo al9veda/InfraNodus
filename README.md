@@ -50,9 +50,10 @@ InfraNodus is built on
 
 
 ###Installation Guide
-To use this software you should install Neo4J 2.0 and Redis on your local computer.
+To use this software you should install Neo4J 2.0 on your local computer.
 To install Neo4J on a Mac use homebrew (see [Neo4J instructions here](http://www.neo4j.org/download)).
-To install Redis on a Mac, check out [this nice installation guide](http://jasdeep.ca/2012/05/installing-redis-on-mac-os-x/)
+For settings, check out [How to Set Up Neo4J for InfraNodus](https://github.com/noduslabs/infranodus/wiki/Neo4J-Database-Setup).
+You may also find [other wiki pages](https://github.com/noduslabs/infranodus/wiki/_pages) interesting.
 
 You will also need to have npm Node.Js package manager on your computer and run
 `npm install` 
@@ -60,6 +61,8 @@ in node_modules folder of the project to install all the dependencies.
 
 You might need to manually install ejs rending Node.Js module
 `npm install ejs`
+
+You might also need to manually `npm build node-lemmer`
 
 
 =================
