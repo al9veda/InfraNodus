@@ -84,14 +84,38 @@ fs.readFile( __dirname + '/public/files/stopwords_ru_ru.txt', function (err, dat
 
 
 
-// Get a list of stopwords for English
+// Get a list of stopwords for French
 
-fs.readFile( __dirname + '/public/files/stopwords_en_en.txt', function (err, data) {
+fs.readFile( __dirname + '/public/files/stopwords_fr_fr.txt', function (err, data) {
     if (err) {
         throw err;
     }
 
-    exports.stopwords = data.toString().split("\n");
+    exports.stopwords_fr = data.toString().split("\n");
+
+});
+
+
+// Get a list of stopwords for German
+
+fs.readFile( __dirname + '/public/files/stopwords_de_de.txt', function (err, data) {
+    if (err) {
+        throw err;
+    }
+
+    exports.stopwords_de = data.toString().split("\n");
+
+});
+
+
+// Get a list of stopwords for Spanish
+
+fs.readFile( __dirname + '/public/files/stopwords_es_es.txt', function (err, data) {
+    if (err) {
+        throw err;
+    }
+
+    exports.stopwords_es = data.toString().split("\n");
 
 });
 
