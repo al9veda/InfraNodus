@@ -22,6 +22,7 @@ The basic ideas behind InfraNodus are:
 - Works on desktop and mobile.
 - Make it easy to add nodes into a graph through a simple web interface.
 - Work with what people already know and use well: #hashtags and @mentions, not nodes and edges.
+- Use natural language to enter nodes in a graph (English and Russian morphology is supported)
 - Move away from binary edges (e.g. A < - > B) to hyperedges in one statement (e.g. A and B and C or D)
 - API and JSON export of all data;
 - Make it as lightweight, portable, and standalone as possible;
