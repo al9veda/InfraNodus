@@ -393,3 +393,37 @@ exports.accentmap = [{
     'base': "z",
     'letters': /(&#122;|&#9449;|&#65370;|&#378;|&#7825;|&#380;|&#382;|&#7827;|&#7829;|&#438;|&#549;|&#576;|&#11372;|&#42851;|[\u007A\u24E9\uFF5A\u017A\u1E91\u017C\u017E\u1E93\u1E95\u01B6\u0225\u0240\u2C6C\uA763])/g
 }];
+
+
+exports.digitsmap = [
+    {
+        'base': /(0)/g,
+        'letters': "zero"
+    }, {
+        'base': /(1)/g,
+        'letters': "one"
+    }, {
+        'base': /(2)/g,
+        'letters': "two"
+    }, {
+        'base': /(3)/g,
+        'letters': "three"
+    }, {
+        'base': /(4)/g,
+        'letters': "four"
+    }, {
+        'base': /(5)/g,
+        'letters': "five"
+    }, {
+        'base': /(6)/g,
+        'letters': "six"
+    }, {
+        'base': /(7)/g,
+        'letters': "seven"
+    }, {
+        'base': /(8)/g,
+        'letters': "eight"
+    }, {
+        'base': /(9)/g,
+        'letters': "nine"
+    }];
