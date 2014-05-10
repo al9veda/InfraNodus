@@ -1,5 +1,7 @@
 ##InfraNodus is a web / mobile interface to Neo4J made using Node.Js and Sigma.Js.
- 
+
+#### Keep track of all the relations using this simple tool that converts natural language into graph (English, Russian and other languages are supported).
+
 =================
 
 ![](/public/images/infranodus.gif "InfraNodus Interface")
