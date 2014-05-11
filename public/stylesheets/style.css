@@ -87,6 +87,12 @@ textarea:focus {
     max-width: 95%;
 }
 
+.intro {
+    font: 19px 'IstokWeb-Bold',sans-serif;
+    color: #000;
+    max-width: 95%;
+}
+
 a.app-concept-link {
     text-decoration: none;
     color: #000;
