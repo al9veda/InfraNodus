@@ -25,6 +25,7 @@
  */
 
 var api = require('./routes/api');
+var api2 = require('./routes/api2');
 var express = require('express');
 var routes = require('./routes');
 var entries = require('./routes/entries');
@@ -63,8 +64,10 @@ app.use(express.session());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
-// This makes sure that when someone accesses /api they are authenticated first
-//app.use('/api', api.auth);
+
+// This makes sure that when someone accesses external /api2 they are authenticated first
+app.use('/api2', api2.auth);
+
 app.use(user);
 app.use(messages);
 app.use(app.router);
@@ -102,11 +105,17 @@ app.post(
     entries.submit
 );
 
+// Internal API to get nodes and statements
 app.get('/api/user/nodes/:context?', api.nodes);
 app.get('/api/user/statements/:context?', api.entries);
-app.get('/api/user/:id', api.user);
+
+// External API to get nodes and statements
+app.get('/api2/user/nodes/:context?', api2.nodes);
+app.get('/api2/user/statements/:context?', api2.entries);
+
 app.get('/api/public/nodes/:user?', validate.getUserID(), api.nodes);
 app.post('/api/entry', entries.submit);
+
 app.get('/contexts/:context?', pass.ensureAuthenticated, entries.list);
 app.get('/users/:user?', validate.getUserID(), entries.list);
 app.get('/settings', pass.ensureAuthenticated, settings.render);
