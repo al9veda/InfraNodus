@@ -103,7 +103,7 @@ app.post(
 );
 
 app.get('/api/user/nodes/:context?', api.nodes);
-app.get('/api/user/statements', api.entries);
+app.get('/api/user/statements/:context?', api.entries);
 app.get('/api/user/:id', api.user);
 app.get('/api/public/nodes/:user?', validate.getUserID(), api.nodes);
 app.post('/api/entry', entries.submit);

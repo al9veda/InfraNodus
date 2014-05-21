@@ -29,10 +29,29 @@ exports.user = function(req, res, next){
 };
 
 exports.entries = function(req, res, next){
-    var page = req.page;
-    Entry.getRange(res.locals.user.uid, function(err, entries){
 
-        console.log("Getting nodes for " + res.locals.user.uid);
+    // This is for pagination, but not currently used
+    var page = req.page;
+
+    // Define user
+    res.locals.user = req.user;
+
+    // Define whose graph is seen (receiver) and who sees the graph (perceiver)
+    var receiver = '';
+    var perceiver = '';
+
+    // Set that by default the one who sees can only see their own graph, if logged in
+    // TODO implement viewing public data of others
+
+    if (res.locals.user) {
+        receiver = res.locals.user.uid;
+        perceiver = res.locals.user.uid;
+    }
+
+    var contexts = [];
+    contexts.push(req.params.context);
+
+    Entry.getRange(receiver, perceiver, contexts, function(err, entries){
 
         if (err) return next(err);
 
@@ -59,6 +78,8 @@ exports.nodes = function(req, res, next){
     // TODO think of how this is bypassed when API is functional
     // Give this user a variable
     res.locals.user = req.user;
+
+    console.log(req.user);
 
     // Do we want to see graphs that include "near" 4-word gap scan?
     var fullview = res.locals.user.fullview;
