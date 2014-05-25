@@ -15,6 +15,8 @@
 
 var Entry = require('../lib/entry');
 var FlowdockText = require("flowdock-text");
+var validate = require('../lib/middleware/validate');
+
 
 
 exports.populate = function(req, res, next) {
@@ -160,7 +162,22 @@ exports.submit = function(req, res, next){
 
     // Here we process the data of the POST request, the entry.body and entry.hashtags fields
 
-    var data = req.body.entry;
+    var statement = req.body.entry.body;
+
+    statement = validate.required(statement, res);
+
+    statement = validate.lengthAbove(statement, 4, res);
+
+    statement = validate.stackOverflow(statement, res);
+
+    statement = validate.sanitize(statement);
+
+    var hashtags = validate.getHashtags(statement, res);
+
+        /*validate.isToDelete();*/
+
+    var contexts = validate.getContext(statement, req);
+
 
 
     // Then we ascribe the data that the Entry object needs in order to survive
@@ -170,9 +187,9 @@ exports.submit = function(req, res, next){
         "by_uid": res.locals.user.uid,
         "by_id": res.locals.user.uid,
         "by_name": res.locals.user.name,
-        "contexts": data.contexts,
-        "hashtags": data.hashtags,
-        "text": data.body,
+        "contexts": contexts,
+        "hashtags": hashtags,
+        "text": statement,
         "fullscan": res.locals.user.fullscan
 
     });

@@ -95,13 +95,6 @@ app.post(
     '/post',
     pass.ensureAuthenticated,
     validate.isLoggedIn(),
-    validate.required('entry[body]'),
-    validate.lengthAbove('entry[body]', 4),
-    validate.stackOverflow('entry[body]'),
-    validate.sanitize('entry[body]'),
-    validate.getHashtags('entry[body]'),
-    validate.isToDelete(),
-    validate.getContext('entry[body]'),
     entries.submit
 );
 
@@ -118,7 +111,7 @@ app.get('/api2/user/statements/:context?', api2.entries);
 // context is the context (optional),
 // statementid is the ID of a statement to edit / delete (optional)
 // submit = 'edit' to edit, delete = 'delete' to delete (optional)
-app.post('/api2/post',
+/*app.post('/api2/post',
     validate.required('entry[body]'),
     validate.lengthAbove('entry[body]', 4),
     validate.stackOverflow('entry[body]'),
@@ -126,7 +119,7 @@ app.post('/api2/post',
     validate.getHashtags('entry[body]'),
     validate.isToDelete(),
     validate.getContext('entry[body]'),
-    entries.submit);
+    entries.submit);*/
 
 app.get('/contexts/:context?', pass.ensureAuthenticated, entries.list);
 app.get('/users/:user?', validate.getUserID(), entries.list);
