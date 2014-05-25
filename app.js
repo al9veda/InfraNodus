@@ -132,7 +132,7 @@ app.get('/contexts/:context?', pass.ensureAuthenticated, entries.list);
 app.get('/users/:user?', validate.getUserID(), entries.list);
 app.get('/settings', pass.ensureAuthenticated, settings.render);
 app.post('/settings', pass.ensureAuthenticated, settings.modify);
-app.get('/', pass.ensureAuthenticated, entries.list);
+app.get('/', pass.ensureAuthenticated, entries.populate, entries.list);
 
 
 
