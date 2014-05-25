@@ -16,7 +16,7 @@ exports.settings = {
 
     // 1 - Either the hashtags or the words can be the nodes for each statement
     // 0 - The nodes in the graph are both the words and the hashtags
-    hashnodes: 1,
+    hashnodes: 0,
 
     // 1 - #hashtags are automatically converted to their morphemes (#cats = #cat, #taken = #take)
     // 0 - #hashtags stay like they are
