@@ -20,72 +20,6 @@ var options = require('../options');
 var async = require('async');
 
 
-exports.populate = function(req, res, next) {
-
-    if (!res.locals.user.loggedin || res.locals.user.loggedin == '0') {
-
-        // User never logged in
-        // So let's add the first statements for hotstart
-
-        console.log("never logged");
-
-        var contexts = ['fruits'];
-        var hashtags = ['apple','orange','good','bananas'];
-        var textbody = 'apples and oranges are better than bananas @fruits';
-
-
-        var entry = new Entry({
-            "by_uid": res.locals.user.uid,
-            "by_id": res.locals.user.uid,
-            "by_name": res.locals.user.name,
-            "contexts": contexts,
-            "hashtags": hashtags,
-            "text": textbody,
-            "fullscan": res.locals.user.fullscan
-
-        });
-
-        modifyVirginity(res.locals.user.uid);
-
-        function modifyVirginity (user_id) {
-
-            var modify_query = 'MATCH (u:User{uid:"' + user_id + '"}) SET u.loggedin = 1;';
-
-            dbneo.cypherQuery(modify_query, function(err, cypherAnswer){
-                if(err) {
-                    err.type = 'neo4j';
-                    return callback(err);
-                }
-            });
-
-        }
-
-        // Now that the object is created, we can call upon the save function
-
-
-        entry.save(function(err) {
-
-            if (err) return next(err);
-
-            next();
-
-        });
-
-        // Set loggedin flag to 1, so we know he logged in already.
-
-
-
-    }
-
-    else {
-
-        next();
-
-    }
-
-}
-
-
 exports.list = function(req, res, next){
 
     // The one who sees the statements (hello Tengo @1Q84 #Murakami)
@@ -246,7 +180,11 @@ exports.submit = function(req, res, next){
                 if (err) return next(err);
                 if (req.remoteUser) {
                     res.json({message: 'Entry added.'});
-                } else {
+                }
+                else if (req.internal) {
+                    next();
+                }
+                else {
                     if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
                         res.redirect('/');
                     }
@@ -258,23 +196,6 @@ exports.submit = function(req, res, next){
             });
         }
     });
-
-
-
-
-
-
-
-    /*validate.isToDelete();*/
-
-
-
-
-
-
-    // Now that the object is created, we can call upon the save function
-
-    // TODO add here a check if there's a parameter in req. that makes us not return but simply proceed further.
 
 
 };
