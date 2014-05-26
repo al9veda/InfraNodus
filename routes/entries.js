@@ -182,7 +182,7 @@ exports.submit = function(req, res, next){
                     res.json({message: 'Entry added.'});
                 }
                 else if (req.internal) {
-                    next();
+                    //next();
                 }
                 else {
                     if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
