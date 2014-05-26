@@ -131,11 +131,11 @@ exports.submit = function(req, res, next){
         function(statement, callback){
             var hashtags = validate.getHashtags(statement, res);
 
-            if  (hashtags.length >= maxhash) {
-                callback('please, try to use less than ' + maxhash + ' #hashtags');
-            }
-            else if (hashtags.length == 0) {
+            if  (!hashtags) {
                 callback('there should be at least one #hashtag. you can double-click the words to hashtag them.');
+            }
+            else if (hashtags.length >= maxhash) {
+                callback('please, try to use less than ' + maxhash + ' #hashtags');
             }
             else {
                 callback(null, statement, hashtags);
