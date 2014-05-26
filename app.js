@@ -95,6 +95,7 @@ app.post(
     '/post',
     pass.ensureAuthenticated,
     validate.isLoggedIn(),
+    validate.isToDelete(),
     entries.submit
 );
 
