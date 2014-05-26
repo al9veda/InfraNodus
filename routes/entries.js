@@ -209,6 +209,11 @@ exports.submit = function(req, res, next){
         },
         function(statement, hashtags, callback){
             var contexts = validate.getContext(statement, default_context);
+            for (var i = 0; i < contexts.length; ++i) {
+                if (statement.indexOf('@' + contexts[i]) == -1) {
+                    statement +=  ' @' + contexts[i];
+                }
+            }
             callback(null, statement, hashtags, contexts);
         },
         function(statement, hashtags, contexts, callback){
