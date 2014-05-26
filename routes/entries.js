@@ -160,6 +160,13 @@ exports.form = function(req, res){
 
 exports.submit = function(req, res, next){
 
+
+    // TODO All below will be taken to a separate function and we'll use async.waterfall to ensure it's sequential
+
+    // TODO Maybe it's also a good opportunity to get rid of @contexts and change it to simple lists
+
+    // TODO For numerous entries https://github.com/caolan/async#whilst
+
     // Here we process the data of the POST request, the entry.body and entry.hashtags fields
 
     var statement = req.body.entry.body;
@@ -220,6 +227,7 @@ exports.submit = function(req, res, next){
 
     // Now that the object is created, we can call upon the save function
 
+    // TODO add here a check if there's a parameter in req. that makes us not return but simply proceed further.
 
     entry.save(function(err) {
         if (err) return next(err);
