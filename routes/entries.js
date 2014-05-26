@@ -17,6 +17,7 @@ var Entry = require('../lib/entry');
 var FlowdockText = require("flowdock-text");
 var validate = require('../lib/middleware/validate');
 var options = require('../options');
+var async = require('async');
 
 
 exports.populate = function(req, res, next) {
@@ -175,72 +176,103 @@ exports.submit = function(req, res, next){
     var min_length = options.settings.min_text_length;
     var maxhash = options.settings.max_hashtags;
 
-    if (!statement) {
-        res.error('please, enter a statement');
-        res.redirect('back');
-    }
-    else if (statement.length <= min_length) {
-         res.error('a statement must have more than ' + min_length + ' characters');
-         res.redirect('back');
-    }
-    else if (statement.length > max_length) {
-        res.error('try to make it less than ' + max_length + ' characters, please...');
-        res.redirect('back');
-    }
 
 
-    statement = validate.sanitize(statement);
+    async.waterfall([
+        function(callback){
+            if (!statement) {
+                callback('please, enter a statement');
+            }
+            else if (statement.length <= min_length) {
+                callback('a statement must have more than ' + min_length + ' characters');
+            }
+            else if (statement.length > max_length) {
+                callback('try to make it less than ' + max_length + ' characters, please...');
+            }
+            else {
+                callback(null, statement);
+            }
+        },
+        function(statement, callback){
+            statement = validate.sanitize(statement);
+            callback(null, statement);
+        },
+        function(statement, callback){
+            var hashtags = validate.getHashtags(statement, res);
+
+            if  (hashtags.length >= maxhash) {
+                callback('please, try to use less than ' + maxhash + ' #hashtags');
+            }
+            else if (hashtags.length == 0) {
+                callback('there should be at least one #hashtag. you can double-click the words to hashtag them.');
+            }
+            else {
+                callback(null, statement, hashtags);
+            }
+        },
+        function(statement, hashtags, callback){
+            var contexts = validate.getContext(statement, default_context);
+            callback(null, statement, hashtags, contexts);
+        },
+        function(statement, hashtags, contexts, callback){
+            // Then we ascribe the data that the Entry object needs in order to survive
+            // We create various fields and values for that object and initialize it
+
+            var entry = new Entry({
+                "by_uid": res.locals.user.uid,
+                "by_id": res.locals.user.uid,
+                "by_name": res.locals.user.name,
+                "contexts": contexts,
+                "hashtags": hashtags,
+                "text": statement,
+                "fullscan": res.locals.user.fullscan
+
+            });
+            callback(null, entry);
+        }
+    ], function (err, entry) {
+
+        if (err) {
+
+            console.log(err);
+            res.error(err);
+            res.redirect('back');
+
+        }
+        else {
+            entry.save(function(err) {
+                if (err) return next(err);
+                if (req.remoteUser) {
+                    res.json({message: 'Entry added.'});
+                } else {
+                    if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
+                        res.redirect('/');
+                    }
+                    else {
+                        res.redirect('/contexts/' + default_context);
+                    }
+
+                }
+            });
+        }
+    });
 
 
 
-    var hashtags = validate.getHashtags(statement, res);
 
-    if  (hashtags.length >= maxhash) {
-        res.error('please, try to use less than ' + maxhash + ' #hashtags');
-        res.redirect('back');
-    }
-    else {
-        res.error('there should be at least one #hashtag. you can double-click the words to hashtag them.');
-        res.redirect('back');
-    }
+
 
 
     /*validate.isToDelete();*/
 
-    var contexts = validate.getContext(statement, default_context);
 
 
 
-    // Then we ascribe the data that the Entry object needs in order to survive
-    // We create various fields and values for that object and initialize it
 
-    var entry = new Entry({
-        "by_uid": res.locals.user.uid,
-        "by_id": res.locals.user.uid,
-        "by_name": res.locals.user.name,
-        "contexts": contexts,
-        "hashtags": hashtags,
-        "text": statement,
-        "fullscan": res.locals.user.fullscan
-
-    });
 
     // Now that the object is created, we can call upon the save function
 
     // TODO add here a check if there's a parameter in req. that makes us not return but simply proceed further.
 
-    entry.save(function(err) {
-        if (err) return next(err);
-        if (req.remoteUser) {
-            res.json({message: 'Entry added.'});
-        } else {
-            if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
-                res.redirect('/');
-            }
-            else {
-                res.redirect('/contexts/' + default_context);
-            }
 
-        }
-    });
 };
