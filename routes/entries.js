@@ -16,7 +16,7 @@
 var Entry = require('../lib/entry');
 var FlowdockText = require("flowdock-text");
 var validate = require('../lib/middleware/validate');
-
+var options = require('../options');
 
 
 exports.populate = function(req, res, next) {
@@ -163,20 +163,44 @@ exports.submit = function(req, res, next){
     // Here we process the data of the POST request, the entry.body and entry.hashtags fields
 
     var statement = req.body.entry.body;
+    var default_context = req.body.context;
+    var max_length = options.settings.max_text_length;
+    var min_length = options.settings.min_text_length;
+    var maxhash = options.settings.max_hashtags;
 
-    statement = validate.required(statement, res);
+    if (!statement) {
+        res.error('please, enter a statement');
+        res.redirect('back');
+    }
+    else if (statement.length <= min_length) {
+         res.error('a statement must have more than ' + min_length + ' characters');
+         res.redirect('back');
+    }
+    else if (statement.length > max_length) {
+        res.error('try to make it less than ' + max_length + ' characters, please...');
+        res.redirect('back');
+    }
 
-    statement = validate.lengthAbove(statement, 4, res);
-
-    statement = validate.stackOverflow(statement, res);
 
     statement = validate.sanitize(statement);
 
+
+
     var hashtags = validate.getHashtags(statement, res);
 
-        /*validate.isToDelete();*/
+    if  (hashtags.length >= maxhash) {
+        res.error('please, try to use less than ' + maxhash + ' #hashtags');
+        res.redirect('back');
+    }
+    else {
+        res.error('there should be at least one #hashtag. you can double-click the words to hashtag them.');
+        res.redirect('back');
+    }
 
-    var contexts = validate.getContext(statement, req);
+
+    /*validate.isToDelete();*/
+
+    var contexts = validate.getContext(statement, default_context);
 
 
 
@@ -196,7 +220,6 @@ exports.submit = function(req, res, next){
 
     // Now that the object is created, we can call upon the save function
 
-    var default_context = req.body.context;
 
     entry.save(function(err) {
         if (err) return next(err);
