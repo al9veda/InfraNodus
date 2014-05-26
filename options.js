@@ -36,6 +36,13 @@ exports.settings = {
 
 }
 
+exports.defaultstatements = {
+    1: 'welcome! using infranodus you can make and find connections between your thoughts and ideas. @help',
+    2: 'this is a statement. if you click it, you will see it on the graph. if you double-click it, you can edit it or delete it. @help',
+    3: 'you can also use #hashtags to make more #precise #connections to your #idea @help',
+    4: 'you can use @mentions to create new lists of ideas.'
+}
+
 // Config file exists?
 
 if (fs.existsSync(configPath)) {
