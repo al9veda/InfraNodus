@@ -37,7 +37,7 @@ exports.settings = {
 }
 
 exports.defaultstatements = {
-    a: 'welcome! using infranodus you can make and find connections between your thoughts and ideas. @help',
+    a: 'welcome! using infranodus you can create and discover connections between your thoughts and ideas through a graph. @help',
     b: 'this is a statement (or a note). if you click it, you will see it on the graph. if you double-click it, you can edit it or delete it. @help',
     c: 'you can also use #hashtags to make more #precise #connections to your #idea @help',
     d: 'you can use @mentions to create new lists of ideas.'
