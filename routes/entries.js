@@ -187,13 +187,23 @@ exports.submit = function(req, res, next){
         if (err) {
 
             console.log(err);
-            res.error(err);
-            res.redirect('back');
+
+            if (!req.internal) {
+                res.error(err);
+                res.redirect('back');
+            }
 
         }
         else {
             entry.save(function(err) {
-                if (err) return next(err);
+                if (err) {
+                    if (req.internal) {
+
+                    }
+                    else {
+                        return next(err);
+                    }
+                }
                 if (req.remoteUser) {
                     res.json({message: 'Entry added.'});
                 }

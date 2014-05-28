@@ -45,11 +45,11 @@ exports.submit = function(req, res) {
 
     var user_id = res.locals.user.uid;
 
-    T.get('statuses/user_timeline', { screen_name: 'noduslabs', count: 5 }, function(err, data, response) {
+    T.get('statuses/user_timeline', { screen_name: 'followlori', count: 100 }, function(err, data, response) {
 
         var statements = [];
 
-        var default_context = 'twitter';
+        var default_context = 'twitter2';
 
         for (key in data) {
             var statement = data[key].text;

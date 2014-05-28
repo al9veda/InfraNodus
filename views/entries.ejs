@@ -124,10 +124,14 @@ var contextNames = [];
 var statementsOfContext = [];
 
 // Path to the JSON graph file (specific context or a general one)
-var jsonpath = '/api/user/nodes/<%= context %>';
+    <% if (addcontext) { %>
+        var jsonpath = '/api/user/nodes/<%= context %>?addcontext=<%= addcontext %>';
+        var addcontext = "<%= addcontext %>";
+    <% } else { %>
+        var jsonpath = '/api/user/nodes/<%= context %>';
+        var addcontext = "";
+    <% }  %>
 
-// A context for comparison
-var addcontext = "";
 
 // Get current context
 var path = window.location.pathname;
@@ -277,7 +281,7 @@ sigma.parsers.json(
 
                 // Check if the node is in additional context and if yes, give it a different color
                 if (addcontext) {
-                    if (contextNodeID[addcontext].indexOf(n.id) > -1) {
+                    if (contextNodeID[addcontext].indexOf(n.id) > -1 && contextNodeID[current_context].indexOf(n.id) > -1) {
                         n.color = color_addcontext;
                     }
                 }
