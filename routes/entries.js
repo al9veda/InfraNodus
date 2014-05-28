@@ -95,14 +95,16 @@ exports.form = function(req, res){
 
 exports.submit = function(req, res, next){
 
-    // TODO Maybe it's also a good opportunity to get rid of @contexts and change it to simple lists
-
-    // TODO For numerous entries https://github.com/caolan/async#whilst
+    // TODO  it's also a good opportunity to get rid of @contexts and change it to simple lists
 
     // Here we process the data of the POST request, the entry.body and entry.hashtags fields
 
     var statement = req.body.entry.body;
+
+    // TODO this will be later replaced with an array of contexts derived before .submit is called
     var default_context = req.body.context;
+    var contextids = req.contextids;
+
     var max_length = options.settings.max_text_length;
     var min_length = options.settings.min_text_length;
     var maxhash = options.settings.max_hashtags;
@@ -142,10 +144,20 @@ exports.submit = function(req, res, next){
             }
         },
         function(statement, hashtags, callback){
-            var contexts = validate.getContext(statement, default_context);
-            for (var i = 0; i < contexts.length; ++i) {
-                if (statement.indexOf('@' + contexts[i]) == -1) {
-                    statement +=  ' @' + contexts[i];
+
+            var contexts = [];
+            var contextsextracted = validate.getContext(statement, default_context);
+
+            for (var i = 0; i < contextids.length; i++) {
+                if (contextsextracted.indexOf(contextids[i].name) > -1) {
+                    contexts.push(contextids[i]);
+                }
+            }
+
+
+           for (var i = 0; i < contexts.length; ++i) {
+                if (statement.indexOf('@' + contexts[i].name) == -1) {
+                    statement +=  ' @' + contexts[i].name;
                 }
             }
             callback(null, statement, hashtags, contexts);

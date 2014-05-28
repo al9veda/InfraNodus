@@ -96,6 +96,7 @@ app.post(
     pass.ensureAuthenticated,
     validate.isLoggedIn(),
     validate.isToDelete(),
+    validate.getContextForEntry('entry[body]'),
     entries.submit
 );
 
@@ -114,6 +115,7 @@ app.get('/api2/user/statements/:context?', api2.entries);
 // submit = 'edit' to edit, delete = 'delete' to delete (optional)
 app.post('/api2/post',
     validate.isToDelete(),
+    validate.getContextForEntry('entry[body]'),
     entries.submit);
 
 app.get('/contexts/:context?', pass.ensureAuthenticated, entries.list);
