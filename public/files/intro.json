@@ -1,0 +1,246 @@
+{
+  "nodes": [
+    {
+      "id": "ec530601-e3fa-11e3-ac6a-159ed2b68234",
+      "label": "connect"
+    },
+    {
+      "id": "96ffaac1-a145-11e3-98c5-476729c16049",
+      "label": "graph"
+    },
+    {
+      "id": "021f1052-bf61-11e3-bdbd-476fefd65326",
+      "label": "help"
+    },
+    {
+      "id": "7e201c1a-a186-11e3-ace9-1fa4c6cf2894",
+      "label": "idea"
+    },
+    {
+      "id": "002dd771-a140-11e3-98c5-476729c16049",
+      "label": "infranodus"
+    },
+    {
+      "id": "a98fbf82-b307-11e3-b5a6-6f4a7cfb41bc",
+      "label": "note"
+    },
+    {
+      "id": "8d521a10-e67f-11e3-9940-4d840b2323e2",
+      "label": "overview"
+    },
+    {
+      "id": "6a4408e8-af8d-11e3-a530-f7ff52338200",
+      "label": "research"
+    },
+    {
+      "id": "4cc28bea-ad1a-11e3-b535-0f31502e3c9f",
+      "label": "tool"
+    },
+    {
+      "id": "565c0ae4-e67d-11e3-9940-4d840b2323e2",
+      "label": "tweet"
+    }
+  ],
+  "edges": [
+    {
+      "source": "565c0ae4-e67d-11e3-9940-4d840b2323e2",
+      "target": "96ffaac1-a145-11e3-98c5-476729c16049",
+      "id": "8d524127-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "2"
+    },
+    {
+      "source": "7e201c1a-a186-11e3-ace9-1fa4c6cf2894",
+      "target": "96ffaac1-a145-11e3-98c5-476729c16049",
+      "id": "8d524126-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "1"
+    },
+    {
+      "source": "6a4408e8-af8d-11e3-a530-f7ff52338200",
+      "target": "96ffaac1-a145-11e3-98c5-476729c16049",
+      "id": "8d524124-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "3"
+    },
+    {
+      "source": "021f1052-bf61-11e3-bdbd-476fefd65326",
+      "target": "96ffaac1-a145-11e3-98c5-476729c16049",
+      "id": "6d058449-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "6d044bc0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "2"
+    },
+    {
+      "source": "4cc28bea-ad1a-11e3-b535-0f31502e3c9f",
+      "target": "96ffaac1-a145-11e3-98c5-476729c16049",
+      "id": "6d058448-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "6d044bc0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "1"
+    },
+    {
+      "source": "ec530601-e3fa-11e3-ac6a-159ed2b68234",
+      "target": "96ffaac1-a145-11e3-98c5-476729c16049",
+      "id": "6d058446-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "6d044bc0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "3"
+    },
+    {
+      "source": "4cc28bea-ad1a-11e3-b535-0f31502e3c9f",
+      "target": "ec530601-e3fa-11e3-ac6a-159ed2b68234",
+      "id": "6d058444-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "6d044bc0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "2"
+    },
+    {
+      "source": "002dd771-a140-11e3-98c5-476729c16049",
+      "target": "ec530601-e3fa-11e3-ac6a-159ed2b68234",
+      "id": "6d058443-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "6d044bc0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "1"
+    },
+    {
+      "source": "021f1052-bf61-11e3-bdbd-476fefd65326",
+      "target": "ec530601-e3fa-11e3-ac6a-159ed2b68234",
+      "id": "6d058441-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "6d044bc0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "3"
+    },
+    {
+      "source": "002dd771-a140-11e3-98c5-476729c16049",
+      "target": "021f1052-bf61-11e3-bdbd-476fefd65326",
+      "id": "021f1055-bf61-11e3-bdbd-476fefd65326",
+      "edge_context": "infranodus",
+      "statement_id": "021e25f0-bf61-11e3-bdbd-476fefd65326",
+      "weight": "1"
+    },
+    {
+      "source": "002dd771-a140-11e3-98c5-476729c16049",
+      "target": "021f1052-bf61-11e3-bdbd-476fefd65326",
+      "id": "6d055d37-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "6d044bc0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "2"
+    },
+    {
+      "source": "4cc28bea-ad1a-11e3-b535-0f31502e3c9f",
+      "target": "021f1052-bf61-11e3-bdbd-476fefd65326",
+      "id": "6d055d35-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "6d044bc0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "3"
+    },
+    {
+      "source": "002dd771-a140-11e3-98c5-476729c16049",
+      "target": "4cc28bea-ad1a-11e3-b535-0f31502e3c9f",
+      "id": "6d055d32-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "6d044bc0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "3"
+    },
+    {
+      "source": "002dd771-a140-11e3-98c5-476729c16049",
+      "target": "8d521a10-e67f-11e3-9940-4d840b2323e2",
+      "id": "8d521a11-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "3"
+    },
+    {
+      "source": "002dd771-a140-11e3-98c5-476729c16049",
+      "target": "a98fbf82-b307-11e3-b5a6-6f4a7cfb41bc",
+      "id": "8d521a16-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "2"
+    },
+    {
+      "source": "8d521a10-e67f-11e3-9940-4d840b2323e2",
+      "target": "a98fbf82-b307-11e3-b5a6-6f4a7cfb41bc",
+      "id": "8d521a14-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "3"
+    },
+    {
+      "source": "8d521a10-e67f-11e3-9940-4d840b2323e2",
+      "target": "7e201c1a-a186-11e3-ace9-1fa4c6cf2894",
+      "id": "8d521a1b-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "2"
+    },
+    {
+      "source": "002dd771-a140-11e3-98c5-476729c16049",
+      "target": "7e201c1a-a186-11e3-ace9-1fa4c6cf2894",
+      "id": "8d521a1a-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "1"
+    },
+    {
+      "source": "a98fbf82-b307-11e3-b5a6-6f4a7cfb41bc",
+      "target": "7e201c1a-a186-11e3-ace9-1fa4c6cf2894",
+      "id": "8d521a18-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "3"
+    },
+    {
+      "source": "a98fbf82-b307-11e3-b5a6-6f4a7cfb41bc",
+      "target": "565c0ae4-e67d-11e3-9940-4d840b2323e2",
+      "id": "8d521a20-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "2"
+    },
+    {
+      "source": "8d521a10-e67f-11e3-9940-4d840b2323e2",
+      "target": "565c0ae4-e67d-11e3-9940-4d840b2323e2",
+      "id": "8d521a1f-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "1"
+    },
+    {
+      "source": "7e201c1a-a186-11e3-ace9-1fa4c6cf2894",
+      "target": "565c0ae4-e67d-11e3-9940-4d840b2323e2",
+      "id": "8d521a1d-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "3"
+    },
+    {
+      "source": "7e201c1a-a186-11e3-ace9-1fa4c6cf2894",
+      "target": "6a4408e8-af8d-11e3-a530-f7ff52338200",
+      "id": "8d524122-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "2"
+    },
+    {
+      "source": "a98fbf82-b307-11e3-b5a6-6f4a7cfb41bc",
+      "target": "6a4408e8-af8d-11e3-a530-f7ff52338200",
+      "id": "8d524121-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "1"
+    },
+    {
+      "source": "565c0ae4-e67d-11e3-9940-4d840b2323e2",
+      "target": "6a4408e8-af8d-11e3-a530-f7ff52338200",
+      "id": "8d521a22-e67f-11e3-9940-4d840b2323e2",
+      "edge_context": "help",
+      "statement_id": "8d5108a0-e67f-11e3-9940-4d840b2323e2",
+      "weight": "3"
+    }
+  ]
+}
