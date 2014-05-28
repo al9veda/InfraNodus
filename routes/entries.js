@@ -103,6 +103,10 @@ exports.submit = function(req, res, next){
 
     // TODO this will be later replaced with an array of contexts derived before .submit is called
     var default_context = req.body.context;
+
+    console.log("default context");
+    console.log(default_context);
+
     var contextids = req.contextids;
 
     var max_length = options.settings.max_text_length;
