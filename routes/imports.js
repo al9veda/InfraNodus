@@ -45,17 +45,55 @@ exports.submit = function(req, res) {
 
     var user_id = res.locals.user.uid;
 
-    T.get('statuses/user_timeline', { screen_name: 'followlori', count: 100 }, function(err, data, response) {
+    // TODO pass on in req. the
+    // 1) Service (Twitter, Facebook)
+    // 2) Type of Query (Hashtags Universe, User Universe, Users Connected)
+    // 3) List where it has to be saved (Category name)
+    // 4) Override setting - viz both hashtags and words
+    // 5) Set how many tweets (defo: 50, max: 100)
+    // 6) Make it more like a game -
+
+    // For user timeline
+ /*   var twitterRequest = {
+          type: 'statuses/user_timeline',
+          params: {
+                screen_name: 'followlori',
+                count: 100
+          }
+    }*/
+
+    var twitterRequest = {
+        type: 'search/tweets',
+        params: {
+            q: '#visualization',
+            count: 100
+        }
+    }
+
+
+
+    T.get(twitterRequest.type, twitterRequest.params, function(err, data, response) {
 
         var statements = [];
 
-        var default_context = 'twitter2';
+        var default_context = 'twitterdata';
 
-        for (key in data) {
-            var statement = data[key].text;
+        var result = data;
+
+        // For hashtag surrounding search remove the actual hashtag from all tweets
+        if (twitterRequest.type == 'search/tweets') {
+            result = data['statuses'];
+            default_context = '';
+        }
+
+        for (key in result) {
+            var statement = result[key].text;
             var mentions = FlowdockText.extractMentions(statement);
             for (index in mentions) {
                 statement = statement.replace(mentions[index], 'user_' + mentions[index].substr(1));
+            }
+            if (twitterRequest.type == 'search/tweets') {
+                statement = statement.toLowerCase().replace(twitterRequest.params.q,'@'+twitterRequest.params.q.substr(1))
             }
             statements.push(statement);
         }
