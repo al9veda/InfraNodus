@@ -580,7 +580,9 @@ sigma.parsers.json(
 
     // Textarea select conversion to hashtags
 
-    var getSelected = function(){
+    // For now it's disabled, but will be enabled for bulk statement correction later
+
+    /*var getSelected = function(){
         var t = '';
         if(window.getSelection) {
             t = window.getSelection();
@@ -609,7 +611,7 @@ sigma.parsers.json(
             $("#statement").val(replacedString);
         }
 
-    });
+    });*/
 
 
 
@@ -1111,7 +1113,7 @@ sigma.parsers.json(
                 index: 1,
                 replace: function (word) {
 
-                        return '#' + word + ' ';
+                        return word + ' ';
 
                 }
             }
