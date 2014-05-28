@@ -43,6 +43,7 @@ var pass = require('./lib/pass')
 var passport = require('passport');
 
 var settings = require('./routes/settings');
+var imports = require('./routes/imports');
 
 var app = express();
 
@@ -122,6 +123,8 @@ app.get('/contexts/:context?', pass.ensureAuthenticated, entries.list);
 app.get('/users/:user?', validate.getUserID(), entries.list);
 app.get('/settings', pass.ensureAuthenticated, settings.render);
 app.post('/settings', pass.ensureAuthenticated, settings.modify);
+app.get('/import', pass.ensureAuthenticated, imports.render);
+app.post('/import', pass.ensureAuthenticated, imports.submit);
 app.get('/', pass.ensureAuthenticated, entries.list);
 
 

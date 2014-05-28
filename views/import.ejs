@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/jquery.textcomplete.css' />
+    <link rel="stylesheet" href="/stylesheets/side-menu.css">
+    <link rel="stylesheet" href="/stylesheets/jquery-ui.min.css">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+
+
+</head>
+<body>
+<% include statsabove %>
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+
+    <a href="javascript:" id="graph-link">
+        <!-- Graph icon -->
+        <span></span>
+    </a>
+
+    <div id="menu">
+        <div class="pure-menu pure-menu-open">
+            <% if (locals.user) { %>
+            <a class="pure-menu-heading" href="/"><%= user.name %></a>
+            <br>
+            <ul id="contexts" class="contexts">
+
+            </ul>
+            &nbsp;<br><br>
+
+            <% } else { %>
+            <% include menu %>
+
+            <% } %>
+        </div>
+
+    </div>
+
+
+    <div id='content'>
+
+        <div id='statements'>
+            <% include messages %>
+
+            <form action='/import' name='submitform' id="submitform" method='post' class='pure-form'>
+
+                <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a link to a twitter profile here to visualize all its tweets...'></textarea>
+                <input type="hidden" name="context" value="twitter">
+                <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
+                <input type="hidden" name="statementid" value="">
+                &nbsp;<br>
+                <input type='submit' name="submit" value="save" class="pure-button pure-button-primary">
+
+            </form>   &nbsp;<br>&nbsp;<br>
+
+
+
+
+
+        </div>
+
+        <div id="graph-container"></div>
+
+        <div id="graph-tools"><a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a>&nbsp;&nbsp;&nbsp;<a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a></div>
+
+    </div>
+
+
+
+
+</div>
+
+<script src="/javascripts/sigma/sigma.min.js"></script>
+<script src="/javascripts/sigma/plugins/sigma.parsers.json.min.js"></script>
+<script src="/javascripts/sigma/plugins/sigma.layout.forceAtlas2.js"></script>
+<script src="/javascripts/sigma/plugins/sigma.plugins.animate.min.js"></script>
+<script src="/javascripts/jquery.min.js"></script>
+<script src="/javascripts/jquery-ui.min.js"></script>
+<script src="/javascripts/string.min.js"></script>
+<script src="/javascripts/underscore-min.js"></script>
+<script src="/javascripts/jquery.textcomplete.js"></script>
+<script src='/javascripts/jquery.autosize.js'></script>
+<script src="/javascripts/ui.js"></script>
+<script src="/javascripts/jquery.mobile-events.min.js"></script>
+
+
+
+
+<% include statsbelow %>
+</body>
+</html>
