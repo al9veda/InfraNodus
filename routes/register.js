@@ -23,7 +23,7 @@ var options = require('../options');
 // The form route function renders the register.ejs template from views and adds 'Register' into the title field there
 
 exports.form = function(req, res){
-    res.render('register', { title: 'Register' });
+    res.render('register', { title: 'InfraNodus: Polysingularity Thinking Tool' });
 };
 
 // This happens when the user accesses /register with a POST request

@@ -6,6 +6,13 @@
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel="stylesheet" href="/stylesheets/side-menu.css">
+    <script src="/javascripts/sigma/sigma.min.js"></script>
+    <script src="/javascripts/sigma/plugins/sigma.parsers.json.min.js"></script>
+    <script src="/javascripts/sigma/plugins/sigma.layout.forceAtlas2.js"></script>
+    <script src="/javascripts/sigma/plugins/sigma.plugins.animate.min.js"></script>
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/ui.js"></script>
+
 
 </head>
 <body>
@@ -18,9 +25,14 @@
         <!-- Hamburger icon -->
         <span></span>
     </a>
+
+    <a href="javascript:" id="graph-link">
+        <!-- Graph icon -->
+        <span></span>
+    </a>
+
     <% include menu %>
 
-    <div id="main">
 
 
             <div id="content">
@@ -41,16 +53,141 @@
                     </form>
 
                     &nbsp;<br>
-                    <p class="intro">InfraNodus is a tool that helps you see how it all connects. <br><br>Use it for your notes, ideas, tweets, and research.</p>
+                    <p class="intro">InfraNodus is a tool that helps you see how it all connects. <br><br>Use it to get an overview of your notes, ideas, tweets, and research as a graph.</p>
                     &nbsp;<br>
                     <p>Use InfraNodus for your bookmarks, drag this bookmarklet into your browser's toolbar: <a style="cursor: move;" href="javascript:var a=window,b=document,c=encodeURIComponent,s='';s=document.getSelection().toString();if(s!=''){d=a.open('http://infranodus.com/contexts/bookmarks?url='+c(b.location)+'&urltitle='+c(s),'bkmk_popup','left='+((a.screenX||a.screenLeft)+10)+',top='+((a.screenY||a.screenTop)+10)+',height=420px,width=550px,resizable=1,alwaysRaised=1');}else{d=a.open('http://infranodus.com/contexts/bookmarks?url='+c(b.location)+'&urltitle='+c(b.title),'bkmk_popup','left='+((a.screenX||a.screenLeft)+10)+',top='+((a.screenY||a.screenTop)+10)+',height=420px,width=550px,resizable=1,alwaysRaised=1');}a.setTimeout(function(){d.focus()},300);">GraphMark</a>
                     </p>
 
                 </div>
+
+                <div id="graph-container"></div>
+
+                <div id="graph-tools"><a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a>&nbsp;&nbsp;&nbsp;<a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a></div>
+
             </div>
 
-    </div>
+
+
+
 </div>
+
+
+<script>
+;(function(){
+
+    var jsonpath = '/files/intro.json';
+
+
+
+// The button to hide / show statements
+
+    $("#graph-link").click(function(e) {
+        e.preventDefault();
+        $("#statements").fadeToggle();
+    });
+
+// Add a method to the graph model that returns an
+// object with every neighbors of a node inside:
+
+    sigma.classes.graph.addMethod('neighbors', function(nodeId) {
+        var k,
+                neighbors = {},
+                index = this.allNeighborsIndex[nodeId] || {};
+
+        for (k in index)
+            neighbors[k] = this.nodesIndex[k];
+
+        return neighbors;
+    });
+
+// Initialize JSON parser for SIGMA visualization
+
+    sigma.parsers.json(
+            jsonpath,
+            {
+                container: 'graph-container',
+                renderer: {
+                    container: document.getElementById('graph-container'),
+                    type: 'canvas'
+                },
+                settings: {
+                    minNodeSize: 5,
+                    maxNodeSize: 16,
+                    minEdgeSize: 0.5,
+                    maxEdgeSize: 2,
+                    labelThreshold: 8
+                }
+            },
+            function(sigma) {
+
+                var i,
+                        timeout = 4000,
+                        nodes = sigma.graph.nodes(),
+                        color_context = '#666',
+                        color_addcontext = '#666688',
+                        len = nodes.length;
+
+
+                // This is a fix for JSON
+                // Sigma requires that nodes have X, Y, Size and Color properties which our JSON doesn't have. So we add them.
+                // We also make the initial graph layout circular, so that ForceAtlas always looks the same
+
+                for (i = 0; i < len; i++) {
+                    var angle = Math.PI * 2 * i / len;
+                    nodes[i].x = Math.cos(angle);
+                    nodes[i].y = Math.sin(angle);
+                    nodes[i].size = sigma.graph.degree(nodes[i].id);
+                    nodes[i].color = color_context;
+                }
+
+
+                // Do ForceAtlasLayout
+
+                sigma.startForceAtlas2();
+
+                // Don't run it forever not to overheat :)
+
+                setTimeout(function() {
+                    sigma.stopForceAtlas2();
+                },timeout);
+
+
+
+
+                // Zoom Graph Control
+
+                var c = sigma.camera;
+
+
+                $("#zoom-in").on('click', function(e) {
+                    // Zoom in - single frame :
+                    c.goTo({
+                        ratio: c.ratio / c.settings('zoomingRatio')
+                    });
+                });
+
+                $("#zoom-out").on('click', function(e) {
+                    // Zoom out - single frame :
+                    c.goTo({
+                        ratio: c.ratio * c.settings('zoomingRatio')
+                    });
+                });
+
+
+
+
+            }
+    );
+
+
+
+
+
+
+
+
+})();
+</script>
 
 <script src="/javascripts/ui.js"></script>
 

@@ -78,7 +78,7 @@ exports.list = function(req, res, next){
         }
 
         res.render('entries', {
-            title: 'InfraNodus',
+            title: 'InfraNodus: Polysingularity Thinking Tool',
             entries: entries,
             context: contexts[0],
             addcontext: req.query.addcontext,
