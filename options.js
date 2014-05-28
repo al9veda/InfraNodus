@@ -37,12 +37,12 @@ exports.settings = {
 }
 
 exports.defaultstatements = {
-    f: 'you can also save links from the web (e.g. http://infranodus.com) with descriptions and they will be added to the graph... (btw this statement is in the "private" list because it does not have any mention inside)',
-    e: '@help try to click on a node in a graph: it will show you the statements that contain that node',
-    d: 'you can use @mentions to create new lists of ideas.',
-    c: '@help you can also use #hashtags to make more #precise #connections to your #idea',
-    b: '@help this is a statement (or a note). if you click it, you will see it on the graph. if you double-click it, you can edit it or delete it.',
-    a: '@help welcome! using infranodus you can create and discover connections between your thoughts and ideas through a graph.'
+    f: 'you can also save links from the web (e.g. http://infranodus.com) with descriptions and they will be added to the graph... @bookmarks',
+    e: '@help if you click on a word in a graph, you will see all the notes that contain that word.',
+    d: 'if you use #hashtags, only those #hashtags will be added into the #graph, not the other words you use. #great-feature #web #infranodus #amazing #nice ',
+    c: 'now, try to add your own note. if you use a mention (the @ tag), the note will be added to a new list (see the menu on the left). if you use none, it will be added into the "private" list',
+    b: '@help this is a note. try to click it to see it on the graph. now try to double-click it, so you can edit it or delete it.',
+    a: '@help welcome! using infranodus you can see how your different notes and ideas connect using a graph.'
 }
 
 // Config file exists?
