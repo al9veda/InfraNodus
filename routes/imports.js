@@ -41,42 +41,80 @@ exports.render = function(req, res) {
 
 // POST request to the settings page (change settings)
 
-exports.submit = function(req, res) {
+exports.submit = function(req, res, next) {
 
     var user_id = res.locals.user.uid;
 
-    // TODO pass on in req. the
-    // 1) Service (Twitter, Facebook)
-    // 2) Type of Query (Hashtags Universe, User Universe, Users Connected)
-    // 3) List where it has to be saved (Category name)
-    // 4) Override setting - viz both hashtags and words
-    // 5) Set how many tweets (defo: 50, max: 100)
-    // 6) Make it more like a game -
+    // What will we analyze?
+    var service = req.body.source;
 
-    // For user timeline
- /*   var twitterRequest = {
-          type: 'statuses/user_timeline',
-          params: {
-                screen_name: 'followlori',
-                count: 100
-          }
-    }*/
+    // What will we be extracting
+    var extract = req.body.extract;
 
-    var twitterRequest = {
-        type: 'search/tweets',
-        params: {
-            q: '#visualization',
-            count: 100
+    var searchString = '';
+
+    // What is the search string
+    if (!req.body.search || req.body.search == '')  {
+        res.error('Please, enter the @username or a #hashtag');
+        res.redirect('back');
+    }
+    else {
+        if (req.body.search.charAt(0) != '@' && req.body.search.charAt(0) != '#') {
+            res.error('Please, enter the @username or a #hashtag');
+            res.redirect('back');
+        }
+        searchString = req.body.search;
+    }
+
+    // How many recent posts
+    var limit = 50;
+    if (req.body.limit && req.body.limit < 101) {
+            limit = req.body.limit;
+    }
+
+    // List to be used for import
+    var importContext = 'imported';
+    if (req.body.context && req.body.context.length > 3 && req.body.context.length < 13) {
+        importContext = req.body.context;
+    }
+    else {
+        req.body.context = importContext;
+    }
+
+    var twitterRequest = [];
+
+    if (service == 'twitter' && extract == 'user') {
+         twitterRequest = {
+              type: 'statuses/user_timeline',
+              params: {
+                    screen_name: searchString.substr(1),
+                    count: limit
+              }
+        }
+    }
+    else if (service == 'twitter' && extract == 'hashtag') {
+         twitterRequest = {
+            type: 'search/tweets',
+            params: {
+                q: searchString,
+                count: limit
+            }
         }
     }
 
+    console.log('postparams');
+    console.log(searchString);
+    console.log(importContext);
+    console.log(service);
+    console.log(extract);
 
 
+    if (searchString) {
     T.get(twitterRequest.type, twitterRequest.params, function(err, data, response) {
 
         var statements = [];
 
-        var default_context = 'twitterdata';
+        var default_context = importContext;
 
         var result = data;
 
@@ -90,10 +128,10 @@ exports.submit = function(req, res) {
             var statement = result[key].text;
             var mentions = FlowdockText.extractMentions(statement);
             for (index in mentions) {
-                statement = statement.replace(mentions[index], 'user_' + mentions[index].substr(1));
+                statement = statement.replace(mentions[index], '_@' + mentions[index].substr(1));
             }
             if (twitterRequest.type == 'search/tweets') {
-                statement = statement.toLowerCase().replace(twitterRequest.params.q,'@'+twitterRequest.params.q.substr(1))
+                statement = statement.toLowerCase().replace(twitterRequest.params.q,'_#'+twitterRequest.params.q.substr(1))
             }
             statements.push(statement);
         }
@@ -119,9 +157,10 @@ exports.submit = function(req, res) {
                 body:  {
                     entry: {
                         body: ''
-                    }
+                    },
+                    context: default_context
                 },
-                context: default_context,
+
                 contextids: contexts,
                 internal: 1
             };
@@ -148,7 +187,7 @@ exports.submit = function(req, res) {
 
 
     });
-
+    }
 
 
 

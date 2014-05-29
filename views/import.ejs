@@ -21,39 +21,68 @@
         <span></span>
     </a>
 
-    <a href="javascript:" id="graph-link">
-        <!-- Graph icon -->
-        <span></span>
-    </a>
+    <% include menu %>
 
-    <div id="menu">
-        <div class="pure-menu pure-menu-open">
-            <% if (locals.user) { %>
-            <a class="pure-menu-heading" href="/"><%= user.name %></a>
-            <br>
-            <ul id="contexts" class="contexts">
 
-            </ul>
-            &nbsp;<br><br>
-
-            <% } else { %>
-            <% include menu %>
-
-            <% } %>
-        </div>
-
-    </div>
 
 
     <div id='content'>
 
         <div id='statements'>
+
+            Enter the type of data you want to import:
             <% include messages %>
 
-            <form action='/import' name='submitform' id="submitform" method='post' class='pure-form'>
+            <form action='/import' name='submitform' id="submitform" method='post' class='pure-form pure-form-stacked'>
+                <br>
+                Data source:
+                <label for="source1" class="pure-radio">
+                    <input id="source1" type="radio" name="source" value="twitter" checked>
+                    Twitter
+                </label>
 
-                <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a link to a twitter profile here to visualize all its tweets...'></textarea>
-                <input type="hidden" name="context" value="twitter">
+                <label for="source2" class="pure-radio">
+                    <input id="source2" type="radio" name="source" value="instagram">
+                    Instagram
+                </label>
+                <br>
+
+                Extract:
+                <label for="extract1" class="pure-radio">
+                    <input id="extract1" type="radio" name="extract" value="user" checked>
+                    graph of words used by a user
+                </label>
+
+                <label for="extract2" class="pure-radio">
+                    <input id="extract2" type="radio" name="extract" value="hashtag">
+                    graph of words used with a hashtag
+                </label>
+                <br>
+
+                Profile or Hashtag:
+                <input type='text' name='search' placeholder='@username or #hashtag' />
+                <br>
+
+                Save In List:
+                <input type='text' name='context' value='imported' />
+                <br>
+
+                How Many Recent Posts:
+                <input type='text' name='limit' value='50' />
+                <br>
+
+                Settings:
+                <label for="settings1" class="pure-radio">
+                    <input id="settings1" type="radio" name="settings" value="default" checked>
+                    Process both hashtags and words
+                </label>
+
+                <label for="settings2" class="pure-radio">
+                    <input id="settings2" type="radio" name="settings" value="hashtags">
+                    Process only hashtags
+                </label>
+                <br>
+
                 <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
                 <input type="hidden" name="statementid" value="">
                 &nbsp;<br>
@@ -78,10 +107,7 @@
 
 </div>
 
-<script src="/javascripts/sigma/sigma.min.js"></script>
-<script src="/javascripts/sigma/plugins/sigma.parsers.json.min.js"></script>
-<script src="/javascripts/sigma/plugins/sigma.layout.forceAtlas2.js"></script>
-<script src="/javascripts/sigma/plugins/sigma.plugins.animate.min.js"></script>
+
 <script src="/javascripts/jquery.min.js"></script>
 <script src="/javascripts/jquery-ui.min.js"></script>
 <script src="/javascripts/string.min.js"></script>
