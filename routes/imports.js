@@ -111,6 +111,14 @@ exports.submit = function(req, res, next) {
             }
         }
     }
+    else if (service == 'twitter' && extract == 'timeline') {
+        twitterRequest = {
+            type: 'statuses/home_timeline',
+            params: {
+                count: limit
+            }
+        }
+    }
 
     console.log('postparams');
     console.log(searchString);

@@ -13,14 +13,10 @@ var T = new Twit({
 //
 //  search twitter for all tweets containing the word 'banana' since Nov. 11, 2011
 //
-T.get('search/tweets', { q: '#visualization', count: 10 }, function(err, data, response) {
-    var result = data['statuses'];
+T.get('statuses/home_timeline', { count: 50 }, function(err, data, response) {
+    var result = data;
     for (key in result) {
         var statement = result[key].text;
-        var mentions = FlowdockText.extractMentions(statement);
-        for (index in mentions) {
-            statement = statement.replace(mentions[index], 'user_' + mentions[index].substr(1));
-        }
         console.log(statement);
     }
 
