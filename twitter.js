@@ -1,6 +1,9 @@
 var Twit = require('twit');
 var FlowdockText = require("flowdock-text");
 
+var async = require('async');
+
+
 
 var T = new Twit({
     consumer_key:         'thuprgnrfxsKUV78Q6LdPqZWJ'
@@ -13,13 +16,79 @@ var T = new Twit({
 //
 //  search twitter for all tweets containing the word 'banana' since Nov. 11, 2011
 //
-T.get('statuses/home_timeline', { count: 50 }, function(err, data, response) {
-    var result = data;
-    for (key in result) {
-        var statement = result[key].text;
-        console.log(statement);
+
+var tweets = [];
+var twitterRequest = [];
+
+
+async.waterfall([
+
+    function(callback){
+
+        T.get('friends/ids', { screen_name: 'noduslabs', count: 3 }, function(err, data, response) {
+
+            var result = data['ids'];
+
+            for (var i = 0; i < result.length; i++) {
+                var statement = result[i];
+                twitterRequest[i] = {
+                    type: 'statuses/user_timeline',
+                    params: {
+                        user_id: statement,
+                        count: 3
+                    }
+                }
+
+            }
+
+            callback(null, twitterRequest);
+
+        });
+
+
+
+    },
+    function(twitterRequest, callback){
+
+        var count = 0;
+        for (var j = 0; j < twitterRequest.length; j++) {
+
+
+            T.get(twitterRequest[j].type, twitterRequest[j].params, function(err, data, response) {
+
+                var result = data;
+
+                for (var k = 0; k < result.length; k++) {
+                    var tweetobject = [];
+                    tweetobject['created_at'] = result[k].created_at;
+                    tweetobject['text'] = result[k].text;
+                    tweets.push(tweetobject);
+                }
+                count = count + 1;
+                if (count == twitterRequest.length) {
+                    callback(null, tweets);
+                }
+
+
+            });
+
+
+
+        }
+
+
     }
+], function (err, tweets) {
+
+    if (err) {
+
+        console.log(err);
 
 
 
+    }
+    else {
+        console.log(tweets);
+
+    }
 });
