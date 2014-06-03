@@ -88,6 +88,14 @@ async.waterfall([
 
     }
     else {
+
+        function sortFunction(a,b){
+            var dateA = new Date(a.created_at).getTime();
+            var dateB = new Date(b.created_at.getTime();
+            return dateA > dateB ? 1 : -1;
+        };
+
+        tweets.sort(sortFunction​)
         console.log(tweets);
 
     }
