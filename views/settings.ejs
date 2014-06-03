@@ -46,37 +46,43 @@
                     <br>
 
                     Graph view shows only
-                    <label for="wordscan-view" class="pure-radio">
-                        <input id="wordscan-view" type="radio" name="fullview" value="0" <% if (user.fullview=='0') { %> checked <% } %>>
+                    <label for="wordscan-view1" class="pure-radio">
+                        <input id="wordscan-view1" type="radio" name="fullview" value="0" <% if (user.fullview=='0') { %> checked <% } %>>
                         "next to" connections
                     </label>
 
-                    <label for="wordscan-view" class="pure-radio">
-                        <input id="wordscan-view" type="radio" name="fullview" value="1" <% if (user.fullview=='1') { %> checked <% } %>>
+                    <label for="wordscan-view2" class="pure-radio">
+                        <input id="wordscan-view2" type="radio" name="fullview" value="1" <% if (user.fullview=='1') { %> checked <% } %>>
                         "near" connections
                     </label>
                     <br>
 
                     Visualize in the graph
-                    <label for="wordscan-view" class="pure-radio">
-                        <input id="wordscan-view" type="radio" name="hashnodes" value="0" <% if (user.hashnodes=='0') { %> checked <% } %>>
+                    <label for="hashnodes1" class="pure-radio">
+                        <input id="hashnodes1" type="radio" name="hashnodes" value="0" <% if (user.hashnodes=='0') { %> checked <% } %>>
                         prioritize #hashtags, if none - words
                     </label>
 
-                    <label for="wordscan-view" class="pure-radio">
-                        <input id="wordscan-view" type="radio" name="hashnodes" value="1" <% if (user.hashnodes=='1') { %> checked <% } %>>
+                    <label for="hashnodes2" class="pure-radio">
+                        <input id="hashnodes2" type="radio" name="hashnodes" value="1" <% if (user.hashnodes=='1') { %> checked <% } %>>
                         both #hashtags and words
                     </label>
+
+                    <label for="hashnodes3" class="pure-radio">
+                        <input id="hashnodes3" type="radio" name="hashnodes" value="1" <% if (user.hashnodes=='2') { %> checked <% } %>>
+                        only #hashtags, ignore words
+                    </label>
+
                     <br>
 
                     #Hashtags will
-                    <label for="wordscan-view" class="pure-radio">
-                        <input id="wordscan-view" type="radio" name="morphemes" value="0" <% if (user.morphemes=='0') { %> checked <% } %>>
+                    <label for="morphemes1" class="pure-radio">
+                        <input id="morphemes1" type="radio" name="morphemes" value="0" <% if (user.morphemes=='0') { %> checked <% } %>>
                         stay as they are
                     </label>
 
-                    <label for="wordscan-view" class="pure-radio">
-                        <input id="wordscan-view" type="radio" name="morphemes" value="1" <% if (user.morphemes=='1') { %> checked <% } %>>
+                    <label for="morphemes2" class="pure-radio">
+                        <input id="morphemes2" type="radio" name="morphemes" value="1" <% if (user.morphemes=='1') { %> checked <% } %>>
                         be lemmatized (#bits -> #bit)
                     </label>
                     <br>

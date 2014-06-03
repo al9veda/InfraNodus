@@ -81,6 +81,16 @@ exports.submit = function(req, res, next) {
         req.body.context = importContext;
     }
 
+    // We extract only hashtags or hashtags and morphemes
+    // TODO reset res.locals after that parameter change
+
+    if (req.body.settings == 'hashtags') {
+        res.locals.user.hashnodes = '2';
+    }
+    else if (req.body.settings == 'morphemes') {
+        res.locals.user.hashnodes = '1';
+    }
+
     var twitterRequest = [];
 
     if (service == 'twitter' && extract == 'user') {
@@ -121,17 +131,17 @@ exports.submit = function(req, res, next) {
         // For hashtag surrounding search remove the actual hashtag from all tweets
         if (twitterRequest.type == 'search/tweets') {
             result = data['statuses'];
-            default_context = '';
+
         }
 
         for (key in result) {
             var statement = result[key].text;
             var mentions = FlowdockText.extractMentions(statement);
             for (index in mentions) {
-                statement = statement.replace(mentions[index], '_@' + mentions[index].substr(1));
+                statement = statement.replace(mentions[index], 'user_' + mentions[index].substr(1) + ' (http://twitter.com/' + mentions[index].substr(1) + ')');
             }
             if (twitterRequest.type == 'search/tweets') {
-                statement = statement.toLowerCase().replace(twitterRequest.params.q,'_#'+twitterRequest.params.q.substr(1))
+                statement = statement.toLowerCase().replace(twitterRequest.params.q.toLowerCase(),'_#'+twitterRequest.params.q.substr(1).toLowerCase());
             }
             statements.push(statement);
         }
@@ -179,7 +189,7 @@ exports.submit = function(req, res, next) {
 
             // Move on to the next one
 
-            res.redirect('/');
+            res.redirect('/contexts/' + default_context);
 
 
         });
