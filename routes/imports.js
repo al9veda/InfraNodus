@@ -21,6 +21,9 @@ var FlowdockText = require("flowdock-text");
 var validate = require('../lib/middleware/validate');
 var entries = require('../routes/entries');
 
+var async = require('async');
+
+
 
 
 var T = new Twit({
@@ -113,12 +116,18 @@ exports.submit = function(req, res, next) {
     }
     else if (service == 'twitter' && extract == 'timeline') {
         twitterRequest = {
-            type: 'statuses/home_timeline',
+            type: 'friends/ids',
             params: {
+                screen_name: searchString.substr(1),
                 count: limit
             }
         }
+
+
     }
+
+
+
 
     console.log('postparams');
     console.log(searchString);
@@ -128,83 +137,235 @@ exports.submit = function(req, res, next) {
 
 
     if (searchString) {
-    T.get(twitterRequest.type, twitterRequest.params, function(err, data, response) {
 
-        var statements = [];
+        if (twitterRequest.type == 'friends/ids') {
 
-        var default_context = importContext;
+            var tweets = [];
+            var moreTwitterRequests = [];
 
-        var result = data;
+            async.waterfall([
 
-        // For hashtag surrounding search remove the actual hashtag from all tweets
-        if (twitterRequest.type == 'search/tweets') {
-            result = data['statuses'];
+                function(callback){
 
-        }
+                    T.get(twitterRequest.type, twitterRequest.params, function(err, data, response) {
 
-        for (key in result) {
-            var statement = result[key].text;
-            var mentions = FlowdockText.extractMentions(statement);
-            for (index in mentions) {
-                statement = statement.replace(mentions[index], 'user_' + mentions[index].substr(1) + ' (http://twitter.com/' + mentions[index].substr(1) + ')');
-            }
-            if (twitterRequest.type == 'search/tweets') {
-                statement = statement.toLowerCase().replace(twitterRequest.params.q.toLowerCase(),'_#'+twitterRequest.params.q.substr(1).toLowerCase());
-            }
-            statements.push(statement);
-        }
+                        var result = data['ids'];
+                        for (var i = 0; i < result.length; i++) {
+                            var statement = result[i];
+                            // Get 3 most recent statements from each friend of a user
+                            moreTwitterRequests[i] = {
+                                type: 'statuses/user_timeline',
+                                params: {
+                                    user_id: statement,
+                                    count: 3
+                                }
+                            }
+
+                        }
+
+                        callback(null, moreTwitterRequests);
+
+                    });
 
 
-        validate.getContextID(user_id, default_context, statements, function(result) {
-            console.log('so the statements we got are');
-            console.log(statements);
-            console.log('and default context');
-            console.log(default_context);
-            // What are the contexts that already exist for this user and their IDs?
-            // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
-            var contexts = result;
 
-            console.log('extracted contexts');
-            console.log(contexts);
-
-            // Create default statement object that has an empty body, default context, and all the context IDs for the user
-            // context: default_context is where all the statements are added anyway
-            // contextids: contexts are the IDs of all the contexts that will be used in those statements
-
-            var req = {
-                body:  {
-                    entry: {
-                        body: ''
-                    },
-                    context: default_context
                 },
+                function(moreTwitterRequests, callback){
 
-                contextids: contexts,
-                internal: 1
-            };
-
-            console.log('requestobject');
-            console.log(req);
+                    var count = 0;
+                    for (var j = 0; j < moreTwitterRequests.length; j++) {
 
 
-            for (var key in statements) {
-                if (statements.hasOwnProperty(key)) {
-                    req.body.entry.body = statements[key];
-                    entries.submit(req, res);
+                        T.get(moreTwitterRequests[j].type, moreTwitterRequests[j].params, function(err, data, response) {
+
+                            var result = data;
+
+
+                            for (var k = 0; k < result.length; k++) {
+                                var tweetobject = [];
+                                tweetobject['created_at'] = result[k].created_at;
+                                tweetobject['text'] = result[k].text;
+                                tweets.push(tweetobject);
+                            }
+                            count = count + 1;
+                            if (count == moreTwitterRequests.length) {
+                                callback(null, tweets);
+                            }
+
+
+                        });
+
+
+
+                    }
+
+
+                }
+            ], function (err, tweets) {
+
+                if (err) {
+
+                    console.log(err);
+
+
+
+                }
+                else {
+
+                    function sortFunction(a,b){
+                        var dateA = new Date(a.created_at).getTime();
+                        var dateB = new Date(b.created_at).getTime();
+                        return dateA < dateB ? 1 : -1;
+                    };
+
+                    tweets.sort(sortFunction);
+                    tweets = tweets.splice(0,100);
+
+                    var statements = [];
+                    var default_context = importContext;
+
+
+                    for (key in tweets) {
+                        var statement = tweets[key].text;
+                        var mentions = FlowdockText.extractMentions(statement);
+                        for (index in mentions) {
+                            statement = statement.replace(mentions[index], 'user_' + mentions[index].substr(1) + ' (http://twitter.com/' + mentions[index].substr(1) + ')');
+                        }
+                        statements.push(statement);
+                    }
+
+                    validate.getContextID(user_id, default_context, statements, function(result) {
+                        console.log('so the statements we got are');
+                        console.log(statements);
+                        console.log('and default context');
+                        console.log(default_context);
+                        // What are the contexts that already exist for this user and their IDs?
+                        // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
+                        var contexts = result;
+
+                        console.log('extracted contexts');
+                        console.log(contexts);
+
+                        // Create default statement object that has an empty body, default context, and all the context IDs for the user
+                        // context: default_context is where all the statements are added anyway
+                        // contextids: contexts are the IDs of all the contexts that will be used in those statements
+
+                        var req = {
+                            body:  {
+                                entry: {
+                                    body: ''
+                                },
+                                context: default_context
+                            },
+
+                            contextids: contexts,
+                            internal: 1
+                        };
+
+                        console.log('requestobject');
+                        console.log(req);
+
+
+                        for (var key in statements) {
+                            if (statements.hasOwnProperty(key)) {
+                                req.body.entry.body = statements[key];
+                                entries.submit(req, res);
+                            }
+
+                        }
+
+                        // Move on to the next one
+
+                        res.redirect('/contexts/' + default_context);
+
+
+                    });
+
+
+                }
+            });
+
+
+        }
+        else {
+            T.get(twitterRequest.type, twitterRequest.params, function(err, data, response) {
+
+                var statements = [];
+
+                var default_context = importContext;
+
+                var result = data;
+
+                // For hashtag surrounding search remove the actual hashtag from all tweets
+                if (twitterRequest.type == 'search/tweets') {
+                    result = data['statuses'];
+
                 }
 
-            }
+                for (key in result) {
+                    var statement = result[key].text;
+                    var mentions = FlowdockText.extractMentions(statement);
+                    for (index in mentions) {
+                        statement = statement.replace(mentions[index], 'user_' + mentions[index].substr(1) + ' (http://twitter.com/' + mentions[index].substr(1) + ')');
+                    }
+                    if (twitterRequest.type == 'search/tweets') {
+                        statement = statement.toLowerCase().replace(twitterRequest.params.q.toLowerCase(),'_#'+twitterRequest.params.q.substr(1).toLowerCase());
+                    }
+                    statements.push(statement);
+                }
 
-            // Move on to the next one
 
-            res.redirect('/contexts/' + default_context);
+                validate.getContextID(user_id, default_context, statements, function(result) {
+                    console.log('so the statements we got are');
+                    console.log(statements);
+                    console.log('and default context');
+                    console.log(default_context);
+                    // What are the contexts that already exist for this user and their IDs?
+                    // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
+                    var contexts = result;
+
+                    console.log('extracted contexts');
+                    console.log(contexts);
+
+                    // Create default statement object that has an empty body, default context, and all the context IDs for the user
+                    // context: default_context is where all the statements are added anyway
+                    // contextids: contexts are the IDs of all the contexts that will be used in those statements
+
+                    var req = {
+                        body:  {
+                            entry: {
+                                body: ''
+                            },
+                            context: default_context
+                        },
+
+                        contextids: contexts,
+                        internal: 1
+                    };
+
+                    console.log('requestobject');
+                    console.log(req);
 
 
-        });
+                    for (var key in statements) {
+                        if (statements.hasOwnProperty(key)) {
+                            req.body.entry.body = statements[key];
+                            entries.submit(req, res);
+                        }
+
+                    }
+
+                    // Move on to the next one
+
+                    res.redirect('/contexts/' + default_context);
+
+
+                });
 
 
 
-    });
+            });
+        }
     }
 
 
