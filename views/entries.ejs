@@ -69,6 +69,18 @@
                     <p><%- entry.text %></p>
                 </div>
             <% }) %>
+
+            <% if (context && entries.length > 2) { %>
+            <form action='/post' name='deletecontext' id="deletecontext" method='post' class='pure-form'>
+
+                <input type="hidden" name="context" value="<%= context %>">
+                <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
+                <input type="hidden" name="statementid" value="">
+                &nbsp;<br>
+                <input type='submit' name="delete" value="delete list" class="pure-button pure-button-primary">
+
+            </form>
+            <% } %>
         </div>
 
         <div id="graph-container"></div>
@@ -285,6 +297,7 @@ sigma.parsers.json(
                         n.color = color_addcontext;
                     }
                 }
+
 
                 // Save node's default color, for hide and show later
                 n.originalColor = n.color;
