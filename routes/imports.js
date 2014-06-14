@@ -149,6 +149,7 @@ exports.submit = function(req, res, next) {
 
                     T.get(twitterRequest.type, twitterRequest.params, function(err, data, response) {
 
+                        console.log(data);
                         var result = data['ids'];
                         for (var i = 0; i < result.length; i++) {
                             var statement = result[i];
