@@ -28,6 +28,7 @@ var api = require('./routes/api');
 var api2 = require('./routes/api2');
 var express = require('express');
 var routes = require('./routes');
+var oauths = require('./routes/evernote');
 var entries = require('./routes/entries');
 var Entry = require('./lib/entry');
 var page = require('./lib/middleware/page');
@@ -125,6 +126,11 @@ app.get('/settings', pass.ensureAuthenticated, settings.render);
 app.post('/settings', pass.ensureAuthenticated, settings.modify);
 app.get('/import', pass.ensureAuthenticated, imports.render);
 app.post('/import', pass.ensureAuthenticated, imports.submit);
+
+app.get('/oauth', oauths.oauth);
+app.get('/oauth_callback', oauths.oauth_callback);
+app.get('/clear', oauths.clear);
+
 app.get('/', pass.ensureAuthenticated, entries.list);
 
 

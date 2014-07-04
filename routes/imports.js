@@ -22,6 +22,9 @@ var validate = require('../lib/middleware/validate');
 var entries = require('../routes/entries');
 
 var async = require('async');
+var Evernote = require('evernote').Evernote;
+
+
 
 
 
@@ -33,9 +36,24 @@ var T = new Twit({
     , access_token_secret:  'rn9Vve1c5oDtyGqbPhKM1AFN0KNDWoO9L296bIBpDiMGJ'
 });
 
+
+
+
+
 // GET request to the /settings page (view settings)
 
 exports.render = function(req, res) {
+
+    if (req.session.oauthAccessToken) {
+        console.log('logged into Evernote');
+        var client = new Evernote.Client({token: req.session.oauthAccessToken});
+        var noteStore = client.getNoteStore();
+        notebooks = noteStore.listNotebooks(function(err, notebooks) {
+            console.log(notebooks);
+        });
+
+
+    }
 
     res.render('import', { title: 'Import Data to InfraNodus' });
 
