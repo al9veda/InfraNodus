@@ -48,53 +48,7 @@ exports.render = function(req, res) {
 
     if (req.session.oauthAccessToken) {
 
-        var userInfo 	= req.session.oauthAccessToken;
-        var offset 		= 0;
-        var count 		= 50;
-        var words 		= '';
-        var sortOrder = 'UPDATED';
-        var ascending = false;
 
-        console.log('logged into Evernote');
-
-        var client = new Evernote.Client({token: req.session.oauthAccessToken});
-        var noteStore = client.getNoteStore();
-        var noteFilter = new Evernote.NoteFilter;
-        var notesMetadataResultSpec = new Evernote.NotesMetadataResultSpec;
-
-
-
-        notebooks = noteStore.listNotebooks(function(err, notebooks) {
-            var notebookid = notebooks[1].guid
-
-            console.log(notebookid);
-
-            //noteFilter.notebookGuid = notebookid;
-
-            notesMetadataResultSpec.includeNotebookGuid = true;
-
-            noteStore.findNotesMetadata(userInfo, noteFilter, offset, count, notesMetadataResultSpec, function(err, noteList) {
-                if (err) {
-                    console.log(err);
-                    console.log(noteList);
-                } else {
-                    console.log(noteList);
-
-
-                    for (var i = 0; i < noteList.notes.length; i++ ) {
-                        noteStore.getNoteContent(userInfo,noteList.notes[i].guid, function(err, result) {
-                           console.log(result);
-                        });
-                    }
-
-                }
-
-
-            });
-
-
-
-         });
 
 
 
@@ -140,7 +94,7 @@ exports.submit = function(req, res, next) {
         res.redirect('back');
     }
     else {
-        if (req.body.search.charAt(0) != '@' && req.body.search.charAt(0) != '#') {
+        if (req.body.search.charAt(0) != '@' && req.body.search.charAt(0) != '#' && service != 'evernote') {
             res.error('Please, enter the @username or a #hashtag');
             res.redirect('back');
         }
@@ -214,7 +168,7 @@ exports.submit = function(req, res, next) {
     console.log(extract);
 
 
-    if (searchString) {
+    if (searchString && service == 'twitter') {
 
         if (twitterRequest.type == 'friends/ids') {
 
@@ -445,6 +399,112 @@ exports.submit = function(req, res, next) {
 
             });
         }
+    }
+    else if (searchString && service == 'evernote') {
+
+        var userInfo 	= req.session.oauthAccessToken;
+        var offset 		= 0;
+        var count 		= 50;
+
+        console.log('logged into Evernote');
+
+        var client = new Evernote.Client({token: req.session.oauthAccessToken});
+        var noteStore = client.getNoteStore();
+        var noteFilter = new Evernote.NoteFilter;
+        var notesMetadataResultSpec = new Evernote.NotesMetadataResultSpec;
+
+        var statements = [];
+
+        var default_context = importContext;
+
+
+        notebooks = noteStore.listNotebooks(function(err, notebooks) {
+            var notebookid = notebooks[1].guid
+
+            console.log(notebookid);
+
+            //noteFilter.notebookGuid = notebookid;
+
+            notesMetadataResultSpec.includeNotebookGuid = true;
+
+            noteStore.findNotesMetadata(userInfo, noteFilter, offset, count, notesMetadataResultSpec, function(err, noteList) {
+                if (err) {
+                    console.log(err);
+                    console.log(noteList);
+                } else {
+                    console.log(noteList);
+
+
+                    for (var i = 0; i < noteList.notes.length; i++ ) {
+                        noteStore.getNoteSearchText(userInfo,noteList.notes[i].guid, false, false, function(err, result) {
+                          console.log(result);
+                        });
+                    }
+                    res.redirect('/import');
+
+
+                    /* validate.getContextID(user_id, default_context, statements, function(result) {
+                         console.log('so the statements we got are');
+                         console.log(statements);
+                         console.log('and default context');
+                         console.log(default_context);
+                         // What are the contexts that already exist for this user and their IDs?
+                         // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
+                         var contexts = result;
+
+                         console.log('extracted contexts');
+                         console.log(contexts);
+
+                         // Create default statement object that has an empty body, default context, and all the context IDs for the user
+                         // context: default_context is where all the statements are added anyway
+                         // contextids: contexts are the IDs of all the contexts that will be used in those statements
+
+                         var req = {
+                             body:  {
+                                 entry: {
+                                     body: ''
+                                 },
+                                 context: default_context
+                             },
+
+                             contextids: contexts,
+                             internal: 1
+                         };
+
+                         console.log('requestobject');
+                         console.log(req);
+
+
+                         for (var key in statements) {
+                             if (statements.hasOwnProperty(key)) {
+                                 req.body.entry.body = statements[key];
+                                 entries.submit(req, res);
+                             }
+
+                         }
+
+                         // Move on to the next one
+
+                         res.redirect('/contexts/' + default_context);
+
+
+                     });
+ */
+
+
+                }
+
+
+            });
+
+
+
+        });
+
+
+
+
+
     }
 
 

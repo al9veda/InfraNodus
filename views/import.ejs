@@ -46,19 +46,6 @@
                     Evernote (<a href="/evernote_oauth">authorize</a>)
                 </label>
 
-                <% } else { %>
-                <label for="source2" class="pure-radio">
-                    <input id="source2" type="radio" name="source" value="evernote" checked>
-                    Evernote (<a href="/evernote_clear">deauthorize</a>)
-                </label>
-                <label for="source1" class="pure-radio">
-                    <input id="source1" type="radio" name="source" value="twitter">
-                    Twitter
-                </label>
-
-                <% } %>
-
-
                 <br>
 
                 Extract:
@@ -81,6 +68,33 @@
                 Profile or Hashtag:
                 <input type='text' name='search' placeholder='@username or #hashtag' />
                 <br>
+
+                <% } else { %>
+                <label for="source2" class="pure-radio">
+                    <input id="source2" type="radio" name="source" value="evernote" checked>
+                    Evernote (<a href="/evernote_clear">deauthorize</a>)
+                </label>
+                <label for="source1" class="pure-radio">
+                    <input id="source1" type="radio" name="source" value="twitter" disabled>
+                    Twitter
+                </label>
+                <br>
+
+                Extract:
+                <label for="extract1" class="pure-radio">
+                    <input id="extract1" type="radio" name="extract" value="user" checked>
+                    graph of words used in all the entries
+                </label>
+                <br>
+
+                Profile or Hashtag:
+                <input type='text' name='search' value="<%= evernote %>" readonly/>
+                <br>
+
+                <% } %>
+
+
+
 
                 Save In List:
                 <input type='text' name='context' value='imported' />
