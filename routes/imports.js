@@ -434,62 +434,103 @@ exports.submit = function(req, res, next) {
                 } else {
                     console.log(noteList);
 
+                    async.waterfall([
 
-                    for (var i = 0; i < noteList.notes.length; i++ ) {
-                        noteStore.getNoteSearchText(userInfo,noteList.notes[i].guid, false, false, function(err, result) {
-                          console.log(result);
-                        });
-                    }
-                    res.redirect('/import');
+                        function(callback){
+                            // TODO change this super ugly workaround for getContextID function
 
+                            statements[0] = 'dummy statement 1';
+                            statements[1] = 'dummy statement 2';
 
-                    /* validate.getContextID(user_id, default_context, statements, function(result) {
-                         console.log('so the statements we got are');
-                         console.log(statements);
-                         console.log('and default context');
-                         console.log(default_context);
-                         // What are the contexts that already exist for this user and their IDs?
-                         // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
-                         var contexts = result;
+                            validate.getContextID(user_id, default_context, statements, function(result) {
 
-                         console.log('extracted contexts');
-                         console.log(contexts);
+                                console.log('so the statements we got are');
+                                console.log(statements);
+                                console.log('and default context');
+                                console.log(default_context);
+                                // What are the contexts that already exist for this user and their IDs?
+                                // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
+                                var contexts = result;
 
-                         // Create default statement object that has an empty body, default context, and all the context IDs for the user
-                         // context: default_context is where all the statements are added anyway
-                         // contextids: contexts are the IDs of all the contexts that will be used in those statements
+                                console.log('extracted contexts');
+                                console.log(contexts);
 
-                         var req = {
-                             body:  {
-                                 entry: {
-                                     body: ''
-                                 },
-                                 context: default_context
-                             },
+                                // Create default statement object that has an empty body, default context, and all the context IDs for the user
+                                // context: default_context is where all the statements are added anyway
+                                // contextids: contexts are the IDs of all the contexts that will be used in those statements
 
-                             contextids: contexts,
-                             internal: 1
-                         };
+                                var req = {
+                                    body:  {
+                                        entry: {
+                                            body: ''
+                                        },
+                                        context: default_context
+                                    },
 
-                         console.log('requestobject');
-                         console.log(req);
+                                    contextids: contexts,
+                                    internal: 1
+                                };
 
+                                console.log('requestobject');
+                                console.log(req);
 
-                         for (var key in statements) {
-                             if (statements.hasOwnProperty(key)) {
-                                 req.body.entry.body = statements[key];
-                                 entries.submit(req, res);
-                             }
-
-                         }
-
-                         // Move on to the next one
-
-                         res.redirect('/contexts/' + default_context);
+                                callback(null, req);
 
 
-                     });
- */
+
+
+                            });
+
+
+
+                        },
+                        function(req, callback){
+
+                           callback(null,req);
+
+                        }
+                    ], function (err, req) {
+
+                        if (err) {
+
+                            console.log(err);
+
+
+
+                        }
+                        else {
+
+
+
+
+                            var default_context = importContext;
+
+
+
+
+                            for (var i = 0; i < noteList.notes.length; i++ ) {
+                                noteStore.getNoteSearchText(userInfo,noteList.notes[i].guid, false, false, function(err, result) {
+                                    req.body.entry.body = result;
+                                    entries.submit(req, res);
+                                    console.log(result);
+                                });
+                            }
+
+                                // Move on to the next one
+
+                                res.redirect('/contexts/' + default_context);
+
+
+
+
+                        }
+                    });
+
+
+
+
+
+
 
 
                 }
