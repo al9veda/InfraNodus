@@ -44,13 +44,55 @@ var T = new Twit({
 
 exports.render = function(req, res) {
 
+
+
     if (req.session.oauthAccessToken) {
+
+        var userInfo 	= req.session.oauthAccessToken;
+        var offset 		= 0;
+        var count 		= 50;
+        var words 		= '';
+        var sortOrder = 'UPDATED';
+        var ascending = false;
+
         console.log('logged into Evernote');
-        var client = new Evernote.Client({token: req.session.oauthAccessToken});
+
+        var client = new Evernote.Client({token: req.session.oauthAccessToken,});
         var noteStore = client.getNoteStore();
+        var noteFilter = new Evernote.NoteFilter;
+        var notesMetadataResultSpec = new Evernote.NotesMetadataResultSpec;
+
         notebooks = noteStore.listNotebooks(function(err, notebooks) {
-            console.log(notebooks);
-        });
+            var notebookid = notebooks[1].guid
+
+            console.log(notebookid);
+
+            //noteFilter.notebookGuid = notebookid;
+            notesMetadataResultSpec.includeNotebookGuid = true;
+
+            noteStore.findNotesMetadata(userInfo, noteFilter, offset, count, notesMetadataResultSpec, function(err, noteList) {
+                if (err) {
+                    console.log(err);
+                    console.log(noteList);
+                } else {
+                    console.log(noteList);
+                }
+
+
+            });
+
+
+
+         });
+
+
+
+   /*     notebooknotes = noteStore.getNotebook(req.session.oauthAccessToken, "e14d8c18-133f-4bc0-b32a-36ebe6ffd405", function(err, notebook) {
+
+            console.log(notebook);
+
+        });*/
+
 
 
     }
