@@ -127,9 +127,9 @@ app.post('/settings', pass.ensureAuthenticated, settings.modify);
 app.get('/import', pass.ensureAuthenticated, imports.render);
 app.post('/import', pass.ensureAuthenticated, imports.submit);
 
-app.get('/oauth', oauths.oauth);
-app.get('/oauth_callback', oauths.oauth_callback);
-app.get('/clear', oauths.clear);
+app.get('/evernote_oauth', oauths.oauth);
+app.get('/evernote_oauth_callback', oauths.oauth_callback);
+app.get('/evernote_clear', oauths.clear);
 
 app.get('/', pass.ensureAuthenticated, entries.list);
 

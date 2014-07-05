@@ -57,10 +57,12 @@ exports.render = function(req, res) {
 
         console.log('logged into Evernote');
 
-        var client = new Evernote.Client({token: req.session.oauthAccessToken,});
+        var client = new Evernote.Client({token: req.session.oauthAccessToken});
         var noteStore = client.getNoteStore();
         var noteFilter = new Evernote.NoteFilter;
         var notesMetadataResultSpec = new Evernote.NotesMetadataResultSpec;
+
+
 
         notebooks = noteStore.listNotebooks(function(err, notebooks) {
             var notebookid = notebooks[1].guid
@@ -68,6 +70,7 @@ exports.render = function(req, res) {
             console.log(notebookid);
 
             //noteFilter.notebookGuid = notebookid;
+
             notesMetadataResultSpec.includeNotebookGuid = true;
 
             noteStore.findNotesMetadata(userInfo, noteFilter, offset, count, notesMetadataResultSpec, function(err, noteList) {
@@ -76,6 +79,14 @@ exports.render = function(req, res) {
                     console.log(noteList);
                 } else {
                     console.log(noteList);
+
+
+                    for (var i = 0; i < noteList.notes.length; i++ ) {
+                        noteStore.getNoteContent(userInfo,noteList.notes[i].guid, function(err, result) {
+                           console.log(result);
+                        });
+                    }
+
                 }
 
 
@@ -94,10 +105,17 @@ exports.render = function(req, res) {
         });*/
 
 
+        res.render('import', { title: 'Import Data to InfraNodus', evernote: req.session.oauthAccessToken});
+
+    }
+    else {
+
+        res.render('import', { title: 'Import Data to InfraNodus', evernote: '' });
 
     }
 
-    res.render('import', { title: 'Import Data to InfraNodus' });
+
+
 
 };
 

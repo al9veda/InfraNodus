@@ -1,7 +1,7 @@
 var Evernote = require('evernote').Evernote;
 
 var config = require('../config.json');
-var callbackUrl = "http://localhost:3000/oauth_callback";
+var callbackUrl = "http://localhost:3000/evernote_oauth_callback";
 
 // home page
 exports.index = function(req, res) {
@@ -73,13 +73,13 @@ exports.oauth_callback = function(req, res) {
                 req.session.edamExpires = results.edam_expires;
                 req.session.edamNoteStoreUrl = results.edam_noteStoreUrl;
                 req.session.edamWebApiUrlPrefix = results.edam_webApiUrlPrefix;
-                res.redirect('/');
+                res.redirect('/import');
             }
         });
 };
 
 // Clear session
 exports.clear = function(req, res) {
-    req.session.destroy();
-    res.redirect('/');
+    req.session.oauthAccessToken = '';
+    res.redirect('/import');
 };

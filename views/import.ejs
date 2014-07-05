@@ -36,10 +36,27 @@
             <form action='/import' name='submitform' id="submitform" method='post' class='pure-form pure-form-stacked'>
                 <br>
                 Data source:
+                <% if (!evernote) { %>
                 <label for="source1" class="pure-radio">
                     <input id="source1" type="radio" name="source" value="twitter" checked>
                     Twitter
                 </label>
+                <label for="source2" class="pure-radio">
+                <input id="source2" type="radio" name="source" value="evernote">
+                    Evernote (<a href="/evernote_oauth">authorize</a>)
+                </label>
+
+                <% } else { %>
+                <label for="source2" class="pure-radio">
+                    <input id="source2" type="radio" name="source" value="evernote" checked>
+                    Evernote (<a href="/evernote_clear">deauthorize</a>)
+                </label>
+                <label for="source1" class="pure-radio">
+                    <input id="source1" type="radio" name="source" value="twitter">
+                    Twitter
+                </label>
+
+                <% } %>
 
 
                 <br>
