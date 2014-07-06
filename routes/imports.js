@@ -488,7 +488,7 @@ exports.submit = function(req, res, next) {
                                         entry: {
                                             body: ''
                                         },
-                                        context: default_context
+                                        context: ''
                                     },
 
                                     contextids: contexts,
