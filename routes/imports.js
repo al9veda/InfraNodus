@@ -24,6 +24,9 @@ var entries = require('../routes/entries');
 var async = require('async');
 var Evernote = require('evernote').Evernote;
 
+var S = require('string');
+
+
 
 
 
@@ -421,9 +424,18 @@ exports.submit = function(req, res, next) {
         notebooks = noteStore.listNotebooks(function(err, notebooks) {
             var notebookid = notebooks[1].guid
 
-            console.log(notebookid);
+            console.log(notebooks);
 
+            // This below will be needed if we want to add filter notebooks functionality
             //noteFilter.notebookGuid = notebookid;
+
+            // Let's create an array of notebook names to their IDs
+
+            var notebooks_db = [];
+
+            for (var t = 0; t < notebooks.length; t++) {
+                 notebooks_db[notebooks[t].guid] = notebooks[t].name;
+            }
 
             notesMetadataResultSpec.includeNotebookGuid = true;
 
@@ -434,13 +446,25 @@ exports.submit = function(req, res, next) {
                 } else {
                     console.log(noteList);
 
+                    var notebook_name = [];
+
+                    for (var i = 0; i < noteList.notes.length; i++ ) {
+
+                        notebook_name[i] = noteList.notes[i].notebookGuid;
+                        console.log('notebookname');
+                        console.log(notebook_name[i]);
+
+                    }
+
                     async.waterfall([
 
                         function(callback){
-                            // TODO change this super ugly workaround for getContextID function
 
-                            statements[0] = 'dummy statement 1';
-                            statements[1] = 'dummy statement 2';
+                            // Here we create dummy statements in order to create the new contexts and get the IDs for them from our Neo4J DB
+
+                            for (var m = 0; m < notebooks.length; m++) {
+                                statements[m] = 'dummy statement ' + m + ' @' + S(notebooks[m].name).dasherize().chompLeft('-').camelize().s;;
+                            }
 
                             validate.getContextID(user_id, default_context, statements, function(result) {
 
@@ -507,18 +531,31 @@ exports.submit = function(req, res, next) {
 
 
 
-
                             for (var i = 0; i < noteList.notes.length; i++ ) {
-                                noteStore.getNoteSearchText(userInfo,noteList.notes[i].guid, false, false, function(err, result) {
-                                    req.body.entry.body = result;
+
+                                var notebook_name = noteList.notes[i].notebookGuid;
+                                var note_id = noteList.notes[i].guid;
+
+                                getStatement(notebook_name, note_id);
+
+
+
+                            }
+
+                            function getStatement(notebook_name, note_id) {
+
+                                noteStore.getNoteSearchText(userInfo,note_id, false, false, function(err, result) {
+
+                                    req.body.entry.body = result + ' @' + S(notebooks_db[notebook_name]).dasherize().chompLeft('-').camelize().s;
                                     entries.submit(req, res);
-                                    console.log(result);
+                                    console.log(req.body.entry.body);
+
                                 });
                             }
 
                                 // Move on to the next one
 
-                                res.redirect('/contexts/' + default_context);
+                            res.redirect('/');
 
 
 
