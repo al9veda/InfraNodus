@@ -32,6 +32,7 @@ var S = require('string');
 
 
 
+
 var T = new Twit({
     consumer_key:         'thuprgnrfxsKUV78Q6LdPqZWJ'
     , consumer_secret:      '2kaOHBI71anPOOthkNr5OHIfqt0gbARcKXgCsss2LJndVrmmQg'
@@ -422,7 +423,7 @@ exports.submit = function(req, res, next) {
 
 
         notebooks = noteStore.listNotebooks(function(err, notebooks) {
-            var notebookid = notebooks[1].guid
+            //var notebookid = notebooks[1].guid
 
             console.log(notebooks);
 
@@ -544,11 +545,16 @@ exports.submit = function(req, res, next) {
 
                             function getStatement(notebook_name, note_id) {
 
-                                noteStore.getNoteSearchText(userInfo,note_id, false, false, function(err, result) {
+                                noteStore.getNoteContent(userInfo, note_id, function(err, result) {
 
-                                    req.body.entry.body = result + ' @' + S(notebooks_db[notebook_name]).dasherize().chompLeft('-').camelize().s;
+
+
+
+
+                                    req.body.entry.body = S(result).stripTags().s + ' @' + S(notebooks_db[notebook_name]).dasherize().chompLeft('-').camelize().s;
                                     entries.submit(req, res);
                                     console.log(req.body.entry.body);
+
 
                                 });
                             }
