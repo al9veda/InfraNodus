@@ -24,9 +24,9 @@ exports.index = function(req, res) {
 // OAuth
 exports.oauth = function(req, res) {
     var client = new Evernote.Client({
-        consumerKey: config.API_CONSUMER_KEY,
-        consumerSecret: config.API_CONSUMER_SECRET,
-        sandbox: config.SANDBOX
+        consumerKey: config.evernote.API_CONSUMER_KEY,
+        consumerSecret: config.evernote.API_CONSUMER_SECRET,
+        sandbox: config.evernote.SANDBOX
     });
 
     client.getRequestToken(callbackUrl, function(error, oauthToken, oauthTokenSecret, results){
@@ -50,9 +50,9 @@ exports.oauth = function(req, res) {
 // OAuth callback
 exports.oauth_callback = function(req, res) {
     var client = new Evernote.Client({
-        consumerKey: config.API_CONSUMER_KEY,
-        consumerSecret: config.API_CONSUMER_SECRET,
-        sandbox: config.SANDBOX
+        consumerKey: config.evernote.API_CONSUMER_KEY,
+        consumerSecret: config.evernote.API_CONSUMER_SECRET,
+        sandbox: config.evernote.SANDBOX
     });
 
     client.getAccessToken(

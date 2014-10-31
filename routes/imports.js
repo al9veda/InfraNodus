@@ -26,6 +26,9 @@ var Evernote = require('evernote').Evernote;
 
 var S = require('string');
 
+var config = require('../config.json');
+
+
 
 
 
@@ -34,10 +37,10 @@ var S = require('string');
 
 
 var T = new Twit({
-    consumer_key:         'thuprgnrfxsKUV78Q6LdPqZWJ'
-    , consumer_secret:      '2kaOHBI71anPOOthkNr5OHIfqt0gbARcKXgCsss2LJndVrmmQg'
-    , access_token:         '77502415-1AHLCPML1tFYm2q27sEYt5YWYp9M5QhGhWvy12qPC'
-    , access_token_secret:  'rn9Vve1c5oDtyGqbPhKM1AFN0KNDWoO9L296bIBpDiMGJ'
+    consumer_key:         config.twitter.consumer_key
+    , consumer_secret:      config.twitter.consumer_secret
+    , access_token:         config.twitter.access_token
+    , access_token_secret:  config.twitter.access_token_secret
 });
 
 
