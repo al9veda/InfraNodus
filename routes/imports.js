@@ -28,6 +28,9 @@ var S = require('string');
 
 var config = require('../config.json');
 
+var Imap = require('imap'),
+    inspect = require('util').inspect;
+
 
 
 
@@ -96,15 +99,11 @@ exports.submit = function(req, res, next) {
     var searchString = '';
 
     // What is the search string
-    if (!req.body.search || req.body.search == '')  {
+    if (service == 'twitter' && (!req.body.search || req.body.search == ''))  {
         res.error('Please, enter the @username or a #hashtag');
         res.redirect('back');
     }
     else {
-        if (req.body.search.charAt(0) != '@' && req.body.search.charAt(0) != '#' && service != 'evernote') {
-            res.error('Please, enter the @username or a #hashtag');
-            res.redirect('back');
-        }
         searchString = req.body.search;
     }
 
@@ -407,7 +406,7 @@ exports.submit = function(req, res, next) {
             });
         }
     }
-    else if (searchString && service == 'evernote') {
+    else if (service == 'evernote') {
 
         var userInfo 	= req.session.oauthAccessToken;
         var offset 		= 0;
@@ -598,6 +597,135 @@ exports.submit = function(req, res, next) {
 
 
 
+
+
+    }
+
+    else if (service == 'email') {
+
+        var statements = [];
+
+        var imap = new Imap({
+            user: req.body.email,
+            password: req.body.password,
+            host: req.body.host,
+            port: req.body.port,
+            tls: req.body.tls
+        });
+
+        function openInbox(cb) {
+            imap.openBox('Notes', true, cb);
+        }
+
+        imap.once('ready', function() {
+            openInbox(function(err, box) {
+                if (err) throw err;
+
+                // How many last messages do we fetch?
+                var nummes = box.messages.total - limit;
+
+                var f = imap.seq.fetch(box.messages.total + ':' + nummes, { bodies: ['HEADER.FIELDS (DATE)','TEXT'] });
+                f.on('message', function(msg, seqno) {
+                    // console.log('Message #%d', seqno);
+                    var prefix = '(#' + seqno + ') ';
+                    msg.on('body', function(stream, info) {
+                        if (info.which === 'TEXT') {
+                            // console.log(prefix + 'Body [%s] found, %d total bytes', inspect(info.which), info.size);
+                        }
+                        var buffer = '', count = 0;
+                        stream.on('data', function(chunk) {
+                            count += chunk.length;
+                            buffer += chunk.toString('utf8');
+                            if (info.which === 'TEXT')  {
+                                // console.log(prefix + 'Body [%s] (%d/%d)', inspect(info.which), count, info.size);
+                            }
+                        });
+                        stream.once('end', function() {
+                            if (info.which !== 'TEXT') {
+                                // console.log(prefix + 'Parsed header: %s', inspect(Imap.parseHeader(buffer)));
+                            }
+                            else  {
+                                console.log(buffer);
+
+                                // Save all the notes into Array
+                                statements.push(S(buffer).stripTags().s);
+
+                                // console.log(prefix + 'Body [%s] Finished', inspect(info.which));
+                            }
+                        });
+                    });
+                    msg.once('attributes', function(attrs) {
+                        // console.log(prefix + 'Attributes: %s', inspect(attrs, false, 8));
+                    });
+                    msg.once('end', function() {
+                        // console.log(prefix + 'Finished');
+                    });
+                });
+                f.once('error', function(err) {
+                    console.log('Fetch error: ' + err);
+                });
+                f.once('end', function() {
+                    // console.log('Done fetching all messages!');
+
+
+                    var default_context = importContext;
+
+
+
+
+                    validate.getContextID(user_id, default_context, statements, function(result) {
+
+                        // What are the contexts that already exist for this user and their IDs?
+                        // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
+
+                        var contexts = result;
+
+
+                        // Create default statement object that has an empty body, default context, and all the context IDs for the user
+                        // context: default_context is where all the statements are added anyway
+                        // contextids: contexts are the IDs of all the contexts that will be used in those statements
+
+                        var req = {
+                            body:  {
+                                entry: {
+                                    body: ''
+                                },
+                                context: default_context
+                            },
+
+                            contextids: contexts,
+                            internal: 1
+                        };
+
+
+                        for (var key in statements) {
+                            if (statements.hasOwnProperty(key)) {
+                                req.body.entry.body = statements[key];
+                                entries.submit(req, res);
+                            }
+
+                        }
+
+                        // Move on to the next one
+
+                        res.redirect('/contexts/' + default_context);
+
+
+                    });
+                    imap.end();
+                });
+            });
+        });
+
+        imap.once('error', function(err) {
+            console.log(err);
+        });
+
+        imap.once('end', function() {
+            console.log('Connection ended');
+        });
+
+        imap.connect();
 
 
     }
