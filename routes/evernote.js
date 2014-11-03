@@ -9,7 +9,7 @@ exports.index = function(req, res) {
         var token = req.session.oauthAccessToken;
         var client = new Evernote.Client({
             token: token,
-            sandbox: config.SANDBOX
+            sandbox: config.evernote.SANDBOX
         });
         var noteStore = client.getNoteStore();
         noteStore.listNotebooks(function(err, notebooks){

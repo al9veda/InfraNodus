@@ -411,11 +411,14 @@ exports.submit = function(req, res, next) {
 
         var userInfo 	= req.session.oauthAccessToken;
         var offset 		= 0;
-        var count 		= 50;
+        var count 		= limit;
 
         console.log('logged into Evernote');
 
         var client = new Evernote.Client({token: req.session.oauthAccessToken});
+
+        console.log(req.session.oauthAccessToken);
+
         var noteStore = client.getNoteStore();
         var noteFilter = new Evernote.NoteFilter;
         var notesMetadataResultSpec = new Evernote.NotesMetadataResultSpec;
@@ -427,163 +430,168 @@ exports.submit = function(req, res, next) {
 
         notebooks = noteStore.listNotebooks(function(err, notebooks) {
             //var notebookid = notebooks[1].guid
-
-            console.log(notebooks);
-
-            // This below will be needed if we want to add filter notebooks functionality
-            //noteFilter.notebookGuid = notebookid;
-
-            // Let's create an array of notebook names to their IDs
-
-            var notebooks_db = [];
-
-            for (var t = 0; t < notebooks.length; t++) {
-                 notebooks_db[notebooks[t].guid] = notebooks[t].name;
+            if (err) {
+                req.session.error = JSON.stringify(err);
+                console.log(req.session.error);
+                res.redirect('/');
             }
+            else {
 
-            notesMetadataResultSpec.includeNotebookGuid = true;
 
-            noteStore.findNotesMetadata(userInfo, noteFilter, offset, count, notesMetadataResultSpec, function(err, noteList) {
-                if (err) {
-                    console.log(err);
-                    console.log(noteList);
-                } else {
-                    console.log(noteList);
+                // This below will be needed if we want to add filter notebooks functionality
+                //noteFilter.notebookGuid = notebookid;
 
-                    var notebook_name = [];
+                // Let's create an array of notebook names to their IDs
 
-                    for (var i = 0; i < noteList.notes.length; i++ ) {
+                var notebooks_db = [];
 
-                        notebook_name[i] = noteList.notes[i].notebookGuid;
-                        console.log('notebookname');
-                        console.log(notebook_name[i]);
+                for (var t = 0; t < notebooks.length; t++) {
+                     notebooks_db[notebooks[t].guid] = notebooks[t].name;
+                }
 
-                    }
+                notesMetadataResultSpec.includeNotebookGuid = true;
 
-                    async.waterfall([
+                noteStore.findNotesMetadata(userInfo, noteFilter, offset, count, notesMetadataResultSpec, function(err, noteList) {
+                    if (err) {
+                        console.log(err);
+                        console.log(noteList);
+                    } else {
+                        console.log(noteList);
 
-                        function(callback){
+                        var notebook_name = [];
 
-                            // Here we create dummy statements in order to create the new contexts and get the IDs for them from our Neo4J DB
+                        for (var i = 0; i < noteList.notes.length; i++ ) {
 
-                            for (var m = 0; m < notebooks.length; m++) {
-                                statements[m] = 'dummy statement ' + m + ' @' + S(notebooks[m].name).dasherize().chompLeft('-').camelize().s;;
-                            }
+                            notebook_name[i] = noteList.notes[i].notebookGuid;
+                            console.log('notebookname');
+                            console.log(notebook_name[i]);
 
-                            validate.getContextID(user_id, default_context, statements, function(result) {
+                        }
 
-                                console.log('so the statements we got are');
-                                console.log(statements);
-                                console.log('and default context');
-                                console.log(default_context);
-                                // What are the contexts that already exist for this user and their IDs?
-                                // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
-                                var contexts = result;
+                        async.waterfall([
 
-                                console.log('extracted contexts');
-                                console.log(contexts);
+                            function(callback){
 
-                                // Create default statement object that has an empty body, default context, and all the context IDs for the user
-                                // context: default_context is where all the statements are added anyway
-                                // contextids: contexts are the IDs of all the contexts that will be used in those statements
+                                // Here we create dummy statements in order to create the new contexts and get the IDs for them from our Neo4J DB
 
-                                var req = {
-                                    body:  {
-                                        entry: {
-                                            body: ''
+                                for (var m = 0; m < notebooks.length; m++) {
+                                    statements[m] = 'dummy statement ' + m + ' @' + S(notebooks[m].name).dasherize().chompLeft('-').camelize().s;;
+                                }
+
+                                validate.getContextID(user_id, default_context, statements, function(result) {
+
+                                    console.log('so the statements we got are');
+                                    console.log(statements);
+                                    console.log('and default context');
+                                    console.log(default_context);
+                                    // What are the contexts that already exist for this user and their IDs?
+                                    // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
+                                    var contexts = result;
+
+                                    console.log('extracted contexts');
+                                    console.log(contexts);
+
+                                    // Create default statement object that has an empty body, default context, and all the context IDs for the user
+                                    // context: default_context is where all the statements are added anyway
+                                    // contextids: contexts are the IDs of all the contexts that will be used in those statements
+
+                                    var req = {
+                                        body:  {
+                                            entry: {
+                                                body: ''
+                                            },
+                                            context: ''
                                         },
-                                        context: ''
-                                    },
 
-                                    contextids: contexts,
-                                    internal: 1
-                                };
+                                        contextids: contexts,
+                                        internal: 1
+                                    };
 
-                                console.log('requestobject');
-                                console.log(req);
+                                    console.log('requestobject');
+                                    console.log(req);
 
-                                callback(null, req);
+                                    callback(null, req);
 
 
-
-
-                            });
-
-
-
-                        },
-                        function(req, callback){
-
-                           callback(null,req);
-
-                        }
-                    ], function (err, req) {
-
-                        if (err) {
-
-                            console.log(err);
-
-
-
-                        }
-                        else {
-
-
-
-
-                            var default_context = importContext;
-
-
-
-                            for (var i = 0; i < noteList.notes.length; i++ ) {
-
-                                var notebook_name = noteList.notes[i].notebookGuid;
-                                var note_id = noteList.notes[i].guid;
-
-                                getStatement(notebook_name, note_id);
-
-
-
-                            }
-
-                            function getStatement(notebook_name, note_id) {
-
-                                noteStore.getNoteContent(userInfo, note_id, function(err, result) {
-
-
-
-
-
-                                    req.body.entry.body = S(result).stripTags().s + ' @' + S(notebooks_db[notebook_name]).dasherize().chompLeft('-').camelize().s;
-                                    entries.submit(req, res);
-                                    console.log(req.body.entry.body);
 
 
                                 });
+
+
+
+                            },
+                            function(req, callback){
+
+                               callback(null,req);
+
                             }
+                        ], function (err, req) {
 
-                                // Move on to the next one
+                            if (err) {
 
-                            res.redirect('/');
-
-
-
-
-                        }
-                    });
+                                console.log(err);
 
 
+
+                            }
+                            else {
 
 
 
 
+                                var default_context = importContext;
 
 
-                }
+
+                                for (var i = 0; i < noteList.notes.length; i++ ) {
+
+                                    var notebook_name = noteList.notes[i].notebookGuid;
+                                    var note_id = noteList.notes[i].guid;
+
+                                    getStatement(notebook_name, note_id);
 
 
-            });
 
+                                }
+
+                                function getStatement(notebook_name, note_id) {
+
+                                    noteStore.getNoteContent(userInfo, note_id, function(err, result) {
+
+
+
+
+
+                                        req.body.entry.body = S(result).stripTags().s + ' @' + S(notebooks_db[notebook_name]).dasherize().chompLeft('-').camelize().s;
+                                        entries.submit(req, res);
+                                        console.log(req.body.entry.body);
+
+
+                                    });
+                                }
+
+                                    // Move on to the next one
+
+                                res.redirect('/');
+
+
+
+
+                            }
+                        });
+
+
+
+
+
+
+
+
+                    }
+
+
+                });
+            }
 
 
         });
