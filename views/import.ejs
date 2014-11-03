@@ -45,6 +45,11 @@
                 <input id="source2" type="radio" name="source" value="evernote">
                     Evernote (<a href="/evernote_oauth">authorize</a>)
                 </label>
+                <label for="source3" class="pure-radio">
+                    <input id="source3" type="radio" name="source" value="email">
+                    iPhone / Gmail notes
+                </label>
+                <div id="inputplace"></div>
 
                 <br>
 
@@ -65,8 +70,15 @@
                 </label>
                 <br>
 
-                Profile or Hashtag:
-                <input type='text' name='search' placeholder='@username or #hashtag' />
+                Account or Hashtag:
+                <input type='text' name='search' id="search" placeholder='@username or #hashtag' />
+                <div id="searchbox" style="display: none">
+                    <input type="text" name="email" id="searchbox1" value="your@email.com" />
+                    <input type="password" name="password" id="searchbox2" value="password" />
+                    <input type="text" name="server" id="searchbox3" value="imap.gmail.com" />
+                    <input type="text" name="tls" id="searchbox4" value="true" />
+                    <input type="text" name="port" id="searchbox5" value="993" />
+                </div>
                 <br>
 
                 <% } else { %>
@@ -87,7 +99,7 @@
                 </label>
                 <br>
 
-                Profile or Hashtag:
+                Evernote Account:
                 <input type='text' name='search' value="<%= evernote %>" readonly/>
                 <br>
 
@@ -151,7 +163,28 @@
 <script src="/javascripts/jquery.mobile-events.min.js"></script>
 
 
+<script>
+    ;(function(){
 
+
+            // cache these!
+            var radioButtons = $("[name=source]"), // get both radiobuttons
+                searchbox  = $("#searchbox");
+
+            radioButtons.change(function () {
+                if( $(this).val() === "email" ) { // this time, we do need to check the value
+                    searchbox.show();
+                    $("#search").hide();
+                } else {
+                    searchbox.hide();
+                    $("#search").show();
+                }
+            });
+
+
+
+    })();
+</script>
 
 <% include statsbelow %>
 </body>
