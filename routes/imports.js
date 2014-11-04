@@ -674,6 +674,7 @@ exports.submit = function(req, res,  next) {
                         }
                         else {
                             encoding = charset;
+                            sencoding = enc;
                         }
 
 
@@ -684,6 +685,8 @@ exports.submit = function(req, res,  next) {
 
                         console.log('massage ' + seqno);
                         console.log(encoding);
+                        console.log('other');
+                        console.log(sencoding);
                         console.log(email);
 
                         var statement = '';
