@@ -114,8 +114,8 @@ exports.submit = function(req, res,  next) {
     }
 
     // How many recent posts
-    var limit = 50;
-    if (req.body.limit && req.body.limit < 101) {
+    var limit = 201;
+    if (req.body.limit && req.body.limit < limit) {
             limit = req.body.limit;
     }
 
