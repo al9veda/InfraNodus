@@ -563,11 +563,10 @@ exports.submit = function(req, res,  next) {
 
                                     noteStore.getNoteContent(userInfo, note_id, function(err, result) {
 
+                                        // Normalize note, get rid of tags, etc.
 
-
-
-
-                                        req.body.entry.body = S(result).stripTags().s + ' @' + S(notebooks_db[notebook_name]).dasherize().chompLeft('-').camelize().s;
+                                        var sendstring = S(result).stripTags().s + ' @' + S(notebooks_db[notebook_name]).dasherize().chompLeft('-').camelize().s;
+                                        req.body.entry.body = sendstring.replace(/&quot;/g, '');
                                         entries.submit(req, res);
                                         console.log(req.body.entry.body);
 
@@ -576,7 +575,7 @@ exports.submit = function(req, res,  next) {
                                 }
 
                                     // Move on to the next one
-
+                                res.error('Importing content... Please, reload this page in a few seconds...');
                                 res.redirect('/');
 
 
