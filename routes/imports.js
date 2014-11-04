@@ -629,7 +629,11 @@ exports.submit = function(req, res,  next) {
 
         imap.once('ready', function() {
             openInbox(function(err, box) {
-                if (err) throw err;
+                if (err) {
+                    throw err;
+                    res.error(err);
+                    res.redirect('back');
+                }
 
                 // How many last messages do we fetch?
                 var nummes = box.messages.total - limit;
@@ -779,6 +783,9 @@ exports.submit = function(req, res,  next) {
 
         imap.once('error', function(err) {
             console.log(err);
+            res.error('Error connecting to email: ' + JSON.stringify(err));
+            res.redirect('back');
+
         });
 
         imap.once('end', function() {
