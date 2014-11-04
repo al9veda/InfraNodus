@@ -37,6 +37,9 @@ var cheerio = require('cheerio');
 
 var validator = require('validator');
 
+var mimelib = require("mimelib");
+
+
 
 
 
@@ -655,23 +658,29 @@ exports.submit = function(req, res,  next) {
 
                         stream.once('end', function() {
 
+                            // If the message contains text, save it to email variable
+
                             if (info.which !== 'TEXT') {
                                 console.log(prefix + 'Parsed header: %s', inspect(Imap.parseHeader(buffer)));
                             }
                             else  {
                                 email = buffer;
                             }
+
                         });
                     });
                     msg.once('attributes', function(attrs) {
-                        attra = [];
-                        attrb = [];
+
+                        // Get the charset of the message obtained
+
                         var charset = attrs.struct[0].params.charset;
                         var enc = attrs.struct[0].encoding;
 
+                        // Is the main encoding base64 - prioritize
                         if (enc == 'BASE64') {
                             encoding = 'base64';
                         }
+                        // Another one – then it'll be that one
                         else {
                             encoding = charset;
                             sencoding = enc;
@@ -682,38 +691,33 @@ exports.submit = function(req, res,  next) {
                     });
                     msg.once('end', function() {
 
-
-                        console.log('massage ' + seqno);
-                        console.log(encoding);
-                        console.log('other');
-                        console.log(sencoding);
-                        console.log(email);
-
+                        // The statement is empty
                         var statement = '';
+
+                        // If it's base64 convert it to utf8
 
                         if (encoding == 'base64') {
                             statement = new Buffer(email, 'base64').toString('utf8');
                         }
-                        else {
-                            statement = email;
+
+                        // otherwise it might have weird characters, so convert it accordingly
+                        else if (sencoding == 'QUOTED-PRINTABLE') {
+                            statement = mimelib.decodeQuotedPrintable(email);
 
                         }
+                        else {
+                            statement = email;
+                        }
+
+
+
+
+                        statement = cleanHtml(statement);
 
 
                         statements.push(statement);
 
-                        /*
 
-                                                var $ = cheerio.load(newbuffer);
-
-                                                var utters = [];
-
-                                                $('div').each(function(i, elem) {
-                                                    utters[i] = $(this).text();
-                                                });
-
-                                                var joineds = utters.join(' ');
-                        */
 
 
 
@@ -790,6 +794,11 @@ exports.submit = function(req, res,  next) {
     }
 
 
-
+    function cleanHtml(Description) {
+        var tmp = Description.replace(/<br>/g, '\n');
+        tmp = tmp.replace(/(<([^>]+)>)/ig," ");
+        tmp = tmp.replace(/&nbsp;/g, ' ');
+        return tmp;
+    }
 
 };
