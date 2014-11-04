@@ -31,20 +31,16 @@ var config = require('../config.json');
 var Imap = require('imap'),
     inspect = require('util').inspect;
 
-var iconv = require('iconv-lite');
-
-var cheerio = require('cheerio');
-
-var validator = require('validator');
+var Instruments = require('../lib/tools/instruments.js');
 
 var mimelib = require("mimelib");
 
 
+// Keeping them here as they are useful libs for future use
 
-
-
-
-
+//var iconv = require('iconv-lite'); // converting encodings
+//var cheerio = require('cheerio'); // for content extraction  from html pages
+//var validator = require('validator'); // to validate encodings, emails, numbers
 
 
 
@@ -705,30 +701,31 @@ exports.submit = function(req, res,  next) {
                             statement = mimelib.decodeQuotedPrintable(email);
 
                         }
+                        // otherwise it must be utf-8 for real, so keep it that way
                         else {
                             statement = email;
                         }
 
 
+                        // replace all html with spaces and <br> with \n
+
+                        statement = Instruments.cleanHtml(statement);
 
 
-                        statement = cleanHtml(statement);
-
+                        // add the cleaned statement to array
 
                         statements.push(statement);
 
 
-
-
-
-
                         // console.log(prefix + 'Body [%s] Finished', inspect(info.which));
+
                     });
                 });
                 f.once('error', function(err) {
                     console.log('Fetch error: ' + err);
                 });
                 f.once('end', function() {
+
                     // console.log('Done fetching all messages!');
 
                     var default_context = importContext;
@@ -794,11 +791,6 @@ exports.submit = function(req, res,  next) {
     }
 
 
-    function cleanHtml(Description) {
-        var tmp = Description.replace(/<br>/g, '\n');
-        tmp = tmp.replace(/(<([^>]+)>)/ig," ");
-        tmp = tmp.replace(/&nbsp;/g, ' ');
-        return tmp;
-    }
+
 
 };
