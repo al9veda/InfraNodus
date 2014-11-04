@@ -31,6 +31,13 @@ var config = require('../config.json');
 var Imap = require('imap'),
     inspect = require('util').inspect;
 
+var iconv = require('iconv-lite');
+
+var cheerio = require('cheerio');
+
+var validator = require('validator');
+
+
 
 
 
@@ -86,7 +93,7 @@ exports.render = function(req, res) {
 
 // POST request to the settings page (change settings)
 
-exports.submit = function(req, res, next) {
+exports.submit = function(req, res,  next) {
 
     var user_id = res.locals.user.uid;
 
@@ -603,7 +610,11 @@ exports.submit = function(req, res, next) {
 
     else if (service == 'email') {
 
+        var email = '';
+        var encoding = '';
+        var sencoding = '';
         var statements = [];
+
 
         var imap = new Imap({
             user: req.body.email,
@@ -624,7 +635,8 @@ exports.submit = function(req, res, next) {
                 // How many last messages do we fetch?
                 var nummes = box.messages.total - limit;
 
-                var f = imap.seq.fetch(box.messages.total + ':' + nummes, { bodies: ['HEADER.FIELDS (DATE)','TEXT'] });
+
+                var f = imap.seq.fetch(box.messages.total + ':' + nummes, { bodies: ['HEADER.FIELDS (DATE)','TEXT'], struct: true });
                 f.on('message', function(msg, seqno) {
                     // console.log('Message #%d', seqno);
                     var prefix = '(#' + seqno + ') ';
@@ -640,25 +652,70 @@ exports.submit = function(req, res, next) {
                                 // console.log(prefix + 'Body [%s] (%d/%d)', inspect(info.which), count, info.size);
                             }
                         });
+
                         stream.once('end', function() {
+
                             if (info.which !== 'TEXT') {
-                                // console.log(prefix + 'Parsed header: %s', inspect(Imap.parseHeader(buffer)));
+                                console.log(prefix + 'Parsed header: %s', inspect(Imap.parseHeader(buffer)));
                             }
                             else  {
-                                console.log(buffer);
-
-                                // Save all the notes into Array
-                                statements.push(S(buffer).stripTags().s);
-
-                                // console.log(prefix + 'Body [%s] Finished', inspect(info.which));
+                                email = buffer;
                             }
                         });
                     });
                     msg.once('attributes', function(attrs) {
-                        // console.log(prefix + 'Attributes: %s', inspect(attrs, false, 8));
+                        attra = [];
+                        attrb = [];
+                        var charset = attrs.struct[0].params.charset;
+                        var enc = attrs.struct[0].encoding;
+
+                        if (enc == 'BASE64') {
+                            encoding = 'base64';
+                        }
+                        else {
+                            encoding = charset;
+                        }
+
+
+
                     });
                     msg.once('end', function() {
-                        // console.log(prefix + 'Finished');
+
+
+                        console.log('massage ' + seqno);
+                        console.log(encoding);
+                        console.log(email);
+
+                        var statement = '';
+
+                        if (encoding == 'base64') {
+                            statement = new Buffer(email, 'base64').toString('utf8');
+                        }
+                        else {
+                            statement = email;
+
+                        }
+
+
+                        statements.push(statement);
+
+                        /*
+
+                                                var $ = cheerio.load(newbuffer);
+
+                                                var utters = [];
+
+                                                $('div').each(function(i, elem) {
+                                                    utters[i] = $(this).text();
+                                                });
+
+                                                var joineds = utters.join(' ');
+                        */
+
+
+
+
+                        // console.log(prefix + 'Body [%s] Finished', inspect(info.which));
                     });
                 });
                 f.once('error', function(err) {
@@ -666,7 +723,6 @@ exports.submit = function(req, res, next) {
                 });
                 f.once('end', function() {
                     // console.log('Done fetching all messages!');
-
 
                     var default_context = importContext;
 
@@ -729,7 +785,6 @@ exports.submit = function(req, res, next) {
 
 
     }
-
 
 
 
