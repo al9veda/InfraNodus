@@ -1,6 +1,6 @@
 ##InfraNodus is a web / mobile interface to Neo4J made using Node.Js and Sigma.Js.
 
-#### Keep track of all the relations using this simple tool that converts natural language into graph (English, Russian and other languages are supported).
+#### Keep track of all the connections using this simple tool that converts natural language into graph (English, Russian and other languages are supported).
 
 =================
 
@@ -8,6 +8,7 @@
 
 =================
 
+#### Update! You can now visualize your notes (Evernote and Gmail import) or tweets and see how they all connect in a graph.
 
 [Watch a Video Demo](https://vimeo.com/89807920) - a 2-minute introduction
 
@@ -20,6 +21,7 @@
 ### Introduction
 
 The basic ideas behind InfraNodus are:
+
 – Graph DB model that can suit any purpose.
 - Works on desktop and mobile.
 - Make it easy to add nodes into a graph through a simple web interface.
@@ -27,6 +29,7 @@ The basic ideas behind InfraNodus are:
 - Use natural language to enter nodes in a graph (English and Russian morphology is supported)
 - Move away from binary edges (e.g. A < - > B) to hyperedges in one statement (e.g. A and B and C or D)
 - API and JSON export of all data;
+- Twitter, Evernote, Gmail (Notes) import (TODO: gexf, xml, csv upload)
 - Make it as lightweight, portable, and standalone as possible;
 - Make it as fast as possible;
 - Enable people to use ше collaboratively, both locally and over the internet (TODO);
