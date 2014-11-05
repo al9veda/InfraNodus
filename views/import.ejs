@@ -177,7 +177,12 @@
                 if( $(this).val() === "email" ) { // this time, we do need to check the value
                     searchbox.show();
                     $("#search").hide();
-                } else {
+                }
+                else if ($(this).val() === "evernote") {
+                    window.location.href = "/evernote_oauth";
+                }
+                else
+                {
                     searchbox.hide();
                     $("#search").show();
                 }
