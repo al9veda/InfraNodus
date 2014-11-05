@@ -71,7 +71,7 @@ You might need to manually install ejs rending Node.Js module
 
 You might also need to manually `npm build node-lemmer`
 
-Check out the config.json.sample file and edit it to add your own Evernote and Twitter API credentials.
+Check out the config.json.sample file and edit it to add your own Evernote and Twitter API credentials. Then rename it to config.json.
 
 =================
 
