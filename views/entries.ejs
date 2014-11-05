@@ -437,7 +437,7 @@ sigma.parsers.json(
                         $(this).css('opacity','1');
 
                         // Create array of sentences from the text
-                        var sentences = $(this).children('entry-text').text().split(/[.|!|?]\s/gi);
+                        var sentences = $(this).children('.entry-text').text().split(/[.|!|?]\s/gi);
 
                         for (var i = 0; i < sentences.length; i++) {
                             if (!S(sentences[i]).contains(nodeLabel)) {
@@ -445,7 +445,7 @@ sigma.parsers.json(
                             }
                         }
 
-                        $(this).children('entry-text').html(sentences.join(' <br>'));
+                        $(this).children('.entry-text').html(sentences.join(' <br>'));
 
                     }
                     else {
