@@ -1,0 +1,25 @@
+{
+    "neo4j":  {
+        "host": "localhost:7474",
+        "username": "username",
+        "password": "password"
+    },
+
+    "secrets": {
+        "invitation": "secretcode"
+    },
+
+    "evernote": {
+        "API_CONSUMER_KEY" : "app_name",
+        "API_CONSUMER_SECRET" : "app_secret",
+        "CALLBACK_URL": 'http://localhost:3000/evernote_oauth_callback',
+        "SANDBOX" : true
+    },
+
+    "twitter": {
+        "consumer_key":         "secret",
+        "consumer_secret":      "secret",
+        "access_token":         "token-secret",
+        "access_token_secret":  "token-secret"
+    }
+}

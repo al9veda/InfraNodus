@@ -10,6 +10,7 @@
 
 #### Update! You can now visualize your notes (Evernote and Gmail import) or tweets and see how they all connect in a graph.
 
+
 [Watch a Video Demo](https://vimeo.com/89807920) - a 2-minute introduction
 
 [Try it Online](http://infranodus.com) - request invitation code through [Nodus Labs](http://noduslabs.com/contact/)
@@ -70,6 +71,7 @@ You might need to manually install ejs rending Node.Js module
 
 You might also need to manually `npm build node-lemmer`
 
+Check out the config.json.sample file and edit it to add your own Evernote and Twitter API credentials.
 
 =================
 
