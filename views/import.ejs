@@ -36,11 +36,20 @@
             <form action='/import' name='submitform' id="submitform" method='post' class='pure-form pure-form-stacked'>
                 <br>
                 Data source:
+                <% if (!evernote) { %>
                 <label for="source1" class="pure-radio">
                     <input id="source1" type="radio" name="source" value="twitter" checked>
                     Twitter
                 </label>
-
+                <label for="source2" class="pure-radio">
+                <input id="source2" type="radio" name="source" value="evernote">
+                    Evernote (<a href="/evernote_oauth">authorize</a>)
+                </label>
+                <label for="source3" class="pure-radio">
+                    <input id="source3" type="radio" name="source" value="email">
+                    iPhone / Gmail notes
+                </label>
+                <div id="inputplace"></div>
 
                 <br>
 
@@ -61,16 +70,51 @@
                 </label>
                 <br>
 
-                Profile or Hashtag:
-                <input type='text' name='search' placeholder='@username or #hashtag' />
+                Account or Hashtag:
+                <input type='text' name='search' id="search" placeholder='@username or #hashtag' />
+                <div id="searchbox" style="display: none">
+                    <input type="text" name="email" id="searchbox1" value="your@email.com" />
+                    <input type="password" name="password" id="searchbox2" value="password" />
+                    <input type="text" name="host" id="searchbox3" value="imap.gmail.com" />
+                    <input type="text" name="tls" id="searchbox4" value="true" />
+                    <input type="text" name="port" id="searchbox5" value="993" />
+                    <br>Your e-mail and password are not saved, <br>only sent to the server.  <br>
+                </div>
                 <br>
 
+                <% } else { %>
+                <label for="source2" class="pure-radio">
+                    <input id="source2" type="radio" name="source" value="evernote" checked>
+                    Evernote (<a href="/evernote_clear">deauthorize</a>)
+                </label>
+                <label for="source1" class="pure-radio">
+                    <input id="source1" type="radio" name="source" value="twitter" disabled>
+                    Twitter
+                </label>
+                <br>
+
+                Extract:
+                <label for="extract1" class="pure-radio">
+                    <input id="extract1" type="radio" name="extract" value="user" checked>
+                    graph of words used in all the entries
+                </label>
+                <br>
+
+                Evernote Account:
+                <input type='text' name='search' value="<%= evernote %>" readonly/>
+                <br>
+
+                <% } %>
+
+
+
+
                 Save In List:
-                <input type='text' name='context' value='imported' />
+                <input type='text' name='context' value='imported'/>
                 <br>
 
                 How Many Recent Posts:
-                <input type='text' name='limit' value='50' />
+                <input type='text' name='limit' value='100 ' />
                 <br>
 
                 Settings:
@@ -120,7 +164,34 @@
 <script src="/javascripts/jquery.mobile-events.min.js"></script>
 
 
+<script>
+    ;(function(){
 
+
+            // toggle email login controls on and off with radio
+
+            var radioButtons = $("[name=source]"), // get both radiobuttons
+                searchbox  = $("#searchbox");
+
+            radioButtons.change(function () {
+                if( $(this).val() === "email" ) { // this time, we do need to check the value
+                    searchbox.show();
+                    $("#search").hide();
+                }
+                else if ($(this).val() === "evernote") {
+                    window.location.href = "/evernote_oauth";
+                }
+                else
+                {
+                    searchbox.hide();
+                    $("#search").show();
+                }
+            });
+
+
+
+    })();
+</script>
 
 <% include statsbelow %>
 </body>
