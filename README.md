@@ -22,7 +22,7 @@
 
 The basic ideas behind InfraNodus are:
 
-– Graph DB model that can suit any purpose.
+- Graph DB model that can suit any purpose.
 - Works on desktop and mobile.
 - Make it easy to add nodes into a graph through a simple web interface.
 - Work with what people already know and use well: #hashtags and @mentions, not nodes and edges.
