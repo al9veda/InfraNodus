@@ -106,6 +106,7 @@
 <script src='/javascripts/jquery.autosize.js'></script>
 <script src="/javascripts/ui.js"></script>
 <script src="/javascripts/jquery.mobile-events.min.js"></script>
+<script src="/javascripts/jquery.highlight-4.js"></script>
 
 
 
@@ -148,6 +149,9 @@ var statementsOfContext = [];
 // Get current context
 var path = window.location.pathname;
 var current_context = path.match(/([^\/]*)\/*$/)[1];
+
+// These are the nodes clicked in the graph
+var pinnedNodes = [];
 
 
 
@@ -345,6 +349,9 @@ sigma.parsers.json(
             sigma.bind('clickNode', function(e) {
 
                 var nodeId = e.data.node.id;
+                var nodeLabel = e.data.node.originalLabel;
+
+
 
                 var toKeep = [];
 
@@ -415,6 +422,28 @@ sigma.parsers.json(
 
 
                 });
+
+                // Was the node clicked already? No? Add it to array of clicked nodes.
+                if (pinnedNodes.indexOf(nodeLabel) < 0) {
+                    pinnedNodes.push(nodeLabel);
+                    $(".entry").removeHighlight();
+                    for (i=0; i<pinnedNodes.length; i++) {
+                        $(".entry").highlight(pinnedNodes[i]);
+                    }
+
+                }
+                else {
+                    var pinnedIndex = pinnedNodes.indexOf(nodeLabel);
+                    if (pinnedIndex > -1) {
+                        pinnedNodes.splice(pinnedIndex,1);
+                        $(".entry").removeHighlight();
+                        for (i=0; i<pinnedNodes.length; i++) {
+                            $(".entry").highlight(pinnedNodes[i]);
+                        }
+                    }
+
+                }
+                console.log(pinnedNodes);
 
             });
 

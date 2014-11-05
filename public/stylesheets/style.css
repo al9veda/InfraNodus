@@ -223,6 +223,8 @@ body {
     background-color: #ffffff;
 }
 
+.highlight { background-color: yellow }
+
 /* from PURE buttons-core.css */
 .pure-button {
     /* Structure */
