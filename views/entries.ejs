@@ -66,7 +66,8 @@
 
             <% entries.forEach(function(entry) { %>
                 <div class='entry' data-uid='<%= entry.uid %>' data-hashtags='<%= entry.name %>'>
-                    <p><%- entry.text %></p>
+                    <p class='entry-text'><%- entry.text %></p>
+                    <p class='entry-date'><%= entry.timestamp %></p>
                 </div>
             <% }) %>
 
@@ -407,13 +408,45 @@ sigma.parsers.json(
                 sigma.refresh();
 
 
+                // Was the node clicked already? No? Add it to array of clicked nodes.
+                // Highlight the clicked node in the text.
+
+                if (pinnedNodes.indexOf(nodeLabel) < 0) {
+                    pinnedNodes.push(nodeLabel);
+                }
+                else {
+                    var pinnedIndex = pinnedNodes.indexOf(nodeLabel);
+                    if (pinnedIndex > -1) {
+                        pinnedNodes.splice(pinnedIndex,1);
+                    }
+
+                }
+                console.log(pinnedNodes);
+
+
+                // Now show / hide statements that have the search field
 
                 $(".entry").each(function(){
                     var currentDiv = $(this).attr('data-uid');
 
                     if (statementsToKeep.indexOf(currentDiv) > -1) {
+
+                        // Show the statement if it contains the node clicked
+
                         $(this).removeClass('hidden');
                         $(this).css('opacity','1');
+
+                        // Create array of sentences from the text
+                        var sentences = $(this).children('entry-text').text().split(/[.|!|?]\s/gi);
+
+                        for (var i = 0; i < sentences.length; i++) {
+                            if (!S(sentences[i]).contains(nodeLabel)) {
+                                sentences[i] = '<br>[...]<br>';
+                            }
+                        }
+
+                        $(this).children('entry-text').html(sentences.join(' <br>'));
+
                     }
                     else {
                         $(this).addClass('hidden');
@@ -423,27 +456,12 @@ sigma.parsers.json(
 
                 });
 
-                // Was the node clicked already? No? Add it to array of clicked nodes.
-                if (pinnedNodes.indexOf(nodeLabel) < 0) {
-                    pinnedNodes.push(nodeLabel);
-                    $(".entry").removeHighlight();
-                    for (i=0; i<pinnedNodes.length; i++) {
-                        $(".entry").highlight(pinnedNodes[i]);
-                    }
-
+                $(".entry").removeHighlight();
+                for (i=0; i<pinnedNodes.length; i++) {
+                    $(".entry").highlight(pinnedNodes[i]);
                 }
-                else {
-                    var pinnedIndex = pinnedNodes.indexOf(nodeLabel);
-                    if (pinnedIndex > -1) {
-                        pinnedNodes.splice(pinnedIndex,1);
-                        $(".entry").removeHighlight();
-                        for (i=0; i<pinnedNodes.length; i++) {
-                            $(".entry").highlight(pinnedNodes[i]);
-                        }
-                    }
 
-                }
-                console.log(pinnedNodes);
+
 
             });
 
@@ -1187,6 +1205,25 @@ sigma.parsers.json(
                 }
             }
         ]);
+    }
+
+    $(".entry-date").each(function() {
+        var convertedTime = timeConverter($(this).text()) ;
+        $(this).text('added on ' + convertedTime);
+    });
+
+        function timeConverter(UNIX_timestamp){
+        var modTimestamp = UNIX_timestamp.substr(0, UNIX_timestamp.length - 4);
+        var a = new Date(modTimestamp *1); // *1000
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var year = a.getFullYear();
+        var month = months[a.getMonth()];
+        var date = a.getDate();
+        var hour = a.getHours();
+        var min = a.getMinutes();
+        var sec = a.getSeconds();
+        var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+        return time;
     }
 
 

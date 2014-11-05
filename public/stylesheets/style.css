@@ -87,6 +87,21 @@ textarea:focus {
     max-width: 95%;
 }
 
+
+.entry-text {
+    font: 17px 'IstokWeb-Bold',sans-serif;
+    color: #000;
+    max-width: 95%;
+}
+
+.entry-date {
+    font: 14px 'IstokWeb-Regular',sans-serif;
+    color: #444;
+    margin-top: -1em;
+    margin-bottom: 2em;
+    color: #999999;
+}
+
 .intro {
     font: 19px 'IstokWeb-Bold',sans-serif;
     color: #000;
