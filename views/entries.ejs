@@ -441,41 +441,44 @@ sigma.parsers.json(
 
                         // Make an array with them
                         var sentences = originaltext.split(/[.|!|?]\s/gi);
-                        var newsentences = [];
 
                         // Check what sentences contain the node clicked
                         // TODO the NODES clicked
 
+                        // How many sentences are hidden
+                        var startmark = 0;
+
                         for (var i = 0; i < sentences.length; i++) {
+
+                            // No node in the sentence? Hide it.
                             if (!S(sentences[i]).contains(nodeLabel)) {
-                                sentences[i] = '';
+
+                                sentences[i] = '<div class="entry-sentence" style="visibility: hidden">' + sentences[i] + '</div>';
+
+                                // First time hiding? Add a more [..] link at the top.
+                                if (startmark == 0) {
+                                    sentences[i] = '<a class="app-more-link" href="#linkid">[...]</a>\n' + sentences[i];
+                                    startmark = startmark + 1;
+                                }
+                            }
+
+                            // The node is in the sentence? Add it and add a dot to it.
+                            else {
+                                sentences[i] = sentences[i] + '.\n';
                             }
                         }
 
-                        // Make a new array with filtered sentences
-                        newsentences = _.filter(sentences, Boolean);
-
                         // Make a new text from the filtered sentences
-                        var newtext = newsentences.join('.\n');
+                        var newtext = sentences.join('');
 
                         // Check if something was deleted from the original
 
-                        if (newsentences.length < sentences.length) {
-                            if (newsentences[0] != sentences[0]) {
-                                newtext = '<a class="app-more-link" href="#linkid">[...]</a><br>\n' + newtext;
-                            }
-                            newtext = newtext + '<br>\n<a class="app-more-link" href="#linkid">[...]</a>';
+                        if (newtext.substr(newtext.length - 6) == '</div>') {
+                            newtext = newtext + '<br><a class="app-more-link" href="#linkid">[...]</a>\n';
                         }
                         else {
 
                         }
-
-
-
-                        // Get the new text
-
-
-
 
                         // Populate statement with a new text
                         $(this).children('.entry-text').html(newtext);
