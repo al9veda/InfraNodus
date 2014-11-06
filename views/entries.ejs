@@ -436,16 +436,49 @@ sigma.parsers.json(
                         $(this).removeClass('hidden');
                         $(this).css('opacity','1');
 
-                        // Create array of sentences from the text
-                        var sentences = $(this).children('.entry-text').text().split(/[.|!|?]\s/gi);
+                        // Retrieve the statement text from the entry
+                        var originaltext = $(this).children('.entry-text').text();
+
+                        // Make an array with them
+                        var sentences = originaltext.split(/[.|!|?]\s/gi);
+                        var newsentences = [];
+
+                        // Check what sentences contain the node clicked
+                        // TODO the NODES clicked
 
                         for (var i = 0; i < sentences.length; i++) {
                             if (!S(sentences[i]).contains(nodeLabel)) {
-                                sentences[i] = '<br>[...]<br>';
+                                sentences[i] = '';
                             }
                         }
 
-                        $(this).children('.entry-text').html(sentences.join(' <br>'));
+                        // Make a new array with filtered sentences
+                        newsentences = _.filter(sentences, Boolean);
+
+                        // Make a new text from the filtered sentences
+                        var newtext = newsentences.join('.\n');
+
+                        // Check if something was deleted from the original
+
+                        if (newsentences.length < sentences.length) {
+                            if (newsentences[0] != sentences[0]) {
+                                newtext = '<a class="app-more-link" href="#linkid">[...]</a><br>\n' + newtext;
+                            }
+                            newtext = newtext + '<br>\n<a class="app-more-link" href="#linkid">[...]</a>';
+                        }
+                        else {
+
+                        }
+
+
+
+                        // Get the new text
+
+
+
+
+                        // Populate statement with a new text
+                        $(this).children('.entry-text').html(newtext);
 
                     }
                     else {
@@ -1209,20 +1242,20 @@ sigma.parsers.json(
 
     $(".entry-date").each(function() {
         var convertedTime = timeConverter($(this).text()) ;
-        $(this).text('added on ' + convertedTime);
+        $(this).text('saved ' + convertedTime);
     });
 
         function timeConverter(UNIX_timestamp){
         var modTimestamp = UNIX_timestamp.substr(0, UNIX_timestamp.length - 4);
         var a = new Date(modTimestamp *1); // *1000
-        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
         var year = a.getFullYear();
         var month = months[a.getMonth()];
         var date = a.getDate();
         var hour = a.getHours();
         var min = a.getMinutes();
         var sec = a.getSeconds();
-        var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+        var time = date + '/' + month + '/' + year + ' ' + hour + ':' + min + ':' + sec ;
         return time;
     }
 
