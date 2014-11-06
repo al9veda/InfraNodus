@@ -453,7 +453,7 @@ sigma.parsers.json(
                             // No node in the sentence? Hide it.
                             if (!S(sentences[i]).contains(nodeLabel)) {
 
-                                sentences[i] = '<div class="entry-sentence" style="visibility: hidden">' + sentences[i] + '</div>';
+                                sentences[i] = '<div class="entry-sentence">' + sentences[i] + '</div> ';
 
                                 // First time hiding? Add a more [..] link at the top.
                                 if (startmark == 0) {
@@ -482,6 +482,8 @@ sigma.parsers.json(
 
                         // Populate statement with a new text
                         $(this).children('.entry-text').html(newtext);
+                        $(this).children('.entry-sentence').hide();
+
 
                     }
                     else {
@@ -491,6 +493,8 @@ sigma.parsers.json(
 
 
                 });
+
+                // Hide the sentences that don't contain the terms
 
                 $(".entry").removeHighlight();
                 for (i=0; i<pinnedNodes.length; i++) {
