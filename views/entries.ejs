@@ -443,7 +443,7 @@ sigma.parsers.json(
                         var sentences = originaltext.split(/[.|!|?]\s/gi);
 
                         // Check what sentences contain the node clicked
-                        // TODO the NODES clicked
+                        // TODO the NODES clicked and this will make [,,] clickable
 
                         // How many sentences are hidden
                         var startmark = 0;
@@ -453,7 +453,7 @@ sigma.parsers.json(
                             // No node in the sentence? Hide it.
                             if (!S(sentences[i]).contains(nodeLabel)) {
 
-                                sentences[i] = '<div class="entry-sentence">' + sentences[i] + '</div> ';
+                                sentences[i] = '<div class="nonmatched-sentence">' + sentences[i] + '</div> ';
 
                                 // First time hiding? Add a more [..] link at the top.
                                 if (startmark == 0) {
@@ -482,7 +482,10 @@ sigma.parsers.json(
 
                         // Populate statement with a new text
                         $(this).children('.entry-text').html(newtext);
-                        $(this).children('.entry-sentence').hide();
+
+                        console.log($(this).find('.nonmatched-sentence').text());
+
+                        $(this).find('.nonmatched-sentence').hide();
 
 
                     }
@@ -493,6 +496,7 @@ sigma.parsers.json(
 
 
                 });
+
 
                 // Hide the sentences that don't contain the terms
 
@@ -594,12 +598,22 @@ sigma.parsers.json(
         });
 
 
+
         // Highlight statement if clicked once
 
         $(".entry").on('click', function(e) {
 
-
+            console.log(e.target.className);
             e.preventDefault();
+
+            // Shall all statements inside Entry if clicked
+
+            if (e.target.className == 'app-more-link') {
+
+                $(this).find('.nonmatched-sentence').show();
+                console.log($(this).find('.nonmatched-sentence').text());
+
+            }
 
             // A parameter to check if we're taking off the flag
 
@@ -1020,8 +1034,6 @@ sigma.parsers.json(
 
 
     }
-
-
 
 
     // Populate context menu
