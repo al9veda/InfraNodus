@@ -352,8 +352,6 @@ sigma.parsers.json(
                 var nodeId = e.data.node.id;
                 var nodeLabel = e.data.node.originalLabel;
 
-
-
                 var toKeep = [];
 
                 console.log('x: ' + e.data.node['renderer1:x'] + ', y:' + e.data.node['renderer1:y'], ', size: ' + e.data.node['renderer1:size']);
@@ -427,14 +425,12 @@ sigma.parsers.json(
                 // Now show / hide statements that have the search field
 
                 $(".entry").each(function(){
+
                     var currentDiv = $(this).attr('data-uid');
 
-                    if (statementsToKeep.indexOf(currentDiv) > -1) {
 
-                        // Show the statement if it contains the node clicked
 
-                        $(this).removeClass('hidden');
-                        $(this).css('opacity','1');
+
 
                         // Retrieve the statement text from the entry, clean from html
                         var originaltext = S($(this).children('.entry-text').text()).stripTags().s;
@@ -479,22 +475,30 @@ sigma.parsers.json(
 
                         if (startmark == sentences.length) {
                              newtext = originaltext;
+
                         }
+
                         else {
                              newtext = sentences.join(' ');
+
                         }
+
+
+                        if (startmark == 0) {
+
+                            $(this).fadeOut(500)
+
+                        }
+
                         // Populate statement with a new text
                         $(this).children('.entry-text').html(newtext);
 
                         console.log($(this).find('.nonmatched-sentence').text());
 
-                        $(this).find('.nonmatched-sentence').fadeOut(2000);
+                        $(this).find('.nonmatched-sentence').fadeOut(500);
 
 
-                    }
-                    else {
-                        $(this).addClass('hidden');
-                    }
+
 
 
 
