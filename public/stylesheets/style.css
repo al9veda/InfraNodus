@@ -95,11 +95,26 @@ textarea:focus {
 }
 
 .entry-date {
+    float: left;
     font: 14px 'IstokWeb-Regular',sans-serif;
     color: #444;
     margin-top: -1em;
     margin-bottom: 2em;
     color: #999999;
+}
+#entry-menu {
+    float: left;
+    font: 14px 'IstokWeb-Regular',sans-serif;
+    color: #444;
+    margin-top: -1em;
+    margin-bottom: 2em;
+    color: #999999;
+    display:none;
+
+}
+
+.separator {
+
 }
 
 .intro {

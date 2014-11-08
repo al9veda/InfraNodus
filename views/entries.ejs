@@ -68,6 +68,9 @@
                 <div class='entry' data-uid='<%= entry.uid %>' data-hashtags='<%= entry.name %>'>
                     <p class='entry-text'><%- entry.text %></p>
                     <p class='entry-date'><%= entry.timestamp %></p>
+                    <p id='entry-menu'>&nbsp;&nbsp;&nbsp;<a href="#">reveal</a></p>
+                    <div class='separator'>&nbsp;</div>
+                    <div id='original' class='hidden'><%= entry.text %></div>
                 </div>
             <% }) %>
 
@@ -475,18 +478,21 @@ sigma.parsers.json(
 
                         if (startmark == sentences.length) {
                              newtext = originaltext;
+                            $(this).find('#entry-menu').fadeOut(500);
+
 
                         }
 
                         else {
                              newtext = sentences.join(' ');
+                             $(this).find('#entry-menu').fadeIn(500);
 
                         }
 
 
                         if (startmark == 0) {
 
-                            $(this).fadeOut(500)
+                             $(this).fadeOut(500);
 
                         }
 
