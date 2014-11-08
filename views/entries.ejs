@@ -598,6 +598,7 @@ sigma.parsers.json(
         });
 
 
+        var hidsentences = 0;
 
         // Highlight statement if clicked once
 
@@ -610,8 +611,16 @@ sigma.parsers.json(
 
             if (e.target.className == 'app-more-link') {
 
-                $(this).find('.nonmatched-sentence').show();
+                if (hidsentences == '1') {
+                     $(this).find('.nonmatched-sentence').hide();
+                     hidsentences = 0;
+                }
+                else {
+                     $(this).find('.nonmatched-sentence').show();
+                     hidsentences = 1;
+                }
                 console.log($(this).find('.nonmatched-sentence').text());
+
 
             }
 
