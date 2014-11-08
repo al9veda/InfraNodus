@@ -68,7 +68,7 @@
                 <div class='entry' data-uid='<%= entry.uid %>' data-hashtags='<%= entry.name %>'>
                     <p class='entry-text'><%- entry.text %></p>
                     <p class='entry-date'><%= entry.timestamp %></p>
-                    <p id='entry-menu'>&nbsp;&nbsp;&nbsp;<a href="#">reveal</a></p>
+                    <p class='entry-menu'>&nbsp;&nbsp;&nbsp;<a class="app-link-menu" href="#">show filtered</a></p>
                     <div class='separator'>&nbsp;</div>
                     <div id='original' class='hidden'><%= entry.text %></div>
                 </div>
@@ -478,14 +478,14 @@ sigma.parsers.json(
 
                         if (startmark == sentences.length) {
                              newtext = originaltext;
-                            $(this).find('#entry-menu').fadeOut(500);
+                            $(this).find('.entry-menu').fadeOut(500);
 
 
                         }
 
                         else {
                              newtext = sentences.join(' ');
-                             $(this).find('#entry-menu').fadeIn(500);
+                             $(this).find('.entry-menu').fadeIn(500);
 
                         }
 
@@ -617,23 +617,21 @@ sigma.parsers.json(
 
         $(".entry").on('click', function(e) {
 
-            console.log(e.target.className);
+            console.log(e);
             e.preventDefault();
 
             // Shall all statements inside Entry if clicked
 
-            if (e.target.className == 'app-more-link') {
+            if (e.target.className == 'app-link-menu') {
 
-                if (hidsentences == '1') {
-                     $(this).find('.nonmatched-sentence').hide();
-                     hidsentences = 0;
+                if ($(this).find('.app-link-menu').text() == 'hide filtered') {
+                    $(this).find('.nonmatched-sentence').fadeOut(400);
+                    $(this).find('.app-link-menu').text('show filtered');
                 }
                 else {
-                     $(this).find('.nonmatched-sentence').show();
-                     hidsentences = 1;
+                    $(this).find('.nonmatched-sentence').fadeIn(400);
+                    $(this).find('.app-link-menu').text('hide filtered');
                 }
-                console.log($(this).find('.nonmatched-sentence').text());
-
 
             }
 
@@ -1285,6 +1283,7 @@ sigma.parsers.json(
         var convertedTime = timeConverter($(this).text()) ;
         $(this).text('saved ' + convertedTime);
     });
+
 
         function timeConverter(UNIX_timestamp){
         var modTimestamp = UNIX_timestamp.substr(0, UNIX_timestamp.length - 4);

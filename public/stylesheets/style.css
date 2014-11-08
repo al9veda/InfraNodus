@@ -102,7 +102,7 @@ textarea:focus {
     margin-bottom: 2em;
     color: #999999;
 }
-#entry-menu {
+.entry-menu {
     float: left;
     font: 14px 'IstokWeb-Regular',sans-serif;
     color: #444;
