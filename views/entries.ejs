@@ -579,7 +579,7 @@ sigma.parsers.json(
 
         // Statement edit / delete functionality
 
-        $(".entry").on('dblclick doubletap', function(e) {
+        $(".entry").on('dblclick', function(e) {
 
             e.preventDefault();
 
@@ -611,7 +611,7 @@ sigma.parsers.json(
         });
 
 
-        var hidsentences = 0;
+        var filteringstarted = 0;
 
         // Highlight statement if clicked once
 
@@ -662,7 +662,7 @@ sigma.parsers.json(
 
             // Make only those edges visible that belong to the statement selected
 
-            if (!alreadyClicked) {
+            if (!alreadyClicked && pinnedNodes.length == 0) {
 
                 sigma.instances(0).graph.edges().forEach(function(e) {
 
@@ -690,18 +690,25 @@ sigma.parsers.json(
                     }
                 });
             }
+            else if (e.target.className == 'app-link-menu') {
+
+                 // Do nothing
+
+            }
             else {
 
-                sigma.instances(0).graph.edges().forEach(function(e) {
-                        e.color = e.originalColor;
-                });
+                if (pinnedNodes.length == 0) {
+                    sigma.instances(0).graph.edges().forEach(function(e) {
+                            e.color = e.originalColor;
+                    });
 
-                // Make only those nodes visible that belong to the statement selected
+                    // Make only those nodes visible that belong to the statement selected
 
-                sigma.instances(0).graph.nodes().forEach(function(n) {
-                        n.color = n.originalColor;
-                        n.label = n.originalLabel;
-                });
+                    sigma.instances(0).graph.nodes().forEach(function(n) {
+                            n.color = n.originalColor;
+                            n.label = n.originalLabel;
+                    });
+                }
 
             }
 
