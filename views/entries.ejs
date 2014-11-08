@@ -436,56 +436,59 @@ sigma.parsers.json(
                         $(this).removeClass('hidden');
                         $(this).css('opacity','1');
 
-                        // Retrieve the statement text from the entry
-                        var originaltext = $(this).children('.entry-text').text();
+                        // Retrieve the statement text from the entry, clean from html
+                        var originaltext = S($(this).children('.entry-text').text()).stripTags().s;
 
-                        // Make an array with them
+                        // Make an array from sentences of that text
                         var sentences = originaltext.split(/[.|!|?]\s/gi);
 
-                        // Check what sentences contain the node clicked
-                        // TODO the NODES clicked and this will make [,,] clickable
 
-                        // How many sentences are hidden
-                        var startmark = 0;
+                        // START Check what sentences contain the node clicked
+
+                        var startmark = sentences.length; // How many sentences are inside
 
                         for (var i = 0; i < sentences.length; i++) {
 
-                            // No node in the sentence? Hide it.
-                            if (!S(sentences[i]).contains(nodeLabel)) {
+                            var nodesfound = 0;
 
-                                sentences[i] = '<div class="nonmatched-sentence">' + sentences[i] + '</div> ';
+                            // Check how many of the nodes are found in This 1 Sentence i
 
-                                // First time hiding? Add a more [..] link at the top.
-                                if (startmark == 0) {
-                                    sentences[i] = '<a class="app-more-link" href="#linkid">[...]</a>\n' + sentences[i];
-                                    startmark = startmark + 1;
-                                }
+                            for (var j = 0; j < pinnedNodes.length; j++) {
+
+                                    if (S(sentences[i]).contains(pinnedNodes[j])) {
+                                        nodesfound = nodesfound + 1;
+                                    }
+
                             }
 
-                            // The node is in the sentence? Add it and add a dot to it.
+                            // At least one node not found? Mark it as non matched
+
+                            if (nodesfound == pinnedNodes.length) {
+                                   sentences[i] = sentences[i] + '.';
+                            }
                             else {
-                                sentences[i] = sentences[i] + '.\n';
+                                sentences[i] = '<div class="nonmatched-sentence">' + sentences[i] + '.</div>';
+                                startmark = startmark - 1;
                             }
+
+
                         }
 
                         // Make a new text from the filtered sentences
-                        var newtext = sentences.join('');
+                        var newtext = '';
 
-                        // Check if something was deleted from the original
-
-                        if (newtext.substr(newtext.length - 6) == '</div>') {
-                            newtext = newtext + '<br><a class="app-more-link" href="#linkid">[...]</a>\n';
+                        if (startmark == sentences.length) {
+                             newtext = originaltext;
                         }
                         else {
-
+                             newtext = sentences.join(' ');
                         }
-
                         // Populate statement with a new text
                         $(this).children('.entry-text').html(newtext);
 
                         console.log($(this).find('.nonmatched-sentence').text());
 
-                        $(this).find('.nonmatched-sentence').hide();
+                        $(this).find('.nonmatched-sentence').fadeOut(2000);
 
 
                     }
