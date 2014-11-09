@@ -61,7 +61,7 @@
 
             </form>   &nbsp;<br>&nbsp;<br>
 
-
+            <div id="messages"></div>
 
 
             <% entries.forEach(function(entry) { %>
@@ -797,18 +797,17 @@ sigma.parsers.json(
 
                     splicedNodes.splice(posnodes, 1);
 
-                    var r = confirm('No link between ' + pinnedNodes + '.\nShow entries just with ' + splicedNodes + '?');
+                    // var r = confirm('No link between ' + pinnedNodes + '.\nShow entries just with ' + splicedNodes + '?');
 
-                    if (r == true) {
+                    $('#messages').html('No entries contain "' + pinnedNodes.join(' and ') + '".<br>Showing entries that contain "' + splicedNodes.join(' and ') + '" only:<br>&nbsp;');
+
+
                         pinnedNodes = [];
                         for (var l = 0; l < splicedNodes.length; l++) {
                             pinnedNodes[l] = splicedNodes[l];
                         }
 
-                    }
-                    else {
-                        pinnedNodes.splice(lastnode, 1);
-                    }
+
 
                     console.log('will make new function iteration through ' + pinnedNodes);
 

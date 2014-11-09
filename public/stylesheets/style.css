@@ -194,6 +194,12 @@ a:hover.app-more-link {
 }
 
 
+#messages {
+    font: 17px 'IstokWeb-Bold',sans-serif;
+    color: #4b9dff;
+}
+
+
 #content {
     position: relative;
     top: 0px;
