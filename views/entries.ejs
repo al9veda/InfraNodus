@@ -427,88 +427,12 @@ sigma.parsers.json(
 
                 // Now show / hide statements that have the search field
 
-                $(".entry").each(function(){
 
-                    var currentDiv = $(this).attr('data-uid');
-
+                var visibleentries = $(".entry:visible").length;
 
 
 
-
-                        // Retrieve the statement text from the entry, clean from html
-                        var originaltext = S($(this).children('.entry-text').text()).stripTags().s;
-
-                        // Make an array from sentences of that text
-                        var sentences = originaltext.split(/[.|!|?]\s/gi);
-
-
-                        // START Check what sentences contain the node clicked
-
-                        var startmark = sentences.length; // How many sentences are inside
-
-                        for (var i = 0; i < sentences.length; i++) {
-
-                            var nodesfound = 0;
-
-                            // Check how many of the nodes are found in This 1 Sentence i
-
-                            for (var j = 0; j < pinnedNodes.length; j++) {
-
-                                    if (S(sentences[i]).contains(pinnedNodes[j])) {
-                                        nodesfound = nodesfound + 1;
-                                    }
-
-                            }
-
-                            // At least one node not found? Mark it as non matched
-
-                            if (nodesfound == pinnedNodes.length) {
-                                   sentences[i] = sentences[i] + '.';
-                            }
-                            else {
-                                sentences[i] = '<div class="nonmatched-sentence">' + sentences[i] + '.</div>';
-                                startmark = startmark - 1;
-                            }
-
-
-                        }
-
-                        // Make a new text from the filtered sentences
-                        var newtext = '';
-
-                        if (startmark == sentences.length) {
-                             newtext = originaltext;
-                            $(this).find('.entry-menu').fadeOut(500);
-
-
-                        }
-
-                        else {
-                             newtext = sentences.join(' ');
-                             $(this).find('.entry-menu').fadeIn(500);
-
-                        }
-
-
-                        if (startmark == 0) {
-
-                             $(this).fadeOut(500);
-
-                        }
-
-                        // Populate statement with a new text
-                        $(this).children('.entry-text').html(newtext);
-
-                        console.log($(this).find('.nonmatched-sentence').text());
-
-                        $(this).find('.nonmatched-sentence').fadeOut(500);
-
-
-
-
-
-
-                });
+                filter_statements(pinnedNodes,visibleentries);
 
 
                 // Hide the sentences that don't contain the terms
@@ -760,7 +684,90 @@ sigma.parsers.json(
 
 
 
+    function filter_statements(pinnedNodes,visibleentries) {
 
+        $(".entry").each(function(){
+
+            var currentDiv = $(this).attr('data-uid');
+
+
+
+
+
+            // Retrieve the statement text from the entry, clean from html
+            var originaltext = S($(this).children('.entry-text').text()).stripTags().s;
+
+            // Make an array from sentences of that text
+            var sentences = originaltext.split(/[.|!|?]\s/gi);
+
+
+            // START Check what sentences contain the node clicked
+
+            var startmark = sentences.length; // How many sentences are inside
+
+            for (var i = 0; i < sentences.length; i++) {
+
+                var nodesfound = 0;
+
+                // Check how many of the nodes are found in This 1 Sentence i
+
+                for (var j = 0; j < pinnedNodes.length; j++) {
+
+                    if (S(sentences[i]).contains(pinnedNodes[j])) {
+                        nodesfound = nodesfound + 1;
+                    }
+
+                }
+
+                // At least one node not found? Mark it as non matched
+
+                if (nodesfound == pinnedNodes.length) {
+                    sentences[i] = sentences[i] + '.';
+                }
+                else {
+                    sentences[i] = '<div class="nonmatched-sentence">' + sentences[i] + '.</div>';
+                    startmark = startmark - 1;
+                }
+
+
+            }
+
+            // Make a new text from the filtered sentences
+            var newtext = '';
+
+            if (startmark == sentences.length) {
+                newtext = originaltext;
+                $(this).find('.entry-menu').fadeOut(500);
+
+
+            }
+
+            else {
+                newtext = sentences.join(' ');
+                $(this).find('.entry-menu').fadeIn(500);
+
+            }
+
+
+            if (startmark == 0) {
+
+                $(this).fadeOut(500);
+                visibleentries = visibleentries - 1;
+
+            }
+
+            // Populate statement with a new text
+            $(this).children('.entry-text').html(newtext);
+
+            $(this).find('.nonmatched-sentence').fadeOut(500);
+
+
+
+
+
+
+        });
+    }
 
     function addContextTriggers() {
 
