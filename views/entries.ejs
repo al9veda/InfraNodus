@@ -417,13 +417,10 @@ sigma.parsers.json(
                      pinnedNodes = [];
                      for (var p = 0; p < splicedNodes.length; p++ ){
                          pinnedNodes[p] = splicedNodes[p];
-                         if (p == (splicedNodes.length - 1)) {
-
-                         }
                      }
                 }
                 else if (splicedNodes.length == 1) {
-                    pinnedNodex = [];
+                    pinnedNodes = [];
                     pinnedNodes[0] = splicedNodes[0];
                 }
 
@@ -440,7 +437,7 @@ sigma.parsers.json(
 
 
 
-                console.log(pinnedNodes);
+                console.log("node clicked, now will filter for nodes " + pinnedNodes);
 
 
                 // Now show / hide statements that have the search field
@@ -712,9 +709,7 @@ sigma.parsers.json(
 
         var visibleentries = visibleentries_original;
 
-        $(".entry").fadeIn(500);
-
-        console.log('started searching for ' + pinnedNodes);
+        console.log('function going for nodes ' + pinnedNodes);
 
         $(".entry").each(function(){
 
@@ -731,8 +726,6 @@ sigma.parsers.json(
 
             var startmark = sentences.length; // How many sentences are inside
 
-            console.log('searching for nodes ' + pinnedNodes + ' in ' + currentDiv);
-
             for (var i = 0; i < sentences.length; i++) {
 
                 var nodesfound = 0;
@@ -741,9 +734,10 @@ sigma.parsers.json(
 
                 for (var j = 0; j < pinnedNodes.length; j++) {
 
-                    if (S(sentences[i]).contains(pinnedNodes[j])) {
+                    if (sentences[i].toLowerCase().indexOf(pinnedNodes[j].toLowerCase()) > -1) {
                         nodesfound = nodesfound + 1;
                     }
+
 
                 }
 
@@ -777,16 +771,11 @@ sigma.parsers.json(
                 }
             }
 
-            console.log(startmark + ' matched');
-
             if (startmark == 0) {
 
                 $(this).fadeOut(500);
 
                 visibleentries = visibleentries - 1;
-
-                console.log('we see now ' + visibleentries + ' on screen');
-                console.log('showing? ' + showingsomething);
 
                 if (visibleentries == 0 && showingsomething == 0) {
 
@@ -794,7 +783,10 @@ sigma.parsers.json(
 
                     timesfiltered = timesfiltered + 1;
 
-                    var posnodes = pinnedNodes.length - timesfiltered - 1;
+                    // This is if we want to remove the node before the last one.
+                    // var posnodes = pinnedNodes.length - timesfiltered - 1;
+
+                    var posnodes = 0;
                     var lastnode = pinnedNodes.length - 1;
 
                     splicedNodes = [];
@@ -818,9 +810,10 @@ sigma.parsers.json(
                         pinnedNodes.splice(lastnode, 1);
                     }
 
-                    console.log('will search through ' + pinnedNodes);
+                    console.log('will make new function iteration through ' + pinnedNodes);
 
                     filter_statements(pinnedNodes);
+
                 }
 
             }
