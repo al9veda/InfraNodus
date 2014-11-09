@@ -428,11 +428,10 @@ sigma.parsers.json(
                 // Now show / hide statements that have the search field
 
 
-                var visibleentries = $(".entry:visible").length;
 
 
 
-                filter_statements(pinnedNodes,visibleentries);
+                filter_statements(pinnedNodes);
 
 
                 // Hide the sentences that don't contain the terms
@@ -490,6 +489,7 @@ sigma.parsers.json(
         }
 );
 
+   var visibleentries_original = '0';
 
 // TODO: 1. Add search function by #hashtag; 2. Attach that same function to hashtag doubleclick;
 
@@ -500,6 +500,7 @@ sigma.parsers.json(
         // Make texarea automatically resizeable
         $('textarea').autosize();
 
+        visibleentries_original = $(".entry:visible").length;
 
         // Statement edit / delete functionality
 
@@ -683,16 +684,24 @@ sigma.parsers.json(
     });*/
 
 
+    // Filter out the statements that don't have any of the nodes clicked
 
-    function filter_statements(pinnedNodes,visibleentries) {
+    var timesfiltered = 0;
+
+
+    function filter_statements(pinnedNodes) {
+
+        var showingsomething = 0;
+
+        var visibleentries = visibleentries_original;
+
+        $(".entry").fadeIn(500);
+
+        console.log('started searching for ' + pinnedNodes);
 
         $(".entry").each(function(){
 
             var currentDiv = $(this).attr('data-uid');
-
-
-
-
 
             // Retrieve the statement text from the entry, clean from html
             var originaltext = S($(this).children('.entry-text').text()).stripTags().s;
@@ -704,6 +713,8 @@ sigma.parsers.json(
             // START Check what sentences contain the node clicked
 
             var startmark = sentences.length; // How many sentences are inside
+
+            console.log('searching for nodes ' + pinnedNodes + ' in ' + currentDiv);
 
             for (var i = 0; i < sentences.length; i++) {
 
@@ -738,28 +749,68 @@ sigma.parsers.json(
             if (startmark == sentences.length) {
                 newtext = originaltext;
                 $(this).find('.entry-menu').fadeOut(500);
-
-
+                showingsomething = showingsomething + 1;
             }
 
             else {
                 newtext = sentences.join(' ');
                 $(this).find('.entry-menu').fadeIn(500);
-
+                if (startmark != 0) {
+                    showingsomething = showingsomething + 1;
+                }
             }
 
+            console.log(startmark + ' matched');
 
             if (startmark == 0) {
 
                 $(this).fadeOut(500);
+
                 visibleentries = visibleentries - 1;
 
+                console.log('we see now ' + visibleentries + ' on screen');
+                console.log('showing? ' + showingsomething);
+
+                if (visibleentries == 0 && showingsomething == 0) {
+
+                    $('.entry').fadeIn(500);
+
+                    timesfiltered = timesfiltered + 1;
+
+                    var posnodes = pinnedNodes.length - timesfiltered - 1;
+                    var lastnode = pinnedNodes.length - 1;
+
+                    var spliced = [];
+
+                    for (var k = 0; k < pinnedNodes.length; k++) {
+                        spliced[k] = pinnedNodes[k];
+                    }
+
+                    spliced.splice(posnodes, 1);
+
+                    var r = confirm('No link between ' + pinnedNodes + '.\nShow entries just with ' + spliced + '?');
+
+                    if (r == true) {
+                        pinnedNodes = spliced;
+                    }
+                    else {
+                        pinnedNodes.splice(lastnode, 1);
+                    }
+
+                    console.log('will search through ' + pinnedNodes);
+
+                    filter_statements(pinnedNodes);
+                }
+
+            }
+            else {
+                // Populate statement with a new text
+                $(this).children('.entry-text').html(newtext);
+
+                $(this).find('.nonmatched-sentence').fadeOut(500);
             }
 
-            // Populate statement with a new text
-            $(this).children('.entry-text').html(newtext);
 
-            $(this).find('.nonmatched-sentence').fadeOut(500);
 
 
 
@@ -767,6 +818,7 @@ sigma.parsers.json(
 
 
         });
+
     }
 
     function addContextTriggers() {
