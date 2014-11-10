@@ -111,7 +111,7 @@
 <script src="/javascripts/ui.js"></script>
 <script src="/javascripts/jquery.mobile-events.min.js"></script>
 <script src="/javascripts/jquery.highlight-4.js"></script>
-
+<script src="/javascripts/bundle-stemmer.js"></script>
 
 
 
@@ -722,22 +722,47 @@ sigma.parsers.json(
             var sentences = originaltext.split(/[.|!|?]\s/gi);
 
 
+
             // START Check what sentences contain the node clicked
 
             var startmark = sentences.length; // How many sentences are inside
 
             for (var i = 0; i < sentences.length; i++) {
 
+                // What language is the sentence?
+                var sentence_cyrillic = sentences[i].match(/[а-яА-Я]/);
+
                 var nodesfound = 0;
+
+                // Transform the sentence into a series of morphemes
+                var sentences_lemmas = sentences[i].split(' ');
+
+
+                for (var z = 0; z < sentences_lemmas.length; z++) {
+                    sentences_lemmas[z] = window.jstemmer(sentences_lemmas[z]);
+                }
+
+
+                var sentences_lemmas_string = sentences_lemmas.join(' ');
 
                 // Check how many of the nodes are found in This 1 Sentence i
 
                 for (var j = 0; j < pinnedNodes.length; j++) {
 
-                    if (sentences[i].toLowerCase().indexOf(pinnedNodes[j].toLowerCase()) > -1) {
+                    // Is the search term cyrillic?
+                    var search_cyrillic = pinnedNodes[j].match(/[а-яА-Я]/);
+
+                    var search_lemma = window.jstemmer(pinnedNodes[j]);
+
+
+                    if (sentences_lemmas_string.toLowerCase().indexOf(search_lemma.toLowerCase()) > -1) {
                         nodesfound = nodesfound + 1;
                     }
-
+                    else if (sentence_cyrillic != null && search_cyrillic != null)  {
+                        if (sentences_lemmas_string.toLowerCase().indexOf(search_lemma.toLowerCase().slice(0,-1)) > -1) {
+                            nodesfound = nodesfound + 1;
+                        }
+                    }
 
                 }
 
