@@ -899,8 +899,6 @@ sigma.parsers.json(
 
 
 
-
-
             }
 
 
@@ -918,7 +916,6 @@ sigma.parsers.json(
         // Add triggers to newly shown Tags elements
 
         addTagTriggers();
-
 
     }
 
@@ -1453,6 +1450,8 @@ sigma.parsers.json(
 
             e.preventDefault();
 
+            console.log('running repopulation');
+
             var remove_node = e.target.innerText;
 
             var pinnedIndex = pinnedNodes.indexOf(remove_node);
@@ -1479,10 +1478,12 @@ sigma.parsers.json(
                 splicedNodes = [];
             }
 
-
             // console.log("node clicked, now will filter for nodes " + pinnedNodes);
-
+            if (pinnedNodes.length == '0') {
+                $('.entry').fadeIn(400);
+            }
             filter_statements(pinnedNodes);
+
 
 
         });
