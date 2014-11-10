@@ -271,9 +271,14 @@ a:hover.app-more-link {
     border-color:transparent #666666 transparent transparent;
 }
 
-.tags a:hover{background:#555;}
+.tags a:hover{
+    background:#666;
+    opacity: 0.2;
+}
 
-.tags a:hover:before{border-color:transparent #555 transparent transparent;}
+.tags a:hover:before{
+    border-color:transparent #555 transparent transparent;
+}
 
 
 #content {

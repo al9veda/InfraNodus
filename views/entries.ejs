@@ -437,26 +437,12 @@ sigma.parsers.json(
 
                 }
 
-
-
-                console.log("node clicked, now will filter for nodes " + pinnedNodes);
+                 // console.log("node clicked, now will filter for nodes " + pinnedNodes);
 
 
                 // Now show / hide statements that have the search field
 
-
-
-
                 filter_statements(pinnedNodes);
-
-
-                // Hide the sentences that don't contain the terms
-
-                $(".entry").removeHighlight();
-                for (i=0; i<pinnedNodes.length; i++) {
-                    $(".entry").highlight(pinnedNodes[i]);
-                }
-
 
 
             });
@@ -655,6 +641,33 @@ sigma.parsers.json(
             sigma.instances(0).refresh();
 
         });
+
+
+
+
+
+        // Deal with each date
+
+        $(".entry-date").each(function() {
+            var convertedTime = timeConverter($(this).text()) ;
+            $(this).text('saved ' + convertedTime);
+        });
+
+
+        function timeConverter(UNIX_timestamp){
+            var modTimestamp = UNIX_timestamp.substr(0, UNIX_timestamp.length - 4);
+            var a = new Date(modTimestamp *1); // *1000
+            var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+            var year = a.getFullYear();
+            var month = months[a.getMonth()];
+            var date = a.getDate();
+            var hour = a.getHours();
+            var min = a.getMinutes();
+            var sec = a.getSeconds();
+            var time = date + '/' + month + '/' + year + ' ' + hour + ':' + min + ':' + sec ;
+            return time;
+        }
+
     });
 
 
@@ -706,11 +719,12 @@ sigma.parsers.json(
 
     function filter_statements(pinnedNodes) {
 
+
         var showingsomething = 0;
 
         var visibleentries = visibleentries_original;
 
-        console.log('function going for nodes ' + pinnedNodes);
+        // Hide the sentences that don't contain the terms
 
         $(".entry").each(function(){
 
@@ -722,6 +736,7 @@ sigma.parsers.json(
             // Make an array from sentences of that text
             var sentences = originaltext.split(/[.|!|?]\s/gi);
 
+            var searchlemmas = [];
 
 
             // START Check what sentences contain the node clicked
@@ -755,6 +770,7 @@ sigma.parsers.json(
 
                     var search_lemma = window.jstemmer(pinnedNodes[j]);
 
+                    searchlemmas.push(search_lemma);
 
                     if (sentences_lemmas_string.toLowerCase().indexOf(search_lemma.toLowerCase()) > -1) {
                         nodesfound = nodesfound + 1;
@@ -882,16 +898,27 @@ sigma.parsers.json(
                 $('#messages').html(htmlNodes);
 
 
+
+
+
             }
 
 
-
-
-
-
-
-
         });
+
+        // Highlight the nodes that were clicked
+
+        $(".entry").removeHighlight();
+
+        for (var i=0; i<pinnedNodes.length; i++) {
+            $(".entry").highlight(pinnedNodes[i]);
+
+        }
+
+        // Add triggers to newly shown Tags elements
+
+        addTagTriggers();
+
 
     }
 
@@ -1419,25 +1446,50 @@ sigma.parsers.json(
         ]);
     }
 
-    $(".entry-date").each(function() {
-        var convertedTime = timeConverter($(this).text()) ;
-        $(this).text('saved ' + convertedTime);
-    });
+    function addTagTriggers() {
 
 
-        function timeConverter(UNIX_timestamp){
-        var modTimestamp = UNIX_timestamp.substr(0, UNIX_timestamp.length - 4);
-        var a = new Date(modTimestamp *1); // *1000
-        var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
-        var year = a.getFullYear();
-        var month = months[a.getMonth()];
-        var date = a.getDate();
-        var hour = a.getHours();
-        var min = a.getMinutes();
-        var sec = a.getSeconds();
-        var time = date + '/' + month + '/' + year + ' ' + hour + ':' + min + ':' + sec ;
-        return time;
+        $(".tags").on('click', function(e) {
+
+            e.preventDefault();
+
+            var remove_node = e.target.innerText;
+
+            var pinnedIndex = pinnedNodes.indexOf(remove_node);
+
+
+
+            if (pinnedIndex > -1) {
+
+                    pinnedNodes.splice(pinnedIndex,1);
+
+                    notfoundNodes.push(remove_node);
+
+            }
+
+            if (splicedNodes.length > 1) {
+                pinnedNodes = [];
+                for (var p = 0; p < splicedNodes.length; p++ ){
+                    pinnedNodes[p] = splicedNodes[p];
+                }
+            }
+            else if (splicedNodes.length == 1) {
+                pinnedNodes = [];
+                pinnedNodes[0] = splicedNodes[0];
+                splicedNodes = [];
+            }
+
+
+            // console.log("node clicked, now will filter for nodes " + pinnedNodes);
+
+            filter_statements(pinnedNodes);
+
+
+        });
+
     }
+
+
 
 
 
