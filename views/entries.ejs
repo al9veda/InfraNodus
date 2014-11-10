@@ -433,6 +433,7 @@ sigma.parsers.json(
                     var pinnedIndex = pinnedNodes.indexOf(nodeLabel);
                     if (pinnedIndex > -1) {
                         pinnedNodes.splice(pinnedIndex,1);
+                        $('.entry').fadeIn(400);
                     }
 
                 }
@@ -1477,9 +1478,8 @@ sigma.parsers.json(
             }
 
             // console.log("node clicked, now will filter for nodes " + pinnedNodes);
-            if (pinnedNodes.length == '0') {
-                $('.entry').fadeIn(400);
-            }
+
+            $('.entry').fadeIn(400);
             filter_statements(pinnedNodes);
 
 
