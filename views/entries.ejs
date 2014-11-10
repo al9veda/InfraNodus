@@ -157,6 +157,7 @@ var current_context = path.match(/([^\/]*)\/*$/)[1];
 // These are the nodes clicked in the graph
 var pinnedNodes = [];
 var splicedNodes = [];
+var notfoundNodes = [];
 
 
 
@@ -813,27 +814,38 @@ sigma.parsers.json(
                     var posnodes = 0;
                     var lastnode = pinnedNodes.length - 1;
 
+                    // Final nodes to search
+
                     splicedNodes = [];
+
+
+                    // First all of them
 
                     for (var k = 0; k < pinnedNodes.length; k++) {
                         splicedNodes[k] = pinnedNodes[k];
                     }
 
+                    // Remove the one we can't find (the very first one of the bunch)
+
                     splicedNodes.splice(posnodes, 1);
 
+                    // Save that one also into the list of the nodes we removed
+
+                    notfoundNodes.push(pinnedNodes[posnodes]);
+
+                    // This is for alert
                     // var r = confirm('No link between ' + pinnedNodes + '.\nShow entries just with ' + splicedNodes + '?');
 
-                    $('#messages').html('No entries contain "' + pinnedNodes.join(' and ') + '".<br>Showing entries that contain "' + splicedNodes.join(' and ') + '" only:<br>&nbsp;');
+                    // This is for plain message
+                    // $('#messages').html('No entries contain "' + pinnedNodes.join(' and ') + '".<br>Showing entries that contain "' + splicedNodes.join(' and ') + '" only:<br>&nbsp;');
 
+                    // Get the pinnedNodes back to a good shape
+                    pinnedNodes = [];
+                    for (var l = 0; l < splicedNodes.length; l++) {
+                        pinnedNodes[l] = splicedNodes[l];
+                    }
 
-                        pinnedNodes = [];
-                        for (var l = 0; l < splicedNodes.length; l++) {
-                            pinnedNodes[l] = splicedNodes[l];
-                        }
-
-
-
-                    console.log('will make new function iteration through ' + pinnedNodes);
+                    // Relaunch the function with the newly cleared list of pinnedNodes
 
                     filter_statements(pinnedNodes);
 
@@ -853,11 +865,18 @@ sigma.parsers.json(
 
                 var htmlNodes = '<ul class="tags">';
 
+                for (var x = 0; x < notfoundNodes.length; x++) {
+                    htmlNodes = htmlNodes + '<li><a class="notfound" href="#">' + notfoundNodes[x] + '</a></li>';
+                }
+
                 for (var q = 0; q < pinnedNodes.length; q++) {
                     htmlNodes = htmlNodes + '<li><a href="#">' + pinnedNodes[q] + '</a></li>';
                 }
 
+
                 htmlNodes = htmlNodes + '<div class="tagsend"></div></ul>';
+
+                notfoundNodes = [];
 
                 $('#messages').html(htmlNodes);
 

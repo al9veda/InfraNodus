@@ -263,6 +263,14 @@ a:hover.app-more-link {
     box-shadow:-1px -1px 2px #004977;
 }
 
+.tags a.notfound{
+    background: #666666;
+    opacity: 0.2;
+}
+.tags a.notfound:before{
+    border-color:transparent #666666 transparent transparent;
+}
+
 .tags a:hover{background:#555;}
 
 .tags a:hover:before{border-color:transparent #555 transparent transparent;}
