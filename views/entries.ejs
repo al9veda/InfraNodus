@@ -556,7 +556,6 @@ sigma.parsers.json(
 
         $(".entry").on('click', function(e) {
 
-            console.log(e);
             e.preventDefault();
 
             // Shall all statements inside Entry if clicked
@@ -842,10 +841,27 @@ sigma.parsers.json(
 
             }
             else {
+
                 // Populate statement with a new text
+
                 $(this).children('.entry-text').html(newtext);
 
                 $(this).find('.nonmatched-sentence').fadeOut(500);
+
+
+                // Show tags that are currently used in search
+
+                var htmlNodes = '<ul class="tags">';
+
+                for (var q = 0; q < pinnedNodes.length; q++) {
+                    htmlNodes = htmlNodes + '<li><a href="#">' + pinnedNodes[q] + '</a></li>';
+                }
+
+                htmlNodes = htmlNodes + '<div class="tagsend"></div></ul>';
+
+                $('#messages').html(htmlNodes);
+
+
             }
 
 
