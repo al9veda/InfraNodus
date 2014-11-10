@@ -423,6 +423,7 @@ sigma.parsers.json(
                 else if (splicedNodes.length == 1) {
                     pinnedNodes = [];
                     pinnedNodes[0] = splicedNodes[0];
+                    splicedNodes = [];
                 }
 
                 if (pinnedNodes.indexOf(nodeLabel) < 0) {
