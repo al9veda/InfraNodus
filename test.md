@@ -1,0 +1,4 @@
+privet
+hello
+hello
+привет
