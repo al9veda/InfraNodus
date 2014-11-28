@@ -159,6 +159,8 @@ var pinnedNodes = [];
 var splicedNodes = [];
 var notfoundNodes = [];
 
+// Whats the clicked nodes in the graph
+var clickedNodes = [];
 
 
 // Is the user going to look at somebody else's graph?
@@ -354,61 +356,10 @@ sigma.parsers.json(
 
             sigma.bind('clickNode', function(e) {
 
-                var nodeId = e.data.node.id;
                 var nodeLabel = e.data.node.originalLabel;
 
-                var toKeep = [];
+                filterGraph(nodeLabel);
 
-                console.log('x: ' + e.data.node['renderer1:x'] + ', y:' + e.data.node['renderer1:y'], ', size: ' + e.data.node['renderer1:size']);
-
-                var contextsToHighlight = [];
-
-                // Which statements the node is in? (so we can keep them on the graph
-
-                var statementsToKeep = [];
-
-                for (var index in nodesOfStatement) {
-                    if (nodesOfStatement[index].indexOf(nodeId) > -1) statementsToKeep.push(index);
-                }
-
-                // What contexts does this statement appear in?
-
-/*
-                for (var index in statementsOfContext) {
-                    for (var s=0;s<statementsToKeep.length;++s) {
-                         if (statementsOfContext[index].indexOf(statementsToKeep[s]) > -1) contextsToHighlight.push(index);
-                    }
-                }
-
-                contextsToHighlight = $.unique(contextsToHighlight);
-
-                console.log(contextsToHighlight);
-*/
-
-
-
-
-                sigma.graph.edges().forEach(function(e) {
-                    if (statementsToKeep.indexOf(e.statement_id) > -1) {
-                        toKeep.push(e.source);
-                        toKeep.push(e.target);
-                        e.color = e.originalColor;
-                    }
-                    else {
-                        e.color = '#ddd';
-                    }
-                });
-
-                sigma.graph.nodes().forEach(function(n) {
-                    if (toKeep.indexOf(n.id) > -1) {
-                        n.color = n.originalColor;
-                    }
-                    else {
-                        n.color = '#ddd';
-                    }
-                });
-
-                sigma.refresh();
 
 
                 // Was the node clicked already? No? Add it to array of clicked nodes.
@@ -1331,37 +1282,8 @@ sigma.parsers.json(
                  $('.entry').addClass('hidden');
                  $('.entry'+conceptstring).removeClass('hidden');
 
+                 filterGraph(filter);
 
-                 sigma.instances(0).graph.nodes().filter(function(n) {
-                      if (n.originalLabel === filter) {
-                          var nodeId = n.id,
-                          toKeep = sigma.instances(0).graph.neighbors(nodeId);
-                          toKeep[nodeId] = n;
-
-                          sigma.instances(0).graph.nodes().forEach(function(n) {
-                              if (toKeep[n.id])  {
-                                  n.color = n.originalColor;
-                                  n.label = n.originalLabel;
-                              }
-                              else  {
-                                  n.color = '#ddd';
-                                  n.label = '';
-                              }
-                          });
-
-                          sigma.instances(0).graph.edges().forEach(function(e) {
-                              if (toKeep[e.source] && toKeep[e.target])
-                                  e.color = e.originalColor;
-                              else
-                                  e.color = '#ddd';
-                          });
-
-                          // Since the data has been modified, we need to
-                          // call the refresh method to make the colors
-                          // update effective.
-                          sigma.instances(0).refresh();
-                      }
-                  });
              }
          });
 
@@ -1369,7 +1291,39 @@ sigma.parsers.json(
     }
 
 
+    function filterGraph(filter){
 
+        sigma.instances(0).graph.nodes().filter(function(n) {
+            if (n.originalLabel === filter) {
+                var nodeId = n.id,
+                        toKeep = sigma.instances(0).graph.neighbors(nodeId);
+                toKeep[nodeId] = n;
+
+                sigma.instances(0).graph.nodes().forEach(function(n) {
+                    if (toKeep[n.id])  {
+                        n.color = n.originalColor;
+                        n.label = n.originalLabel;
+                    }
+                    else  {
+                        n.color = '#ddd';
+                        n.label = '';
+                    }
+                });
+
+                sigma.instances(0).graph.edges().forEach(function(e) {
+                    if (toKeep[e.source] && toKeep[e.target])
+                        e.color = e.originalColor;
+                    else
+                        e.color = '#ddd';
+                });
+
+                // Since the data has been modified, we need to
+                // call the refresh method to make the colors
+                // update effective.
+                sigma.instances(0).refresh();
+            }
+        });
+    }
 
     // Autofill initialized only after Sigma above loaded and populated all the nodes
 
