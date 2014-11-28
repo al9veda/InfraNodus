@@ -1,4 +1,4 @@
 privet
 hello
-hello
 привет
+hello
