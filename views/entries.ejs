@@ -358,8 +358,6 @@ sigma.parsers.json(
 
                 var nodeLabel = e.data.node.originalLabel;
 
-                filterGraph(nodeLabel);
-
 
 
                 // Was the node clicked already? No? Add it to array of clicked nodes.
@@ -389,7 +387,11 @@ sigma.parsers.json(
 
                 }
 
-                 // console.log("node clicked, now will filter for nodes " + pinnedNodes);
+                // console.log("node clicked, now will filter for nodes " + pinnedNodes);
+
+                // Show only the clicked nodes and their neighbors in the graph
+
+                filter_graph(pinnedNodes);
 
 
                 // Now show / hide statements that have the search field
@@ -1282,7 +1284,7 @@ sigma.parsers.json(
                  $('.entry').addClass('hidden');
                  $('.entry'+conceptstring).removeClass('hidden');
 
-                 filterGraph(filter);
+                 filter_graph(filter);
 
              }
          });
@@ -1291,16 +1293,46 @@ sigma.parsers.json(
     }
 
 
-    function filterGraph(filter){
+    function filter_graph(pins){
 
-        sigma.instances(0).graph.nodes().filter(function(n) {
-            if (n.originalLabel === filter) {
-                var nodeId = n.id,
-                        toKeep = sigma.instances(0).graph.neighbors(nodeId);
-                toKeep[nodeId] = n;
 
-                sigma.instances(0).graph.nodes().forEach(function(n) {
-                    if (toKeep[n.id])  {
+            var toKeep = [];
+
+            var toKeepMap = [];
+
+            console.log(pins);
+
+            sigma.instances(0).graph.nodes().filter(function(n) {
+
+                if (pins.indexOf(n.originalLabel) > -1) {
+                    var nodeId = n.id;
+                    var nnodes = sigma.instances(0).graph.neighbors(nodeId);
+
+                    for (key in nnodes) {
+                        toKeep.push(nnodes[key]);
+                    }
+
+                    toKeep.push(n);
+
+                }
+
+            });
+
+            toKeep = _.uniq(toKeep);
+
+            for (key in toKeep) {
+                toKeepMap[toKeep[key].id] = toKeep[key];
+            }
+
+
+            console.log(toKeepMap);
+
+
+
+
+            sigma.instances(0).graph.nodes().forEach(function(n) {
+
+                if (toKeepMap[n.id])  {
                         n.color = n.originalColor;
                         n.label = n.originalLabel;
                     }
@@ -1308,21 +1340,20 @@ sigma.parsers.json(
                         n.color = '#ddd';
                         n.label = '';
                     }
-                });
+            });
 
-                sigma.instances(0).graph.edges().forEach(function(e) {
-                    if (toKeep[e.source] && toKeep[e.target])
+            sigma.instances(0).graph.edges().forEach(function(e) {
+                    if (toKeepMap[e.source] && toKeepMap[e.target])
                         e.color = e.originalColor;
                     else
                         e.color = '#ddd';
-                });
+            });
 
-                // Since the data has been modified, we need to
-                // call the refresh method to make the colors
-                // update effective.
-                sigma.instances(0).refresh();
-            }
-        });
+            // Since the data has been modified, we need to
+            // call the refresh method to make the colors
+            // update effective.
+            sigma.instances(0).refresh();
+
     }
 
     // Autofill initialized only after Sigma above loaded and populated all the nodes
