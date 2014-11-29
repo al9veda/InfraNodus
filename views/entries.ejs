@@ -1366,9 +1366,13 @@ sigma.parsers.json(
 
             sigma.instances(0).graph.nodes().filter(function(n) {
 
+                // lemmataze node so we're searching the same thing
+
+                var nodeLemma = window.jstemmer(n.originalLabel);
+
                 // Is the node one of the ones clicked?
 
-                if (pins.indexOf(n.originalLabel) > -1) {
+                if (pins.indexOf(nodeLemma) > -1) {
 
                     // The node clicked
                     var nodeId = n.id;
@@ -1405,7 +1409,9 @@ sigma.parsers.json(
             sigma.instances(0).graph.nodes().forEach(function(n) {
 
                 if (toKeepMap[n.id])  {
-                        if (pins.indexOf(n.originalLabel) > -1) {
+                    var nodeLemma = window.jstemmer(n.originalLabel);
+
+                    if (pins.indexOf(nodeLemma) > -1) {
                             n.color = '#0089e0';
 
                         }
