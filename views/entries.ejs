@@ -414,7 +414,7 @@ sigma.parsers.json(
             // Hide node's label when we're out of it
 
             sigma.bind('outNode', function(e) {
-                if (e.data.node.color != e.data.node.originalColor) {
+                if (e.data.node.color != e.data.node.originalColor && pinnedNodes.indexOf(e.data.node.originalLabel) < 0) {
                     e.data.node.label = '';
                 }
                 sigma.refresh();
@@ -1300,42 +1300,64 @@ sigma.parsers.json(
 
             var toKeepMap = [];
 
-            console.log(pins);
+
+            // Debug: show which nodes are clicked
+            // console.log(pins);
+
+            // Now we reiterate through every node in the graph
 
             sigma.instances(0).graph.nodes().filter(function(n) {
 
+                // Is the node one of the ones clicked?
+
                 if (pins.indexOf(n.originalLabel) > -1) {
+
+                    // The node clicked
                     var nodeId = n.id;
+
+                    // Its neighbors
                     var nnodes = sigma.instances(0).graph.neighbors(nodeId);
 
+                    // We want to keep showing the neighbors of the clicked node...
                     for (key in nnodes) {
                         toKeep.push(nnodes[key]);
                     }
 
+                    // ... and the node itself
                     toKeep.push(n);
 
                 }
 
             });
 
+            // Make array of nodes to keep unique to avoid duplicates
             toKeep = _.uniq(toKeep);
+
+
+            // Now convert this to an array that will be understood by the functions below
 
             for (key in toKeep) {
                 toKeepMap[toKeep[key].id] = toKeep[key];
             }
 
-
-            console.log(toKeepMap);
-
-
+            // Debug
+            // console.log(toKeepMap);
 
 
             sigma.instances(0).graph.nodes().forEach(function(n) {
 
                 if (toKeepMap[n.id])  {
-                        n.color = n.originalColor;
+                        if (pins.indexOf(n.originalLabel) > -1) {
+                            n.color = '#0089e0';
+
+                        }
+                        else {
+                            n.color = n.originalColor;
+
+                        }
                         n.label = n.originalLabel;
-                    }
+
+                }
                     else  {
                         n.color = '#ddd';
                         n.label = '';
@@ -1343,15 +1365,18 @@ sigma.parsers.json(
             });
 
             sigma.instances(0).graph.edges().forEach(function(e) {
-                    if (toKeepMap[e.source] && toKeepMap[e.target])
+                    if (toKeepMap[e.source] && toKeepMap[e.target]) {
                         e.color = e.originalColor;
-                    else
+                    }
+                    else {
                         e.color = '#ddd';
+                    }
             });
 
             // Since the data has been modified, we need to
             // call the refresh method to make the colors
             // update effective.
+
             sigma.instances(0).refresh();
 
     }
