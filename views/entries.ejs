@@ -389,9 +389,7 @@ sigma.parsers.json(
 
                 // console.log("node clicked, now will filter for nodes " + pinnedNodes);
 
-                // Show only the clicked nodes and their neighbors in the graph
 
-                filter_graph(pinnedNodes);
 
 
                 // Now show / hide statements that have the search field
@@ -867,6 +865,11 @@ sigma.parsers.json(
 
         }
 
+
+        // Show only the clicked nodes and their neighbors in the graph
+
+        filter_graph(pinnedNodes);
+
         // Add triggers to newly shown Tags elements
 
         addTagTriggers();
@@ -1302,7 +1305,7 @@ sigma.parsers.json(
 
 
             // Debug: show which nodes are clicked
-            // console.log(pins);
+            console.log(pins);
 
             // Now we reiterate through every node in the graph
 
