@@ -1281,19 +1281,6 @@ sigma.parsers.json(
 
                  var filter = ui.item.value;
 
-                 if (pinnedNodes.indexOf(filter) < 0) {
-                     pinnedNodes.push(filter);
-                 }
-
-
-                 // Create context query for jQuery
-                 var conceptstring = ":contains('" + filter + "')";
-
-                 // Filter text statements
-                 $('.entry').addClass('hidden');
-                 $('.entry'+conceptstring).removeClass('hidden');
-
-                 filter_statements(pinnedNodes);
 
 
              }
