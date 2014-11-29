@@ -1213,7 +1213,7 @@ sigma.parsers.json(
 
 
 
-        search_field = '<form class="pure-form">' +
+        search_field = '<form class="pure-form" id="searchform">' +
                        '&nbsp;<input type="text" id="search" size="9" maxlength="20" class="pure-input" placeholder="search">' +
                        '</form><br>';
 
@@ -1272,6 +1272,7 @@ sigma.parsers.json(
          $("#search").autocomplete({
              source: nodeNames,
              minLength: 1,
+             delay: 500,
              messages: {
                  noResults: '',
                  results: function() {}
@@ -1296,7 +1297,29 @@ sigma.parsers.json(
 
 
              }
+
          });
+
+        $("#searchform").submit(function(event) {
+            event.preventDefault();
+
+            var filter = $('#search').val();
+
+            if (pinnedNodes.indexOf(filter) < 0) {
+                pinnedNodes.push(filter);
+            }
+
+
+            // Create context query for jQuery
+            var conceptstring = ":contains('" + filter + "')";
+
+            // Filter text statements
+            $('.entry').addClass('hidden');
+            $('.entry'+conceptstring).removeClass('hidden');
+
+            filter_statements(pinnedNodes);
+
+        });
 
 
     }
