@@ -1280,6 +1280,11 @@ sigma.parsers.json(
 
                  var filter = ui.item.value;
 
+                 if (pinnedNodes.indexOf(filter) < 0) {
+                     pinnedNodes.push(filter);
+                 }
+
+
                  // Create context query for jQuery
                  var conceptstring = ":contains('" + filter + "')";
 
@@ -1287,7 +1292,8 @@ sigma.parsers.json(
                  $('.entry').addClass('hidden');
                  $('.entry'+conceptstring).removeClass('hidden');
 
-                 filter_graph(filter);
+                 filter_statements(pinnedNodes);
+
 
              }
          });
@@ -1522,6 +1528,7 @@ sigma.parsers.json(
             // console.log("node clicked, now will filter for nodes " + pinnedNodes);
 
             $('.entry').fadeIn(400);
+
             filter_statements(pinnedNodes);
 
 
