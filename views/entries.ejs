@@ -669,7 +669,7 @@ sigma.parsers.json(
     var timesfiltered = 0;
 
 
-    function filter_statements(pinnedNodes) {
+    function filter_statements(pinnedNodes, origin) {
 
 
         var showingsomething = 0;
@@ -868,7 +868,7 @@ sigma.parsers.json(
 
         // Show only the clicked nodes and their neighbors in the graph
 
-        filter_graph(pinnedNodes);
+        filter_graph(pinnedNodes, origin);
 
         // Add triggers to newly shown Tags elements
 
@@ -1335,7 +1335,7 @@ sigma.parsers.json(
                     }
                 }
 
-                filter_statements(pinnedNodes);
+                filter_statements(pinnedNodes, "search");
 
             }
 
@@ -1346,7 +1346,7 @@ sigma.parsers.json(
     }
 
 
-    function filter_graph(pins){
+    function filter_graph(pins, origin){
 
 
             var toKeep = [];
@@ -1366,13 +1366,31 @@ sigma.parsers.json(
 
             sigma.instances(0).graph.nodes().filter(function(n) {
 
-                // lemmataze node so we're searching the same thing
+                var pinSearch = '';
 
-                var nodeLemma = window.jstemmer(n.originalLabel);
+                // Lemmataze search query if we're coming from search box
+
+                if (origin == 'search') {
+                    var nodeLemma = window.jstemmer(n.originalLabel);
+
+
+                    if (nodeLemma.length > 0) {
+                        pinSearch = nodeLemma;
+                    }
+                    else {
+                        pinSearch = n.originalLabel;
+                    }
+                }
+
+                // This means the user clicked on the tag or on the graph, so we use that exact parameter to search
+
+                else {
+                    pinSearch = n.originalLabel;
+                }
 
                 // Is the node one of the ones clicked?
 
-                if (pins.indexOf(nodeLemma) > -1) {
+                if (pins.indexOf(pinSearch) > -1) {
 
                     // The node clicked
                     var nodeId = n.id;
@@ -1402,16 +1420,36 @@ sigma.parsers.json(
                 toKeepMap[toKeep[key].id] = toKeep[key];
             }
 
-            // Debug
-            // console.log(toKeepMap);
 
 
             sigma.instances(0).graph.nodes().forEach(function(n) {
 
                 if (toKeepMap[n.id])  {
-                    var nodeLemma = window.jstemmer(n.originalLabel);
 
-                    if (pins.indexOf(nodeLemma) > -1) {
+                    var pinSearch = '';
+
+                    // Lemmataze search query if we're coming from search box
+
+                    if (origin == 'search') {
+                        var nodeLemma = window.jstemmer(n.originalLabel);
+
+
+                        if (nodeLemma.length > 0) {
+                            pinSearch = nodeLemma;
+                        }
+                        else {
+                            pinSearch = n.originalLabel;
+                        }
+                    }
+
+                    // This means the user clicked on the tag or on the graph, so we use that exact parameter to search
+
+                    else {
+                        pinSearch = n.originalLabel;
+                    }
+
+
+                    if (pins.indexOf(pinSearch) > -1) {
                             n.color = '#0089e0';
 
                         }
