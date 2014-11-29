@@ -1301,23 +1301,44 @@ sigma.parsers.json(
          });
 
         $("#searchform").submit(function(event) {
+
             event.preventDefault();
 
-            var filter = $('#search').val();
+            // What are we searching?
+            var searchPhrase = $('#search').val();
 
-            if (pinnedNodes.indexOf(filter) < 0) {
-                pinnedNodes.push(filter);
+            if (searchPhrase.length > 1) {
+
+                // Clean up the search string
+                searchPhrase = searchPhrase.replace(/\s+/g,' ').trim();
+
+                // Separate terms into array
+                var searchArray = searchPhrase.toLowerCase().split(" ");
+
+                var searchPhraseLemmas = [];
+
+
+                for (var j = 0; j < searchArray.length; j++) {
+
+                    // Is the search term cyrillic?
+                    var search_cyrillic = searchArray[j].match(/[а-яА-Я]/);
+
+                    var search_lemma = window.jstemmer(searchArray[j]);
+
+                    searchPhraseLemmas.push(search_lemma);
+
+                }
+
+                for (var k = 0; k < searchPhraseLemmas.length; k++) {
+                    if (pinnedNodes.indexOf(searchPhraseLemmas[k]) < 0) {
+                        pinnedNodes.push(searchPhraseLemmas[k]);
+                    }
+                }
+
+                filter_statements(pinnedNodes);
+
             }
 
-
-            // Create context query for jQuery
-            var conceptstring = ":contains('" + filter + "')";
-
-            // Filter text statements
-            $('.entry').addClass('hidden');
-            $('.entry'+conceptstring).removeClass('hidden');
-
-            filter_statements(pinnedNodes);
 
         });
 
