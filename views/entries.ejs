@@ -1307,6 +1307,11 @@ sigma.parsers.json(
             // Debug: show which nodes are clicked
             console.log(pins);
 
+
+            // Are any nodes at all selected on the graph?
+
+            if (pins.length > 0) {
+
             // Now we reiterate through every node in the graph
 
             sigma.instances(0).graph.nodes().filter(function(n) {
@@ -1380,7 +1385,31 @@ sigma.parsers.json(
             // call the refresh method to make the colors
             // update effective.
 
+            }
+
+            // No nodes are selected (or all are deselected) - show the whole graph
+
+            else {
+
+                sigma.instances(0).graph.nodes().forEach(function(n) {
+
+
+                   n.color = n.originalColor;
+                   n.label = n.originalLabel;
+
+
+                });
+
+                sigma.instances(0).graph.edges().forEach(function(e) {
+
+                   e.color = e.originalColor;
+
+                });
+
+            }
+
             sigma.instances(0).refresh();
+
 
     }
 
