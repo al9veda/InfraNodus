@@ -358,8 +358,6 @@ sigma.parsers.json(
 
                 var nodeLabel = e.data.node.originalLabel;
 
-
-
                 // Was the node clicked already? No? Add it to array of clicked nodes.
                 // Highlight the clicked node in the text.
 
@@ -463,8 +461,7 @@ sigma.parsers.json(
             e.preventDefault();
 
             // Get the statement into the edit box at the top
-            $("#statement").val(e.currentTarget.innerText);
-            console.log(e.currentTarget.dataset.uid);
+            $("#statement").val($('.entry-text', e.currentTarget).text());
 
             // Retrieve that statement's ID into the hidden field (for edit or delete)
             $('input[name="statementid"]').val(e.currentTarget.dataset.uid);
