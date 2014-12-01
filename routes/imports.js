@@ -489,10 +489,12 @@ exports.submit = function(req, res,  next) {
 
                             function(callback){
 
+
+
                                 // Here we create dummy statements in order to create the new contexts and get the IDs for them from our Neo4J DB
 
                                 for (var m = 0; m < notebooks.length; m++) {
-                                    statements[m] = 'dummy statement ' + m + ' @' + S(notebooks[m].name).dasherize().chompLeft('-').camelize().s;;
+                                    statements[m] = 'dummy statement ' + m + ' @' + S(notebooks[m].name).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
                                 }
 
                                 validate.getContextID(user_id, default_context, statements, function(result, err) {
@@ -581,7 +583,7 @@ exports.submit = function(req, res,  next) {
 
                                         // Normalize note, get rid of tags, etc.
 
-                                        var sendstring = S(result).stripTags().s + ' @' + S(notebooks_db[notebook_name]).dasherize().chompLeft('-').camelize().s;
+                                        var sendstring = S(result).stripTags().s + ' @' + S(notebooks_db[notebook_name]).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
                                         req.body.entry.body = sendstring.replace(/&quot;/g, '');
                                         entries.submit(req, res);
                                         console.log(req.body.entry.body);
