@@ -279,7 +279,99 @@ exports.submit = function(req, res,  next) {
                         statements.push(statement);
                     }
 
-                    validate.getContextID(user_id, default_context, statements, function(result) {
+                    validate.getContextID(user_id, default_context, statements, function(result, err) {
+                        if (err) {
+                            res.error('Something went wrong when adding new Tweets into Neo4J database. Try changing the import category name or open an issue on GitHub.');
+                            res.redirect('back');
+                        }
+                        else {
+                            console.log('so the statements we got are');
+                            console.log(statements);
+                            console.log('and default context');
+                            console.log(default_context);
+                            // What are the contexts that already exist for this user and their IDs?
+                            // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
+                            var contexts = result;
+
+                            console.log('extracted contexts');
+                            console.log(contexts);
+
+                            // Create default statement object that has an empty body, default context, and all the context IDs for the user
+                            // context: default_context is where all the statements are added anyway
+                            // contextids: contexts are the IDs of all the contexts that will be used in those statements
+
+                            var req = {
+                                body:  {
+                                    entry: {
+                                        body: ''
+                                    },
+                                    context: default_context
+                                },
+
+                                contextids: contexts,
+                                internal: 1
+                            };
+
+                            console.log('requestobject');
+                            console.log(req);
+
+
+                            for (var key in statements) {
+                                if (statements.hasOwnProperty(key)) {
+                                    req.body.entry.body = statements[key];
+                                    entries.submit(req, res);
+                                }
+
+                            }
+
+                            // Move on to the next one
+
+                            res.redirect('/contexts/' + default_context);
+                        }
+
+
+                    });
+
+
+                }
+            });
+
+
+        }
+        else {
+            T.get(twitterRequest.type, twitterRequest.params, function(err, data, response) {
+
+                var statements = [];
+
+                var default_context = importContext;
+
+                var result = data;
+
+                // For hashtag surrounding search remove the actual hashtag from all tweets
+                if (twitterRequest.type == 'search/tweets') {
+                    result = data['statuses'];
+
+                }
+
+                for (key in result) {
+                    var statement = result[key].text;
+                    var mentions = FlowdockText.extractMentions(statement);
+                    for (index in mentions) {
+                        statement = statement.replace(mentions[index], 'user_' + mentions[index].substr(1) + ' (http://twitter.com/' + mentions[index].substr(1) + ')');
+                    }
+                    if (twitterRequest.type == 'search/tweets') {
+                        statement = statement.toLowerCase().replace(twitterRequest.params.q.toLowerCase(),'_#'+twitterRequest.params.q.substr(1).toLowerCase());
+                    }
+                    statements.push(statement);
+                }
+
+
+                validate.getContextID(user_id, default_context, statements, function(result, err) {
+                    if (err) {
+                        res.error('Something went wrong when adding new Twitter lists into Neo4J database. Try changing the Twitter import folder name or open an issue on GitHub.');
+                        res.redirect('back');
+                    }
+                    else {
                         console.log('so the statements we got are');
                         console.log(statements);
                         console.log('and default context');
@@ -322,87 +414,7 @@ exports.submit = function(req, res,  next) {
                         // Move on to the next one
 
                         res.redirect('/contexts/' + default_context);
-
-
-                    });
-
-
-                }
-            });
-
-
-        }
-        else {
-            T.get(twitterRequest.type, twitterRequest.params, function(err, data, response) {
-
-                var statements = [];
-
-                var default_context = importContext;
-
-                var result = data;
-
-                // For hashtag surrounding search remove the actual hashtag from all tweets
-                if (twitterRequest.type == 'search/tweets') {
-                    result = data['statuses'];
-
-                }
-
-                for (key in result) {
-                    var statement = result[key].text;
-                    var mentions = FlowdockText.extractMentions(statement);
-                    for (index in mentions) {
-                        statement = statement.replace(mentions[index], 'user_' + mentions[index].substr(1) + ' (http://twitter.com/' + mentions[index].substr(1) + ')');
                     }
-                    if (twitterRequest.type == 'search/tweets') {
-                        statement = statement.toLowerCase().replace(twitterRequest.params.q.toLowerCase(),'_#'+twitterRequest.params.q.substr(1).toLowerCase());
-                    }
-                    statements.push(statement);
-                }
-
-
-                validate.getContextID(user_id, default_context, statements, function(result) {
-                    console.log('so the statements we got are');
-                    console.log(statements);
-                    console.log('and default context');
-                    console.log(default_context);
-                    // What are the contexts that already exist for this user and their IDs?
-                    // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
-                    var contexts = result;
-
-                    console.log('extracted contexts');
-                    console.log(contexts);
-
-                    // Create default statement object that has an empty body, default context, and all the context IDs for the user
-                    // context: default_context is where all the statements are added anyway
-                    // contextids: contexts are the IDs of all the contexts that will be used in those statements
-
-                    var req = {
-                        body:  {
-                            entry: {
-                                body: ''
-                            },
-                            context: default_context
-                        },
-
-                        contextids: contexts,
-                        internal: 1
-                    };
-
-                    console.log('requestobject');
-                    console.log(req);
-
-
-                    for (var key in statements) {
-                        if (statements.hasOwnProperty(key)) {
-                            req.body.entry.body = statements[key];
-                            entries.submit(req, res);
-                        }
-
-                    }
-
-                    // Move on to the next one
-
-                    res.redirect('/contexts/' + default_context);
 
 
                 });
@@ -483,40 +495,44 @@ exports.submit = function(req, res,  next) {
                                     statements[m] = 'dummy statement ' + m + ' @' + S(notebooks[m].name).dasherize().chompLeft('-').camelize().s;;
                                 }
 
-                                validate.getContextID(user_id, default_context, statements, function(result) {
+                                validate.getContextID(user_id, default_context, statements, function(result, err) {
+                                    if (err) {
+                                        res.error('Something went wrong when adding Evernote folders into Neo4J database. Try changing the name of your Evernote folder or open an issue on GitHub.');
+                                        res.redirect('back');
+                                    }
+                                    else {
+                                        console.log('so the statements we got are');
+                                        console.log(statements);
+                                        console.log('and default context');
+                                        console.log(default_context);
+                                        // What are the contexts that already exist for this user and their IDs?
+                                        // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
+                                        var contexts = result;
 
-                                    console.log('so the statements we got are');
-                                    console.log(statements);
-                                    console.log('and default context');
-                                    console.log(default_context);
-                                    // What are the contexts that already exist for this user and their IDs?
-                                    // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
-                                    var contexts = result;
+                                        console.log('extracted contexts');
+                                        console.log(contexts);
 
-                                    console.log('extracted contexts');
-                                    console.log(contexts);
+                                        // Create default statement object that has an empty body, default context, and all the context IDs for the user
+                                        // context: default_context is where all the statements are added anyway
+                                        // contextids: contexts are the IDs of all the contexts that will be used in those statements
 
-                                    // Create default statement object that has an empty body, default context, and all the context IDs for the user
-                                    // context: default_context is where all the statements are added anyway
-                                    // contextids: contexts are the IDs of all the contexts that will be used in those statements
-
-                                    var req = {
-                                        body:  {
-                                            entry: {
-                                                body: ''
+                                        var req = {
+                                            body:  {
+                                                entry: {
+                                                    body: ''
+                                                },
+                                                context: ''
                                             },
-                                            context: ''
-                                        },
 
-                                        contextids: contexts,
-                                        internal: 1
-                                    };
+                                            contextids: contexts,
+                                            internal: 1
+                                        };
 
-                                    console.log('requestobject');
-                                    console.log(req);
+                                        console.log('requestobject');
+                                        console.log(req);
 
-                                    callback(null, req);
-
+                                        callback(null, req);
+                                    }
 
 
 
@@ -736,43 +752,47 @@ exports.submit = function(req, res,  next) {
 
 
 
-                    validate.getContextID(user_id, default_context, statements, function(result) {
+                    validate.getContextID(user_id, default_context, statements, function(result, err) {
+                        if (err) {
+                            res.error('Something went wrong when adding new notes into Neo4J database. Try changing the import list name or open an issue on GitHub.');
+                            res.redirect('back');
+                        }
+                        else {
+                            // What are the contexts that already exist for this user and their IDs?
+                            // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
 
-                        // What are the contexts that already exist for this user and their IDs?
-                        // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
-
-                        var contexts = result;
+                            var contexts = result;
 
 
-                        // Create default statement object that has an empty body, default context, and all the context IDs for the user
-                        // context: default_context is where all the statements are added anyway
-                        // contextids: contexts are the IDs of all the contexts that will be used in those statements
+                            // Create default statement object that has an empty body, default context, and all the context IDs for the user
+                            // context: default_context is where all the statements are added anyway
+                            // contextids: contexts are the IDs of all the contexts that will be used in those statements
 
-                        var req = {
-                            body:  {
-                                entry: {
-                                    body: ''
+                            var req = {
+                                body:  {
+                                    entry: {
+                                        body: ''
+                                    },
+                                    context: default_context
                                 },
-                                context: default_context
-                            },
 
-                            contextids: contexts,
-                            internal: 1
-                        };
+                                contextids: contexts,
+                                internal: 1
+                            };
 
 
-                        for (var key in statements) {
-                            if (statements.hasOwnProperty(key)) {
-                                req.body.entry.body = statements[key];
-                                entries.submit(req, res);
+                            for (var key in statements) {
+                                if (statements.hasOwnProperty(key)) {
+                                    req.body.entry.body = statements[key];
+                                    entries.submit(req, res);
+                                }
+
                             }
 
+                            // Move on to the next one
+
+                            res.redirect('/contexts/' + default_context);
                         }
-
-                        // Move on to the next one
-
-                        res.redirect('/contexts/' + default_context);
-
 
                     });
                     imap.end();
