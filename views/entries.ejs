@@ -516,19 +516,24 @@ sigma.parsers.json(
 
             // Make all entries semitrasparent
 
-            $(".entry").each(function() {
-                if ($(this).css('opacity') < 1) {
-                    $(this).css('opacity', '1');
-                    alreadyClicked = 1;
-                }
-                else {
-                    $(this).css('opacity', '0.3');
-                }
-            });
 
-            // The one clicked is not transparent
+            if (pinnedNodes.length == 0) {
 
-            $(this).css('opacity','1');
+                $(".entry").each(function() {
+                    if ($(this).css('opacity') < 1) {
+                        $(this).css('opacity', '1');
+                        alreadyClicked = 1;
+                    }
+                    else {
+                        $(this).css('opacity', '0.3');
+                    }
+                });
+
+                // The one clicked is not transparent
+
+                $(this).css('opacity','1');
+
+            }
 
             var keepStatementID = e.currentTarget.dataset.uid;
 
