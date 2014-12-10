@@ -95,26 +95,22 @@ exports.form = function(req, res){
 
 exports.submit = function(req, res, next){
 
-    // TODO  it's also a good opportunity to get rid of @contexts and change it to simple lists
-
-    // Here we process the data of the POST request, the entry.body and entry.hashtags fields
-
+    // Retrieve the statement
     var statement = req.body.entry.body;
 
-    // TODO this will be later replaced with an array of contexts derived before .submit is called
+    // Retrieve the context where user was in when submitting the statement
     var default_context = req.body.context;
 
-    console.log("ddefault context");
-    console.log(default_context);
-
+    // Pass on the context IDs from the DB
     var contextids = req.contextids;
 
+    // Some parameter settings
     var max_length = options.settings.max_text_length;
     var min_length = options.settings.min_text_length;
     var maxhash = options.settings.max_hashtags;
 
 
-
+    // A series of checks before the statement is submitted
     async.waterfall([
         function(callback){
             if (!statement) {
@@ -149,22 +145,21 @@ exports.submit = function(req, res, next){
         },
         function(statement, hashtags, callback){
 
+            // Put all the contexts that came with the statement into a new variable
+
             var contexts = [];
-            var contextsextracted = validate.getContext(statement, default_context);
 
-            for (var i = 0; i < contextids.length; i++) {
-                if (contextsextracted.indexOf(contextids[i].name) > -1) {
-                    contexts.push(contextids[i]);
+            if (contextids.length > 0) {
+                for (var i = 0; i < contextids.length; i++) {
+                        contexts.push(contextids[i]);
                 }
+                callback(null, statement, hashtags, contexts);
+            }
+            else {
+                callback('please, select a list for this statement');
             }
 
 
-           for (var i = 0; i < contexts.length; ++i) {
-                if (statement.indexOf('@' + contexts[i].name) == -1) {
-                    statement +=  ' @' + contexts[i].name;
-                }
-            }
-            callback(null, statement, hashtags, contexts);
         },
         function(statement, hashtags, contexts, callback){
             // Then we ascribe the data that the Entry object needs in order to survive

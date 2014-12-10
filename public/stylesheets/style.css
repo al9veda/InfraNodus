@@ -165,6 +165,10 @@ a:hover.app-more-link {
 }
 
 
+#addToContexts {
+    margin: 10px;
+}
+
 .contexts {
     font: 17px 'IstokWeb-Bold',sans-serif;
     color: #666;

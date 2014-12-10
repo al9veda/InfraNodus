@@ -53,6 +53,10 @@
             <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
                     <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here to visualize the words and their connections. to add a new list, use a @mention'><% if (url) { %><%= urltitle %> <%= url %> @bookmarks<% } %></textarea>
+
+                    <label for="addToContexts">lists:</label>
+                    <select name="addToContexts" id="addToContexts">
+                    </select>
                     <input type="hidden" name="context" value="<%= context %>">
                     <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
                     <input type="hidden" name="statementid" value="">
@@ -1187,6 +1191,9 @@ sigma.parsers.json(
 
         var context_filters = '';
 
+        var context_list_default = '<option selected>private</option>';
+        var context_list = '';
+
         var currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/">all lists</a></li>';
 
         var addNewContext = '';
@@ -1197,17 +1204,27 @@ sigma.parsers.json(
         if (typeof contextNames[0] !== 'undefined' && contextNames[0] !== null) {
             contextNames.forEach(function(n) {
                 if (n == current_context) {
+                    // for the menu
                     context_filters += '<li class="app-context-link menu-item-divided pure-menu-selected"><a href="/contexts/' + n + '">' + n + '</a></li>';
                     currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/">all lists</a></li>';
+                    // for the statement add
+                    context_list_default = '';
+                    context_list += '<option selected>' + n + '</option>';
                 }
                 else {
+                    // for the menu
                     context_filters += '<li class="app-context-link menu-item-divided "><a href="/contexts/' + n + '">' + n + '</a></li>';
+                    // for the statement add
+                    if (n != 'private') {
+                        context_list += '<option>' + n + '</option>';
+                    }
                 }
             });
         }
         // No graph, so show private
         else {
             context_filters += '<li class="app-context-link menu-item-divided"><a href="/contexts/private">private</a></li>';
+            context_list += '<option>private</option>';
 
         }
 
@@ -1231,6 +1248,9 @@ sigma.parsers.json(
                                                         context_filters +
                                                         addNewContext +
                                                         auxLinks;
+
+        document.getElementById('addToContexts').innerHTML = context_list_default +
+                                                             context_list;
 
 
         // Select range in textarea function
