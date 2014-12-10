@@ -54,6 +54,7 @@
             <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
                     <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here to visualize the words and their connections. to add a new list, use a @mention'><% if (url) { %><%= urltitle %> <%= url %> @bookmarks<% } %></textarea>
+                    <div id="addToContextsLabel">contexts:</div>
                     <ul id="addToContexts"></ul>
                     <input type="hidden" name="context" value="<%= context %>">
                     <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
