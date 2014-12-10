@@ -8,9 +8,7 @@
     <link rel="stylesheet" href="/stylesheets/side-menu.css">
     <link rel="stylesheet" href="/stylesheets/jquery-ui.min.css">
     <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel='stylesheet' href='/stylesheets/typeahead.css' />
-    <link rel='stylesheet' href='/stylesheets/tagmanager.css' />
-
+    <link rel='stylesheet' href='/stylesheets/jquery.taghandler.css' />
 
 
 
@@ -56,7 +54,7 @@
             <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
                     <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here to visualize the words and their connections. to add a new list, use a @mention'><% if (url) { %><%= urltitle %> <%= url %> @bookmarks<% } %></textarea>
-                    <input id="contextsToAdd"  type="text" placeholder="in lists..." class="input-medium tm-input tm-input-info" data-original-title="" autocomplete="off">
+                    <ul id="addToContexts"></ul>
                     <input type="hidden" name="context" value="<%= context %>">
                     <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
                     <input type="hidden" name="statementid" value="">
@@ -117,9 +115,8 @@
 <script src="/javascripts/jquery.mobile-events.min.js"></script>
 <script src="/javascripts/jquery.highlight-4.js"></script>
 <script src="/javascripts/bundle-stemmer.js"></script>
+<script src="/javascripts/jquery.taghandler.js"></script>
 
-<script src="/javascripts/typeahead.bundle.min.js"></script>
-<script src="/javascripts/tagmanager.js"></script>
 
 
 
@@ -344,63 +341,14 @@ sigma.parsers.json(
             // Put the contexts into the menu
             populateContextMenu(contextNames,nodeNames);
 
+
             // Populate contexts list next to statement add
 
-            var substringMatcher = function(strs) {
-                return function findMatches(q, cb) {
-                    var matches, substrRegex;
-
-                    // an array that will be populated with substring matches
-                    matches = [];
-
-                    // regex used to determine if a string contains the substring `q`
-                    substrRegex = new RegExp(q, 'i');
-
-                    // iterate through the pool of strings and for any string that
-                    // contains the substring `q`, add it to the `matches` array
-                    $.each(strs, function(i, str) {
-                        if (substrRegex.test(str)) {
-                            // the typeahead jQuery plugin expects suggestions to a
-                            // JavaScript object, refer to typeahead docs for more info
-                            matches.push({ value: str });
-                        }
-                    });
-
-                    cb(matches);
-                };
-            };
-
-
-            var tagApi = $("#contextsToAdd").tagsManager({
-                prefilled: 'private',
-                blinkBGColor_1: '#FFFF9C',
-                blinkBGColor_2: '#CDE69C'
+            $("#addToContexts").tagHandler({
+                assignedTags: [ 'private' ],
+                availableTags: contextNames,
+                autocomplete: true
             });
-
-            $('#contextsToAdd').typeahead({
-                        hint: true,
-                        highlight: true,
-                        minLength: 1
-                    },
-                    {
-                        name: 'contextNames',
-                        displayKey: 'value',
-                        source: substringMatcher(contextNames)
-                    }).on('typeahead:selected', function (e, d) {
-
-                            console.log("new tag from typeahead.js: " + d.value );
-                            console.log("all existing tags: " + tagApi.tagsManager("tags").tags);
-
-                            tagApi.tagsManager("pushTag", d.value);
-
-                            console.log("new list of tags: " + tagApi.tagsManager("tags").tags);
-
-
-
-
-             });
-
-
 
             // Do ForceAtlasLayout
 
@@ -513,6 +461,9 @@ sigma.parsers.json(
 // Auto-resize to fill content;
 
     $(document).ready(function(){
+
+
+
 
         // Make texarea automatically resizeable
         $('textarea').autosize();
