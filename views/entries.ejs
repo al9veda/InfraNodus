@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="/stylesheets/side-menu.css">
     <link rel="stylesheet" href="/stylesheets/jquery-ui.min.css">
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/typeahead.css' />
+    <link rel='stylesheet' href='/stylesheets/tagmanager.css' />
+
 
 
 
@@ -53,10 +56,7 @@
             <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
                     <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here to visualize the words and their connections. to add a new list, use a @mention'><% if (url) { %><%= urltitle %> <%= url %> @bookmarks<% } %></textarea>
-
-                    <label for="addToContexts">lists:</label>
-                    <select name="addToContexts" id="addToContexts">
-                    </select>
+                    <input id="contextsToAdd"  type="text" placeholder="in lists..." class="input-medium tm-input tm-input-info" data-original-title="" autocomplete="off">
                     <input type="hidden" name="context" value="<%= context %>">
                     <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
                     <input type="hidden" name="statementid" value="">
@@ -74,6 +74,7 @@
                     <p class='entry-date'><%= entry.timestamp %></p>
                     <p class='entry-menu'>&nbsp;&nbsp;&nbsp;<a class="app-link-menu" href="#">show filtered</a></p>
                     <div class='separator'>&nbsp;</div>
+                    <div id='<%= entry.uid %>' class='hidden'></div>
                     <div id='original' class='hidden'><%= entry.text %></div>
                 </div>
             <% }) %>
@@ -116,6 +117,10 @@
 <script src="/javascripts/jquery.mobile-events.min.js"></script>
 <script src="/javascripts/jquery.highlight-4.js"></script>
 <script src="/javascripts/bundle-stemmer.js"></script>
+
+<script src="/javascripts/typeahead.bundle.min.js"></script>
+<script src="/javascripts/tagmanager.js"></script>
+
 
 
 
@@ -336,9 +341,65 @@ sigma.parsers.json(
             // Get the context names - all the contexts that exist in the graph we just loaded
             contextNames = _.keys(contextNodeID);
 
-
             // Put the contexts into the menu
             populateContextMenu(contextNames,nodeNames);
+
+            // Populate contexts list next to statement add
+
+            var substringMatcher = function(strs) {
+                return function findMatches(q, cb) {
+                    var matches, substrRegex;
+
+                    // an array that will be populated with substring matches
+                    matches = [];
+
+                    // regex used to determine if a string contains the substring `q`
+                    substrRegex = new RegExp(q, 'i');
+
+                    // iterate through the pool of strings and for any string that
+                    // contains the substring `q`, add it to the `matches` array
+                    $.each(strs, function(i, str) {
+                        if (substrRegex.test(str)) {
+                            // the typeahead jQuery plugin expects suggestions to a
+                            // JavaScript object, refer to typeahead docs for more info
+                            matches.push({ value: str });
+                        }
+                    });
+
+                    cb(matches);
+                };
+            };
+
+
+            var tagApi = $("#contextsToAdd").tagsManager({
+                prefilled: 'private',
+                blinkBGColor_1: '#FFFF9C',
+                blinkBGColor_2: '#CDE69C'
+            });
+
+            $('#contextsToAdd').typeahead({
+                        hint: true,
+                        highlight: true,
+                        minLength: 1
+                    },
+                    {
+                        name: 'contextNames',
+                        displayKey: 'value',
+                        source: substringMatcher(contextNames)
+                    }).on('typeahead:selected', function (e, d) {
+
+                            console.log("new tag from typeahead.js: " + d.value );
+                            console.log("all existing tags: " + tagApi.tagsManager("tags").tags);
+
+                            tagApi.tagsManager("pushTag", d.value);
+
+                            console.log("new list of tags: " + tagApi.tagsManager("tags").tags);
+
+
+
+
+             });
+
 
 
             // Do ForceAtlasLayout
@@ -469,6 +530,7 @@ sigma.parsers.json(
 
             // Retrieve that statement's ID into the hidden field (for edit or delete)
             $('input[name="statementid"]').val(e.currentTarget.dataset.uid);
+
 
             // Chang / add buttons
             document.submitform.submit.value = "edit";
@@ -1191,9 +1253,6 @@ sigma.parsers.json(
 
         var context_filters = '';
 
-        var context_list_default = '<option selected>private</option>';
-        var context_list = '';
-
         var currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/">all lists</a></li>';
 
         var addNewContext = '';
@@ -1207,30 +1266,21 @@ sigma.parsers.json(
                     // for the menu
                     context_filters += '<li class="app-context-link menu-item-divided pure-menu-selected"><a href="/contexts/' + n + '">' + n + '</a></li>';
                     currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/">all lists</a></li>';
-                    // for the statement add
-                    context_list_default = '';
-                    context_list += '<option selected>' + n + '</option>';
+
                 }
                 else {
                     // for the menu
                     context_filters += '<li class="app-context-link menu-item-divided "><a href="/contexts/' + n + '">' + n + '</a></li>';
                     // for the statement add
-                    if (n != 'private') {
-                        context_list += '<option>' + n + '</option>';
-                    }
                 }
             });
         }
         // No graph, so show private
         else {
             context_filters += '<li class="app-context-link menu-item-divided"><a href="/contexts/private">private</a></li>';
-            context_list += '<option>private</option>';
-
         }
 
         addNewContext = '<li id="addNewContext" class="menu-item-divided"><a href="javascript:">+</a></li><li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
-
-
 
         search_field = '<form class="pure-form" id="searchform">' +
                        '&nbsp;<input type="text" id="search" size="9" maxlength="20" class="pure-input" placeholder="search">' +
@@ -1249,8 +1299,6 @@ sigma.parsers.json(
                                                         addNewContext +
                                                         auxLinks;
 
-        document.getElementById('addToContexts').innerHTML = context_list_default +
-                                                             context_list;
 
 
         // Select range in textarea function
