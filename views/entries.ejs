@@ -118,6 +118,7 @@
 <script src="/javascripts/jquery.highlight-4.js"></script>
 <script src="/javascripts/bundle-stemmer.js"></script>
 <script src="/javascripts/jquery.taghandler.js"></script>
+<script src="/javascripts/bimap.js"></script>
 
 
 
@@ -530,10 +531,85 @@ sigma.parsers.json(
                     document.submitform.delete.remove();
                     document.submitform.cancel.remove();
 
+                    // Populate contexts list next to statement add
+
+                    var current_context_field = [];
+
+                    // Are we inside some context already?
+
+                    if (document.getElementById('context').value) {
+                        current_context_field.push(document.getElementById('context').value);
+                        $("#addedContexts").val(document.getElementById('context').value);
+                    }
+
+                    // if not, we're making the 'private' context default
+                    else {
+                        current_context_field.push('private');
+                        $("#addedContexts").val('private');
+                    }
+
+                    $("#addToContexts").tagHandler({
+                        assignedTags: current_context_field,
+                        availableTags: contextNames,
+                        autocomplete: true,
+                        afterAdd: function(tag) {
+                            current_context_field.push(tag);
+                            $("#addedContexts").val(current_context_field.join());
+                            console.log('contexts in hidden field: ' + current_context_field.join());
+                        },
+                        afterDelete: function(tag) {
+                            for (var i=current_context_field.length-1; i>=0; i--) {
+                                if (current_context_field[i] === tag) {
+                                    current_context_field.splice(i, 1);
+                                }
+                            }
+                            $("#addedContexts").val(current_context_field.join());
+                            console.log('contexts in hidden field: ' + current_context_field.join());
+                        }
+                    });
+
                 },false);            }
+
+
+            var bimap = new BiMap;
+
+            for (var key in statementsOfContext) {
+                bimap.push(key,statementsOfContext[key]);
+            }
+
+            var current_context_field = [];
+
+            current_context_field.push(bimap.val(e.currentTarget.dataset.uid));
+
+            console.log('context of statement: ' + current_context_field);
+
+            // Update the contexts list
+
+            $("#addToContexts").tagHandler({
+                assignedTags: current_context_field,
+                availableTags: contextNames,
+                autocomplete: true,
+                afterAdd: function(tag) {
+                    current_context_field.push(tag);
+                    $("#addedContexts").val(current_context_field.join());
+                    console.log('contexts in hidden field: ' + current_context_field.join());
+                },
+                afterDelete: function(tag) {
+                    for (var i=current_context_field.length-1; i>=0; i--) {
+                        if (current_context_field[i] === tag) {
+                            current_context_field.splice(i, 1);
+                        }
+                    }
+                    $("#addedContexts").val(current_context_field.join());
+                    console.log('contexts in hidden field: ' + current_context_field.join());
+                }
+            });
+
 
             // Smoothly scroll up
             $("html, body").animate({ scrollTop: 0 }, "slow");
+
+
         });
 
 
