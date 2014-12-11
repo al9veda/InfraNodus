@@ -269,6 +269,8 @@ exports.submit = function(req, res,  next) {
                     var statements = [];
                     var default_context = importContext;
 
+                    var addToContexts = [];
+                    addToContexts.push(default_context);
 
                     for (key in tweets) {
                         var statement = tweets[key].text;
@@ -279,7 +281,7 @@ exports.submit = function(req, res,  next) {
                         statements.push(statement);
                     }
 
-                    validate.getContextID(user_id, default_context, statements, function(result, err) {
+                    validate.getContextID(user_id, addToContexts, function(result, err) {
                         if (err) {
                             res.error('Something went wrong when adding new Tweets into Neo4J database. Try changing the import category name or open an issue on GitHub.');
                             res.redirect('back');
@@ -345,6 +347,10 @@ exports.submit = function(req, res,  next) {
 
                 var default_context = importContext;
 
+                var addToContexts = [];
+                addToContexts.push(default_context);
+
+
                 var result = data;
 
                 // For hashtag surrounding search remove the actual hashtag from all tweets
@@ -366,7 +372,7 @@ exports.submit = function(req, res,  next) {
                 }
 
 
-                validate.getContextID(user_id, default_context, statements, function(result, err) {
+                validate.getContextID(user_id, addToContexts, function(result, err) {
                     if (err) {
                         res.error('Something went wrong when adding new Twitter lists into Neo4J database. Try changing the Twitter import folder name or open an issue on GitHub.');
                         res.redirect('back');
