@@ -147,6 +147,8 @@ var contextNames = [];
 // What are the concepts present in the graph?
 var statementsOfContext = [];
 
+var current_context_field = [];
+
 // Path to the JSON graph file (specific context or a general one)
     <% if (addcontext) { %>
         var jsonpath = '/api/user/nodes/<%= context %>?addcontext=<%= addcontext %>';
@@ -343,9 +345,6 @@ sigma.parsers.json(
             populateContextMenu(contextNames,nodeNames);
 
 
-            // Populate contexts list next to statement add
-
-            var current_context_field = [];
 
             // Are we inside some context already?
 
@@ -372,6 +371,7 @@ sigma.parsers.json(
                     console.log('contexts in hidden field: ' + current_context_field.join());
                 },
                 afterDelete: function(tag) {
+                    console.log('initiated delete from sigma');
                     for (var i=current_context_field.length-1; i>=0; i--) {
                         if (current_context_field[i] === tag) {
                             current_context_field.splice(i, 1);
@@ -531,7 +531,7 @@ sigma.parsers.json(
 
                     // Populate contexts list next to statement add
 
-                    var current_context_field = [];
+                    current_context_field = [];
 
                     // Are we inside some context already?
 
@@ -553,23 +553,14 @@ sigma.parsers.json(
                         afterAdd: function(tag) {
                             current_context_field.push(tag);
                             $("#addedContexts").val(current_context_field.join());
-                            console.log('contexts in hidden field: ' + current_context_field.join());
-                        },
-                        afterDelete: function(tag) {
-                            for (var i=current_context_field.length-1; i>=0; i--) {
-                                if (current_context_field[i] === tag) {
-                                    current_context_field.splice(i, 1);
-                                }
-                            }
-                            $("#addedContexts").val(current_context_field.join());
-                            console.log('contexts in hidden field: ' + current_context_field.join());
+                            console.log('contexts in cancel field: ' + current_context_field.join());
                         }
                     });
 
                 },false);            }
 
 
-            var current_context_field = [];
+            current_context_field = [];
 
             for (var key in statementsOfContext) {
                 var checkstatements = statementsOfContext[key];
@@ -592,16 +583,7 @@ sigma.parsers.json(
                 afterAdd: function(tag) {
                     current_context_field.push(tag);
                     $("#addedContexts").val(current_context_field.join());
-                    console.log('contexts in hidden field: ' + current_context_field.join());
-                },
-                afterDelete: function(tag) {
-                    for (var i=current_context_field.length-1; i>=0; i--) {
-                        if (current_context_field[i] === tag) {
-                            current_context_field.splice(i, 1);
-                        }
-                    }
-                    $("#addedContexts").val(current_context_field.join());
-                    console.log('contexts in hidden field: ' + current_context_field.join());
+                    console.log('contexts in statement field: ' + current_context_field.join());
                 }
             });
 
