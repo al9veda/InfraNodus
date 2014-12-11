@@ -37,13 +37,14 @@ exports.settings = {
 }
 
 exports.defaultstatements = {
-    f: 'you can also save links from the web (e.g. http://infranodus.com) with descriptions and they will be added to the graph... @bookmarks',
-    e: '@help if you click on a word in a graph, you will see all the notes that contain that word.',
-    d: 'if you use #hashtags, only those #hashtags will be added into the #graph, not the other words you use. #great-feature #web #infranodus #amazing #nice ',
-    c: 'now, try to add your own note. if you use a mention (the @ tag), the note will be added to a new list (see the menu on the left). if you use none, it will be added into the "private" list',
-    b: '@help this is a note. try to click it to see it on the graph. now try to double-click it, so you can edit it or delete it.',
-    a: '@help welcome! using infranodus you can see how your different notes and ideas connect using a graph.'
+    f: 'every note can be saved in several contexts or lists. these notes are in the "help" context - click the context name in the left sidebar and then scroll down to delete the context with all the notes.',
+    e: 'to get started, import your tweets, evernote and gmail / iphone notes using the import function in the left sidebar.',
+    d: 'try to click on several words in the graph: you will see only the notes that contain those words.',
+    c: 'try to add a new note. if you use #hashtags, only those #hashtags will be added into the #graph, not the other words you use. #great-feature #web #infranodus #amazing #nice ',
+    b: 'this is a note. click it once to see it in the graph. double-click it to edit or to delete.',
+    a: 'welcome! using infranodus you can discover how your different notes and ideas connect using a graph.'
 }
+
 
 // Config file exists?
 
