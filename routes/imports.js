@@ -776,10 +776,14 @@ exports.submit = function(req, res,  next) {
 
                     var default_context = importContext;
 
+                    var addToContext = [];
+
+                    addToContext.push(default_context);
 
 
 
-                    validate.getContextID(user_id, default_context, statements, function(result, err) {
+
+                    validate.getContextID(user_id, addToContext, function(result, err) {
                         if (err) {
                             res.error('Something went wrong when adding new notes into Neo4J database. Try changing the import list name or open an issue on GitHub.');
                             res.redirect('back');
