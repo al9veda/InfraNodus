@@ -121,7 +121,7 @@ exports.submit = function(req, res,  next) {
 
     // List to be used for import
     var importContext = 'imported';
-    if (req.body.context && req.body.context.length > 3 && req.body.context.length < 13) {
+    if (req.body.context && req.body.context.length > 2 && req.body.context.length < 20) {
         importContext = req.body.context;
     }
     else {
@@ -350,6 +350,7 @@ exports.submit = function(req, res,  next) {
                 var addToContexts = [];
                 addToContexts.push(default_context);
 
+                var searchquery = twitterRequest.params.q;
 
                 var result = data;
 
@@ -366,7 +367,12 @@ exports.submit = function(req, res,  next) {
                         statement = statement.replace(mentions[index], 'user_' + mentions[index].substr(1) + ' (http://twitter.com/' + mentions[index].substr(1) + ')');
                     }
                     if (twitterRequest.type == 'search/tweets') {
-                        statement = statement.toLowerCase().replace(twitterRequest.params.q.toLowerCase(),'_#'+twitterRequest.params.q.substr(1).toLowerCase());
+                        if (searchquery.charAt(0) == '#') {
+                            statement = statement.toLowerCase().replace(twitterRequest.params.q.toLowerCase(),'_#'+searchquery.substr(1).toLowerCase());
+                        }
+                        else {
+                            statement = statement.toLowerCase().replace(twitterRequest.params.q.toLowerCase(),'_'+searchquery.substr(1).toLowerCase());
+                        }
                     }
                     statements.push(statement);
                 }
