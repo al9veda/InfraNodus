@@ -156,7 +156,7 @@ exports.submit = function(req, res, next){
                 callback(null, statement, hashtags, contexts);
             }
             else {
-                callback('please, select a list for this statement');
+                callback('please, select a context for this statement');
             }
 
 

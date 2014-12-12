@@ -496,50 +496,28 @@ exports.submit = function(req, res,  next) {
                             function(callback){
 
 
-
+                                var addToContexts = [];
                                 // Here we create dummy statements in order to create the new contexts and get the IDs for them from our Neo4J DB
 
                                 for (var m = 0; m < notebooks.length; m++) {
-                                    statements[m] = 'dummy statement ' + m + ' @' + S(notebooks[m].name).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                                    addToContexts.push(S(notebooks[m].name).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,""));
                                 }
 
-                                validate.getContextID(user_id, default_context, statements, function(result, err) {
+                                validate.getContextID(user_id, addToContexts, function(result, err) {
                                     if (err) {
                                         res.error('Something went wrong when adding Evernote folders into Neo4J database. Try changing the name of your Evernote folder or open an issue on GitHub.');
                                         res.redirect('back');
                                     }
                                     else {
-                                        console.log('so the statements we got are');
-                                        console.log(statements);
-                                        console.log('and default context');
-                                        console.log(default_context);
+
                                         // What are the contexts that already exist for this user and their IDs?
                                         // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
                                         var contexts = result;
 
-                                        console.log('extracted contexts');
+                                        console.log('Extracted contexts from DB with IDs');
                                         console.log(contexts);
 
-                                        // Create default statement object that has an empty body, default context, and all the context IDs for the user
-                                        // context: default_context is where all the statements are added anyway
-                                        // contextids: contexts are the IDs of all the contexts that will be used in those statements
-
-                                        var req = {
-                                            body:  {
-                                                entry: {
-                                                    body: ''
-                                                },
-                                                context: ''
-                                            },
-
-                                            contextids: contexts,
-                                            internal: 1
-                                        };
-
-                                        console.log('requestobject');
-                                        console.log(req);
-
-                                        callback(null, req);
+                                        callback(null, contexts);
                                     }
 
 
@@ -549,12 +527,12 @@ exports.submit = function(req, res,  next) {
 
 
                             },
-                            function(req, callback){
+                            function(contexts, callback){
 
-                               callback(null,req);
+                               callback(null,contexts);
 
                             }
-                        ], function (err, req) {
+                        ], function (err, contexts) {
 
                             if (err) {
 
@@ -566,33 +544,74 @@ exports.submit = function(req, res,  next) {
                             else {
 
 
-
-
-                                var default_context = importContext;
-
-
-
                                 for (var i = 0; i < noteList.notes.length; i++ ) {
 
                                     var notebook_name = noteList.notes[i].notebookGuid;
                                     var note_id = noteList.notes[i].guid;
 
-                                    getStatement(notebook_name, note_id);
+                                    console.log('firstcontexts');
+                                    console.log(contexts);
+                                    getStatement(notebook_name, note_id, contexts);
 
 
 
                                 }
 
-                                function getStatement(notebook_name, note_id) {
+                                function getStatement(notebook_name, note_id, contexts) {
 
                                     noteStore.getNoteContent(userInfo, note_id, function(err, result) {
 
+                                        if (err) {
+                                            console.log(err);
+                                            res.error(err);
+                                            res.redirect('back');
+
+                                        }
                                         // Normalize note, get rid of tags, etc.
 
-                                        var sendstring = S(result).stripTags().s + ' @' + S(notebooks_db[notebook_name]).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
-                                        req.body.entry.body = sendstring.replace(/&quot;/g, '');
-                                        entries.submit(req, res);
-                                        console.log(req.body.entry.body);
+                                        var sendstring = S(result).stripTags().s;
+
+                                        sendstring = sendstring.replace(/&quot;/g, '');
+
+
+                                        // Create container for contexts to push
+
+                                        var selcontexts = [];
+
+                                        // Create contained for intemediary context
+
+                                        var selcontexts2 = [];
+
+                                        // What's the notebook name? This will be our context
+                                        var currentcontext = S(notebooks_db[notebook_name]).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                                        currentcontext = currentcontext.replace(/[^\w]/gi, '');
+
+                                        // Now let's find the right ID for that notebook in our database
+                                        for (var i = 0; i < contexts.length; i++) {
+                                            if (contexts[i].name == currentcontext) {
+                                                selcontexts2['uid'] = contexts[i].uid;
+                                                selcontexts2['name'] = contexts[i].name;
+                                                selcontexts.push(selcontexts2);
+                                            }
+                                        }
+
+                                        // and finally create an object to send this entry with the right context
+
+                                        var req = {
+                                            body:  {
+                                                entry: {
+                                                    body: sendstring
+                                                },
+                                                context: ''
+                                            },
+
+                                            contextids: selcontexts,
+                                            internal: 1
+                                        };
+
+
+                                        entries.submit(req,res);
+
 
 
                                     });
