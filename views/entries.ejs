@@ -1386,12 +1386,21 @@ sigma.parsers.json(
 
         $(document).on("click", "#addNewContext", function(e){
 
-            var beforeAdd = $("#statement").val();
-            var afterAdd = beforeAdd + ' @newlist';
-            var totalLength = afterAdd.length;
-            $("#statement").val(afterAdd);
-            $("#statement").focus();
-            $('#statement').selectRange(totalLength-7,totalLength);
+            current_context_field = [];
+
+            $("#addToContexts").tagHandler({
+                assignedTags: current_context_field,
+                availableTags: contextNames,
+                autocomplete: true,
+                afterAdd: function(tag) {
+                    current_context_field.push(tag);
+                    $("#addedContexts").val(current_context_field.join());
+                    console.log('contexts in statement field: ' + current_context_field.join());
+                }
+            });
+
+            $("#tagInputBox").focus();
+
 
         });
 

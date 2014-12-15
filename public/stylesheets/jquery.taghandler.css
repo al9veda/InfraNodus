@@ -52,18 +52,22 @@
 input.tagInputField::-webkit-input-placeholder {
     color:#000;
     opacity:  1;
+    text-align: center;
 }
 input.tagInputField::-moz-placeholder {
     color:#000;
     opacity:  1;
+    text-align: center;
 }
 input.tagInputField:-moz-placeholder {
     color:#000;
     opacity:  1;
+    text-align: center;
 }
 input.tagInputField::-ms-input-placeholder {
     color:#000;
     opacity:  1;
+    text-align: center;
 }
 
 input.tagInputField:focus {
