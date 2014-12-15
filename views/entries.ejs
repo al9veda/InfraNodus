@@ -355,8 +355,27 @@ sigma.parsers.json(
 
             // if not, we're making the 'private' context default
             else {
-                current_context_field.push('private');
-                $("#addedContexts").val('private');
+                var lastcontexts = [];
+                var laststatement = $(".entry:first").attr('data-uid');
+                console.log(laststatement);
+                for (var key in statementsOfContext) {
+                    var reiteratestatements = statementsOfContext[key];
+                    for (var i = 0; i< reiteratestatements.length; i++) {
+                        if (laststatement == reiteratestatements[i]) {
+                            lastcontexts.push(key);
+                            console.log(key);
+                        }
+                    }
+
+                }
+                if (lastcontexts[0] == 'help') {
+                    current_context_field.push('private');
+                    $("#addedContexts").val('private');
+                }
+                else {
+                    current_context_field = lastcontexts;
+                    $("#addedContexts").val(current_context_field.join());
+                }
             }
 
             // let's now populate contextHandlers
