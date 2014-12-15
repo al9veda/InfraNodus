@@ -572,9 +572,12 @@ sigma.parsers.json(
 
             }
 
-            console.log('context of statement: ' + current_context_field);
+            console.log('context of statement clicked: ' + current_context_field);
 
-            // Update the contexts list
+            // Which contexts the statement should be in?
+            $("#addedContexts").val(current_context_field.join());
+
+            // Update the contexts list if anything changes in the context settings of the statement
 
             $("#addToContexts").tagHandler({
                 assignedTags: current_context_field,
