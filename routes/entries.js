@@ -131,7 +131,10 @@ exports.submit = function(req, res, next){
             callback(null, statement);
         },
         function(statement, callback){
+
             var hashtags = validate.getHashtags(statement, res);
+
+            var mentions = validate.getMentions(statement);
 
             if  (!hashtags) {
                 callback('there should be at least one #hashtag. you can double-click the words to hashtag them.');
@@ -140,10 +143,10 @@ exports.submit = function(req, res, next){
                 callback('please, try to use less than ' + maxhash + ' #hashtags');
             }
             else {
-                callback(null, statement, hashtags);
+                callback(null, statement, hashtags, mentions);
             }
         },
-        function(statement, hashtags, callback){
+        function(statement, hashtags, mentions, callback){
 
             // Put all the contexts that came with the statement into a new variable
 
@@ -153,7 +156,7 @@ exports.submit = function(req, res, next){
                 for (var i = 0; i < contextids.length; i++) {
                         contexts.push(contextids[i]);
                 }
-                callback(null, statement, hashtags, contexts);
+                callback(null, statement, hashtags, contexts, mentions);
             }
             else {
                 callback('please, select a context for this statement');
@@ -161,7 +164,7 @@ exports.submit = function(req, res, next){
 
 
         },
-        function(statement, hashtags, contexts, callback){
+        function(statement, hashtags, contexts, mentions, callback){
             // Then we ascribe the data that the Entry object needs in order to survive
             // We create various fields and values for that object and initialize it
 
@@ -171,6 +174,7 @@ exports.submit = function(req, res, next){
                 "by_name": res.locals.user.name,
                 "contexts": contexts,
                 "hashtags": hashtags,
+                "mentions": mentions,
                 "text": statement,
                 "fullscan": res.locals.user.fullscan
 
