@@ -136,14 +136,21 @@ exports.submit = function(req, res, next){
 
             var mentions = validate.getMentions(statement);
 
-            if  (!hashtags) {
-                callback('there should be at least one #hashtag. you can double-click the words to hashtag them.');
-            }
-            else if (hashtags.length >= maxhash) {
-                callback('please, try to use less than ' + maxhash + ' #hashtags');
+            if  (!hashtags && mentions.length < 1) {
+                callback('there should be at least one word, #hashtag or @mention.');
             }
             else {
-                callback(null, statement, hashtags, mentions);
+                if (hashtags) {
+                    if (hashtags.length >= maxhash) {
+                        callback('please, try to use less than ' + maxhash + ' #hashtags');
+                    }
+                    else {
+                        callback(null, statement, hashtags, mentions);
+                    }
+                }
+                else {
+                    callback(null, statement, hashtags, mentions);
+                }
             }
         },
         function(statement, hashtags, mentions, callback){
