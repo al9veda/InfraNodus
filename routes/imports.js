@@ -173,7 +173,7 @@ exports.submit = function(req, res,  next) {
 
 
 
-    console.log('postparams');
+    console.log('Import parameters submitted: ');
     console.log(searchString);
     console.log(importContext);
     console.log(service);
@@ -182,33 +182,43 @@ exports.submit = function(req, res,  next) {
 
     if (searchString && service == 'twitter') {
 
+
+        // Finding tweets of the @user
         if (twitterRequest.type == 'friends/ids') {
 
             var tweets = [];
             var moreTwitterRequests = [];
+
+            var errors = 0;
 
             async.waterfall([
 
                 function(callback){
 
                     T.get(twitterRequest.type, twitterRequest.params, function(err, data, response) {
-
-                        console.log(data);
-                        var result = data['ids'];
-                        for (var i = 0; i < result.length; i++) {
-                            var statement = result[i];
-                            // Get 3 most recent statements from each friend of a user
-                            moreTwitterRequests[i] = {
-                                type: 'statuses/user_timeline',
-                                params: {
-                                    user_id: statement,
-                                    count: 3
+                        if (err) {
+                            console.log(err);
+                            res.error(err);
+                            res.redirect('back');
+                        }
+                        else {
+                            console.log(data);
+                            var result = data['ids'];
+                            for (var i = 0; i < result.length; i++) {
+                                var statement = result[i];
+                                // Get 3 most recent statements from each friend of a user
+                                moreTwitterRequests[i] = {
+                                    type: 'statuses/user_timeline',
+                                    params: {
+                                        user_id: statement,
+                                        count: 3
+                                    }
                                 }
+
                             }
 
+                            callback(null, moreTwitterRequests);
                         }
-
-                        callback(null, moreTwitterRequests);
 
                     });
 
@@ -223,18 +233,26 @@ exports.submit = function(req, res,  next) {
 
                         T.get(moreTwitterRequests[j].type, moreTwitterRequests[j].params, function(err, data, response) {
 
-                            var result = data;
-
-
-                            for (var k = 0; k < result.length; k++) {
-                                var tweetobject = [];
-                                tweetobject['created_at'] = result[k].created_at;
-                                tweetobject['text'] = result[k].text;
-                                tweets.push(tweetobject);
+                            if (err) {
+                                // TODO do something about those errors that the program just doesn't stall here when Twitter rate is exceeded
+                               console.log(err);
+                               errors = errors + 1;
+                               callback(err, null);
                             }
-                            count = count + 1;
-                            if (count == moreTwitterRequests.length) {
-                                callback(null, tweets);
+                            else {
+                                var result = data;
+
+
+                                for (var k = 0; k < result.length; k++) {
+                                    var tweetobject = [];
+                                    tweetobject['created_at'] = result[k].created_at;
+                                    tweetobject['text'] = result[k].text;
+                                    tweets.push(tweetobject);
+                                }
+                                count = count + 1;
+                                if (count == moreTwitterRequests.length) {
+                                    callback(null, tweets);
+                                }
                             }
 
 
@@ -251,6 +269,11 @@ exports.submit = function(req, res,  next) {
                 if (err) {
 
                     console.log(err);
+                    res.error(JSON.stringify(err));
+
+                    if (errors == 1) {
+                     res.redirect('back');
+                    }
 
 
 
@@ -274,10 +297,18 @@ exports.submit = function(req, res,  next) {
 
                     for (key in tweets) {
                         var statement = tweets[key].text;
-                        var mentions = FlowdockText.extractMentions(statement);
+
+                        // This clears the Tweet from the mention, but now as we use @mentions as nodes to connect to everything, we don't need it anymore
+
+                     /*   var mentions = FlowdockText.extractMentions(statement);
                         for (index in mentions) {
                             statement = statement.replace(mentions[index], 'user_' + mentions[index].substr(1) + ' (http://twitter.com/' + mentions[index].substr(1) + ')');
-                        }
+                        }*/
+
+                        // This clears Twitter-specific stopwords we don't need
+
+                        statement = statement.toLowerCase().replace('rt ',' ');
+
                         statements.push(statement);
                     }
 
@@ -340,97 +371,106 @@ exports.submit = function(req, res,  next) {
 
 
         }
+        // Finding tweets with a certain hashtag or a timeline of a @user
         else {
             T.get(twitterRequest.type, twitterRequest.params, function(err, data, response) {
-
-                var statements = [];
-
-                var default_context = importContext;
-
-                var addToContexts = [];
-                addToContexts.push(default_context);
-
-                var searchquery = twitterRequest.params.q;
-
-                var result = data;
-
-                // For hashtag surrounding search remove the actual hashtag from all tweets
-                if (twitterRequest.type == 'search/tweets') {
-                    result = data['statuses'];
-
+                if (err) {
+                    console.log(err);
+                    res.error(JSON.stringify(err));
+                    res.redirect('back');
                 }
+                else {
+                    var statements = [];
 
-                for (key in result) {
-                    var statement = result[key].text;
-                    var mentions = FlowdockText.extractMentions(statement);
-                    for (index in mentions) {
-                        statement = statement.replace(mentions[index], 'user_' + mentions[index].substr(1) + ' (http://twitter.com/' + mentions[index].substr(1) + ')');
-                    }
+                    var default_context = importContext;
+
+                    var addToContexts = [];
+                    addToContexts.push(default_context);
+
+                    var searchquery = twitterRequest.params.q;
+
+                    var result = data;
+
+                    // For hashtag surrounding search remove the actual hashtag from all tweets
                     if (twitterRequest.type == 'search/tweets') {
-                        if (searchquery.charAt(0) == '#') {
-                            statement = statement.toLowerCase().replace(twitterRequest.params.q.toLowerCase(),'_#'+searchquery.substr(1).toLowerCase());
+                        result = data['statuses'];
+
+                    }
+
+                    for (key in result) {
+                        var statement = result[key].text;
+                    /*    var mentions = FlowdockText.extractMentions(statement);
+                        for (index in mentions) {
+                            statement = statement.replace(mentions[index], 'user_' + mentions[index].substr(1) + ' (http://twitter.com/' + mentions[index].substr(1) + ')');
+                        }*/
+                       /* if (twitterRequest.type == 'search/tweets') {
+                            if (searchquery.charAt(0) == '#') {
+                                statement = statement.toLowerCase().replace(twitterRequest.params.q.toLowerCase(),'_#'+searchquery.substr(1).toLowerCase());
+                            }
+                            else {
+                                statement = statement.toLowerCase().replace(twitterRequest.params.q.toLowerCase(),'_'+searchquery.substr(1).toLowerCase());
+                            }
+                        }*/
+
+                        statement = statement.toLowerCase().replace('rt ',' ');
+
+                        statements.push(statement);
+                    }
+
+
+                    validate.getContextID(user_id, addToContexts, function(result, err) {
+                        if (err) {
+                            res.error('Something went wrong when adding new Twitter lists into Neo4J database. Try changing the Twitter import folder name or open an issue on GitHub.');
+                            res.redirect('back');
                         }
                         else {
-                            statement = statement.toLowerCase().replace(twitterRequest.params.q.toLowerCase(),'_'+searchquery.substr(1).toLowerCase());
-                        }
-                    }
-                    statements.push(statement);
-                }
+                            console.log('so the statements we got are');
+                            console.log(statements);
+                            console.log('and default context');
+                            console.log(default_context);
+                            // What are the contexts that already exist for this user and their IDs?
+                            // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
+                            var contexts = result;
 
+                            console.log('extracted contexts');
+                            console.log(contexts);
 
-                validate.getContextID(user_id, addToContexts, function(result, err) {
-                    if (err) {
-                        res.error('Something went wrong when adding new Twitter lists into Neo4J database. Try changing the Twitter import folder name or open an issue on GitHub.');
-                        res.redirect('back');
-                    }
-                    else {
-                        console.log('so the statements we got are');
-                        console.log(statements);
-                        console.log('and default context');
-                        console.log(default_context);
-                        // What are the contexts that already exist for this user and their IDs?
-                        // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
-                        var contexts = result;
+                            // Create default statement object that has an empty body, default context, and all the context IDs for the user
+                            // context: default_context is where all the statements are added anyway
+                            // contextids: contexts are the IDs of all the contexts that will be used in those statements
 
-                        console.log('extracted contexts');
-                        console.log(contexts);
-
-                        // Create default statement object that has an empty body, default context, and all the context IDs for the user
-                        // context: default_context is where all the statements are added anyway
-                        // contextids: contexts are the IDs of all the contexts that will be used in those statements
-
-                        var req = {
-                            body:  {
-                                entry: {
-                                    body: ''
+                            var req = {
+                                body:  {
+                                    entry: {
+                                        body: ''
+                                    },
+                                    context: default_context
                                 },
-                                context: default_context
-                            },
 
-                            contextids: contexts,
-                            internal: 1
-                        };
+                                contextids: contexts,
+                                internal: 1
+                            };
 
-                        console.log('requestobject');
-                        console.log(req);
+                            console.log('requestobject');
+                            console.log(req);
 
 
-                        for (var key in statements) {
-                            if (statements.hasOwnProperty(key)) {
-                                req.body.entry.body = statements[key];
-                                entries.submit(req, res);
+                            for (var key in statements) {
+                                if (statements.hasOwnProperty(key)) {
+                                    req.body.entry.body = statements[key];
+                                    entries.submit(req, res);
+                                }
+
                             }
 
+                            // Move on to the next one
+
+                            res.redirect('/contexts/' + default_context);
                         }
 
-                        // Move on to the next one
 
-                        res.redirect('/contexts/' + default_context);
-                    }
-
-
-                });
-
+                    });
+                }
 
 
             });

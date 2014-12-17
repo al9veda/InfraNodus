@@ -80,13 +80,13 @@
             <% }) %>
 
             <% if (context && entries.length > 2) { %>
-            <form action='/post' name='deletecontext' id="deletecontext" method='post' class='pure-form'>
+            <form action='/post' name='deletecontext' id="deletecontext" method='post' class='pure-form' onsubmit="return confirm('Deleting the context will delete all the statements inside. Are you sure?');">
 
                 <input type="hidden" name="context" value="<%= context %>">
                 <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
                 <input type="hidden" name="statementid" value="">
                 &nbsp;<br>
-                <input type='submit' name="delete" value="delete list" class="pure-button pure-button-primary">
+                <input type='submit' name="delete" value="delete context" class="pure-button pure-button-primary">
 
             </form>
             <% } %>
