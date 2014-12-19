@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/stylesheets/jquery-ui.min.css">
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel='stylesheet' href='/stylesheets/jquery.taghandler.css' />
+    <link rel='stylesheet' href='/stylesheets/jquery.content-panel-switcher.css' />
 
 
 
@@ -49,23 +50,67 @@
     <div id='content'>
 
         <div id='statements'>
+
+
             <% include messages %>
 
-            <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
+            <div class='pure-menu pure-menu-open pure-menu-horizontal'>
+                <ul>
+                    <li>
+                        <a id="finds" class="switcher set1">find</a>
+                    </li>
+                    <li class="pure-menu-selected">
+                        <a id="adds" class="switcher set1">add</a>
+                    </li>
+                    <li>
+                        <a id="imports" href="/import">import</a>
+                    </li>
+                </ul>
+            </div>
 
-                    <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here to visualize the words and their connections, you can also use #hashtags and @mentions.'><% if (url) { %><%= urltitle %> <%= url %> @bookmarks<% } %></textarea>
-                    <div id="addToContextsLabel">contexts:</div>
-                    <ul id="addToContexts"></ul>
-                    <input type="hidden" id="addedContexts" name="addedContexts">
-                    <input type="hidden" id="context" name="context" value="<%= context %>">
-                    <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
-                    <input type="hidden" name="statementid" value="">
+
+            <!-- the panel to show content -->
+
+            <div id="switcher-panel"></div>
+
+            <!-- form to add, later do import here -->
+
+            <div id="adds-content" class="switcher-content set1 show">
+                <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
+
+                        <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here to visualize the words and their connections, you can also use #hashtags and @mentions.'><% if (url) { %><%= urltitle %> <%= url %> @bookmarks<% } %></textarea>
+                        <div id="addToContextsLabel">contexts:</div>
+                        <ul id="addToContexts"></ul>
+                        <input type="hidden" id="addedContexts" name="addedContexts">
+                        <input type="hidden" id="context" name="context" value="<%= context %>">
+                        <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
+                        <input type="hidden" name="statementid" value="">
+                        &nbsp;<br>
+                        <input type='submit' name="submit" value="save" class="pure-button pure-button-primary">
+
+                </form>
+
+            </div>
+
+            <!-- form to find -->
+
+            <div id="finds-content" class="switcher-content set1">
+
+                <form class="pure-form" id="searchform">
+                    <input type="text" id="search" size="9" maxlength="20" class="pure-input" placeholder="search...">
                     &nbsp;<br>
-                    <input type='submit' name="submit" value="save" class="pure-button pure-button-primary">
+                    <input type='submit' name="submit" value="find" class="pure-button pure-button-primary">
 
-            </form>   &nbsp;<br>&nbsp;<br>
+                </form>
+            </div>
+
+
+
+
+            &nbsp;<br>&nbsp;<br>
 
             <div id="messages"></div>
+
 
 
             <% entries.forEach(function(entry) { %>
@@ -118,6 +163,7 @@
 <script src="/javascripts/jquery.highlight-4.js"></script>
 <script src="/javascripts/bundle-stemmer.js"></script>
 <script src="/javascripts/jquery.taghandler.js"></script>
+<script src="/javascripts/jquery.content-panel-switcher.js"></script>
 
 
 
@@ -513,7 +559,8 @@ sigma.parsers.json(
 
     $(document).ready(function(){
 
-
+        // Activate content switcher Set1 and set delay time for fade
+        jcps.fader(300, '#switcher-panel', '.set1');
 
 
         // Make texarea automatically resizeable
@@ -1346,9 +1393,7 @@ sigma.parsers.json(
 
         addNewContext = '<li id="addNewContext" class="menu-item-divided"><a href="javascript:">+</a></li><li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
 
-        search_field = '<form class="pure-form" id="searchform">' +
-                       '&nbsp;<input type="text" id="search" size="9" maxlength="20" class="pure-input" placeholder="search">' +
-                       '</form><br>';
+        search_field = '';
 
         auxLinks = '<br>' +
                    '<li class="menu-item-small"><a href="/logout">logout</a></li>' +

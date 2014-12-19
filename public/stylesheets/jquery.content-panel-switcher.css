@@ -1,0 +1,10 @@
+/* jQuery Content Panel Switcher CSS */
+
+a, a:visited, a:hover {
+  cursor: pointer;
+}
+
+.switcher-content {
+  display: none;
+}
+
