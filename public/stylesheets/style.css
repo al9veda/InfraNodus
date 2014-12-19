@@ -66,6 +66,7 @@ textarea:focus {
 #search {
     position: relative;
     z-index: 100;
+    float: left;
 
 }
 
@@ -1144,6 +1145,14 @@ Forms Core
     background-color: C8C6C6;
     color: #171616;
 }
+
+/* SELECTED MENU ITEM */
+.pure-menu li.pure-menu-selected-top a {
+    background-color: #e6e6e6;
+    color: #171616;
+}
+
+
 
 /* FIXED MENU */
 .pure-menu.pure-menu-open.pure-menu-fixed {

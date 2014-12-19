@@ -54,12 +54,12 @@
 
             <% include messages %>
 
-            <div class='pure-menu pure-menu-open pure-menu-horizontal'>
+            <div id='switcher-selector' class='pure-menu pure-menu-open pure-menu-horizontal'>
                 <ul>
                     <li>
                         <a id="finds" class="switcher set1">find</a>
                     </li>
-                    <li class="pure-menu-selected">
+                    <li class="pure-menu-selected-top">
                         <a id="adds" class="switcher set1">add</a>
                     </li>
                     <li>
@@ -68,7 +68,7 @@
                 </ul>
             </div>
 
-
+            <br>
             <!-- the panel to show content -->
 
             <div id="switcher-panel"></div>
@@ -97,8 +97,8 @@
             <div id="finds-content" class="switcher-content set1">
 
                 <form class="pure-form" id="searchform">
-                    <input type="text" id="search" size="9" maxlength="20" class="pure-input" placeholder="search...">
-                    &nbsp;<br>
+                    <input type="text" id="search" size="17" maxlength="20" class="pure-input" placeholder="search...">
+                    &nbsp;&nbsp;
                     <input type='submit' name="submit" value="find" class="pure-button pure-button-primary">
 
                 </form>
@@ -562,6 +562,10 @@ sigma.parsers.json(
         // Activate content switcher Set1 and set delay time for fade
         jcps.fader(300, '#switcher-panel', '.set1');
 
+        $('#switcher-selector').on('click', 'li', function() {
+            console.log("Clicked", this);
+            this.className = 'pure-menu-selected-top';
+        });
 
         // Make texarea automatically resizeable
         $('textarea').autosize();
