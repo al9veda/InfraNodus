@@ -86,7 +86,7 @@
                         <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
                         <input type="hidden" name="statementid" value="">
                         &nbsp;<br>
-                        <input type='submit' name="submit" value="save" class="pure-button pure-button-primary">
+                        <input type='submit' id="submitbutton" name="submit" value="save" class="pure-button pure-button-primary">
 
                 </form>
 
@@ -104,10 +104,7 @@
                 </form>
             </div>
 
-
-
-
-            &nbsp;<br>&nbsp;<br>
+            &nbsp;<br>
 
             <div id="messages"></div>
 
@@ -639,7 +636,7 @@ sigma.parsers.json(
 
         // Statement edit / delete functionality
 
-        $(".entry").on('dblclick doubletap', function(e) {
+        $(".entry").on('doubletap', function(e) {
 
             e.preventDefault();
 
@@ -649,11 +646,6 @@ sigma.parsers.json(
             // Retrieve that statement's ID into the hidden field (for edit or delete)
             $('input[name="statementid"]').val(e.currentTarget.dataset.uid);
 
-
-            // Show the right panel for editing statement
-            $('#adds-content').toggleClass('switcher-content set1 show');
-            $('#finds-content').toggleClass('switcher-content set1');
-
             $('#topmenuitems').each(function() {
                 $("li", this).each(function(i) {
 
@@ -662,23 +654,24 @@ sigma.parsers.json(
                 });
             });
 
-            this.className = 'pure-menu-selected-top';
 
             // Change / add buttons
-            document.submitform.submit.value = "edit";
+           $('#submitbutton').val("edit");
 
-            if (!document.submitform.delete) {
+            if (!$('#deletebutton').val()) {
 
-                $("#submitform").append('<input type="submit" name="delete" value="delete" class="pure-button"> <input type="submit" name="cancel" value="cancel" id="cancelbutton" class="pure-button">');
+                $("#submitform").append('<input type="submit" name="delete" value="delete" id="deletebutton" class="pure-button"> <input type="submit" name="cancel" value="cancel" id="cancelbutton" class="pure-button">');
 
                 // Delete text from the form in case of Cancel, remove the buttons
 
-                document.getElementById('cancelbutton').addEventListener('click',function(){
+                $("#cancelbutton").on('click', function(e) {
+
+                    e.preventDefault();
 
                     $("#statement").val('');
-                    document.submitform.submit.value = "save";
-                    document.submitform.delete.remove();
-                    document.submitform.cancel.remove();
+                    $('#submitbutton').val("save");
+                    $('#deletebutton').remove();
+                    $('#cancelbutton').remove();
 
                     // Populate contexts list next to statement add
 
@@ -686,9 +679,9 @@ sigma.parsers.json(
 
                     // Are we inside some context already?
 
-                    if (document.getElementById('context').value) {
-                        current_context_field.push(document.getElementById('context').value);
-                        $("#addedContexts").val(document.getElementById('context').value);
+                    if ($("#context").val()) {
+                        current_context_field.push($("#context").val());
+                        $("#addedContexts").val($("#context").val());
                     }
 
                     // if not, we're making the 'private' context default
@@ -708,7 +701,9 @@ sigma.parsers.json(
                         }
                     });
 
-                },false);            }
+                });
+
+            }
 
 
             current_context_field = [];
