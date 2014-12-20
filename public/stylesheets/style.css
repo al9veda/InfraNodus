@@ -1071,7 +1071,7 @@ Forms Core
 
 .pure-menu.pure-menu-open,
 .pure-menu.pure-menu-horizontal li .pure-menu-children {
-    background: #fafafa; /* Old browsers */
+    background: #ffffff; /* Old browsers */
     border: 1px solid #ededed;
 }
 
@@ -1102,7 +1102,7 @@ Forms Core
 
 /* Focus style for a dropdown menu-item when the parent has been opened */
 .pure-menu .pure-menu-open {
-    background: #dedede;
+    background: #ffffff;
 }
 
 .pure-menu li a:hover,
@@ -1148,7 +1148,7 @@ Forms Core
 
 /* SELECTED MENU ITEM */
 .pure-menu li.pure-menu-selected-top a {
-    background-color: #e6e6e6;
+    background-color: #efefef;
     color: #171616;
 }
 

@@ -55,7 +55,7 @@
             <% include messages %>
 
             <div id='switcher-selector' class='pure-menu pure-menu-open pure-menu-horizontal'>
-                <ul>
+                <ul id="topmenuitems">
                     <li>
                         <a id="finds" class="switcher set1">find</a>
                     </li>
@@ -563,6 +563,12 @@ sigma.parsers.json(
         jcps.fader(300, '#switcher-panel', '.set1');
 
         $('#switcher-selector').on('click', 'li', function() {
+
+            $('#topmenuitems').each(function() {
+                $("li", this).each(function(i) {
+                    $(this).removeClass('pure-menu-selected-top');
+                });
+            });
             console.log("Clicked", this);
             this.className = 'pure-menu-selected-top';
         });
