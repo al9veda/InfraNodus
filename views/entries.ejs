@@ -391,11 +391,8 @@ sigma.parsers.json(
             populateContextMenu(contextNames,nodeNames);
 
 
-
-            // Are we inside some context already?
-
             if (document.getElementById('context').value) {
-                current_context_field.push(document.getElementById('context').value);
+                current_context_field = [document.getElementById('context').value];
                 $("#addedContexts").val(document.getElementById('context').value);
             }
 
@@ -415,7 +412,7 @@ sigma.parsers.json(
 
                 }
                 if (lastcontexts[0] == 'help') {
-                    current_context_field.push('private');
+                    current_context_field = ['private'];
                     $("#addedContexts").val('private');
                 }
                 else {
@@ -559,18 +556,80 @@ sigma.parsers.json(
 
     $(document).ready(function(){
 
+
+
+
         // Activate content switcher Set1 and set delay time for fade
-        jcps.fader(300, '#switcher-panel', '.set1');
+        jcps.fader(0, '#switcher-panel', '.set1');
 
         $('#switcher-selector').on('click', 'li', function() {
+
 
             $('#topmenuitems').each(function() {
                 $("li", this).each(function(i) {
                     $(this).removeClass('pure-menu-selected-top');
                 });
             });
-            console.log("Clicked", this);
+
             this.className = 'pure-menu-selected-top';
+
+
+            var topmenuaction = $(this).children(":first").attr('id');
+
+            // Repopulate context for addition field if it was the one clicked
+
+            if (topmenuaction == 'adds') {
+
+                current_context_field = [];
+
+                // Are we inside some context already?
+
+                if (document.getElementById('context').value) {
+                    current_context_field.push(document.getElementById('context').value);
+                    $("#addedContexts").val(document.getElementById('context').value);
+                }
+
+                // if not, we're making the 'private' context default
+                else {
+                    var lastcontexts = [];
+                    var laststatement = $(".entry:first").attr('data-uid');
+                    console.log(laststatement);
+                    for (var key in statementsOfContext) {
+                        var reiteratestatements = statementsOfContext[key];
+                        for (var i = 0; i< reiteratestatements.length; i++) {
+                            if (laststatement == reiteratestatements[i]) {
+                                lastcontexts.push(key);
+                                console.log(key);
+                            }
+                        }
+
+                    }
+                    if (lastcontexts[0] == 'help') {
+                        current_context_field = ['private'];
+                        $("#addedContexts").val('private');
+                    }
+                    else {
+                        current_context_field = lastcontexts;
+                        $("#addedContexts").val(current_context_field.join());
+                    }
+                }
+
+                $("#addToContexts").tagHandler({
+                    assignedTags: current_context_field,
+                    availableTags: contextNames,
+                    autocomplete: true,
+                    afterAdd: function(tag) {
+                        current_context_field.push(tag);
+                        $("#addedContexts").val(current_context_field.join());
+                        console.log('contexts in cancel field: ' + current_context_field.join());
+                    }
+                });
+
+
+
+            }
+
+
         });
 
         // Make texarea automatically resizeable
@@ -591,9 +650,25 @@ sigma.parsers.json(
             $('input[name="statementid"]').val(e.currentTarget.dataset.uid);
 
 
-            // Chang / add buttons
+            // Show the right panel for editing statement
+            $('#adds-content').toggleClass('switcher-content set1 show');
+            $('#finds-content').toggleClass('switcher-content set1');
+
+            $('#topmenuitems').each(function() {
+                $("li", this).each(function(i) {
+
+                    $(this).removeClass('pure-menu-selected-top');
+
+                });
+            });
+
+            this.className = 'pure-menu-selected-top';
+
+            // Change / add buttons
             document.submitform.submit.value = "edit";
+
             if (!document.submitform.delete) {
+
                 $("#submitform").append('<input type="submit" name="delete" value="delete" class="pure-button"> <input type="submit" name="cancel" value="cancel" id="cancelbutton" class="pure-button">');
 
                 // Delete text from the form in case of Cancel, remove the buttons
