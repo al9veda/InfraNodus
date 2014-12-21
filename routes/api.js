@@ -73,8 +73,14 @@ exports.nodes = function(req, res, next){
     console.log(req.user);
 
     // Do we want to see graphs that include "near" 4-word gap scan?
-    var fullview = res.locals.user.fullview;
-    if (fullview != 1) { fullview = null };
+
+    if (res.locals.user) {
+        var fullview = res.locals.user.fullview;
+        if (fullview != 1) { fullview = null }
+    }
+    else {
+        fullview = 1;
+    }
 
     // Let's define the contexts from URL if exist
     contexts.push(req.params.context);
