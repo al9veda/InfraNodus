@@ -102,10 +102,10 @@
                 </form>
             </div>
 
+            &nbsp;<br>
 
             <% include messages %>
             <div id="messages"></div>
-            &nbsp;<br>
 
 
             <% entries.forEach(function(entry) { %>
@@ -623,6 +623,28 @@ sigma.parsers.json(
 
 
             }
+
+
+            // Autocomplete for search input
+            $("#search").autocomplete({
+                source: nodeNames,
+                minLength: 1,
+                delay: 500,
+                messages: {
+                    noResults: '',
+                    results: function() {}
+                },
+                select: function(event, ui) {
+
+                    var filter = ui.item.value;
+
+
+
+                }
+
+            });
+
+            search_graph();
 
 
         });
@@ -1549,27 +1571,34 @@ sigma.parsers.json(
         autofill(nodeNames,contextNames);
 
 
+
+
+    }
+
+    function search_graph() {
+
         // Autocomplete for search input
-         $("#search").autocomplete({
-             source: nodeNames,
-             minLength: 1,
-             delay: 500,
-             messages: {
-                 noResults: '',
-                 results: function() {}
-             },
-             select: function(event, ui) {
+        $("#search").autocomplete({
+            source: nodeNames,
+            minLength: 1,
+            delay: 500,
+            messages: {
+                noResults: '',
+                results: function() {}
+            },
+            select: function(event, ui) {
 
-                 var filter = ui.item.value;
+                var filter = ui.item.value;
 
 
 
-             }
+            }
 
-         });
+        });
 
         $("#searchform").submit(function(event) {
 
+            console.log('here we are');
             event.preventDefault();
 
             // What are we searching?
@@ -1609,8 +1638,6 @@ sigma.parsers.json(
 
 
         });
-
-
     }
 
 
