@@ -31,11 +31,11 @@ jcps.slider = function(speed, target, panel) {
 jcps.show = function (target, panel) {
 $('.show').each(function() {
 	if (panel == null) {
-		$(target).append($(this).html() + '<br/>');
+		$(target).append($(this).html() + '');
 	}
 	else {
 		var trimPanel = panel.replace('.', '');
-		if ($(this).hasClass(trimPanel) == true){$(target).append($(this).html() + '<br/>');}
+		if ($(this).hasClass(trimPanel) == true){$(target).append($(this).html() + '');}
 	}
 });
 }

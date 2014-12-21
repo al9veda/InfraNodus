@@ -52,8 +52,6 @@
         <div id='statements'>
 
 
-            <% include messages %>
-
             <div id='switcher-selector' class='pure-menu pure-menu-open pure-menu-horizontal'>
                 <ul id="topmenuitems">
                     <li>
@@ -104,10 +102,10 @@
                 </form>
             </div>
 
-            &nbsp;<br>
 
+            <% include messages %>
             <div id="messages"></div>
-
+            &nbsp;<br>
 
 
             <% entries.forEach(function(entry) { %>
@@ -636,9 +634,120 @@ sigma.parsers.json(
 
         // Statement edit / delete functionality
 
+        var filteringstarted = 0;
+
+
+
+        $(".entry").on('click', function(e) {
+            if (e.target.className == 'app-link-menu') {
+
+                if ($(this).find('.app-link-menu').text() == 'hide filtered') {
+                    $(this).find('.nonmatched-sentence').fadeOut(400);
+                    $(this).find('.app-link-menu').text('show filtered');
+                }
+                else {
+                    $(this).find('.nonmatched-sentence').fadeTo(400, '0.4');
+                    $(this).find('.app-link-menu').text('hide filtered');
+                }
+
+            }
+
+            // A parameter to check if we're taking off the flag
+
+            var alreadyClicked = null;
+
+            // Make all entries semitrasparent
+
+
+            if (pinnedNodes.length == 0) {
+
+                $(".entry").each(function() {
+                    if ($(this).css('opacity') < 1) {
+                        $(this).css('opacity', '1');
+                        alreadyClicked = 1;
+                    }
+                    else {
+                        $(this).css('opacity', '0.3');
+                    }
+                });
+
+                // The one clicked is not transparent
+
+                $(this).css('opacity','1');
+
+            }
+
+
+
+            var keepStatementID = e.currentTarget.dataset.uid;
+
+
+            console.log(keepStatementID);
+
+            // Make only those edges visible that belong to the statement selected
+
+            if (!alreadyClicked && pinnedNodes.length == 0) {
+
+                sigma.instances(0).graph.edges().forEach(function(e) {
+
+                    if (e.statement_id == keepStatementID) {
+                        e.color = e.originalColor;
+                    }
+                    else {
+                        e.color = '#ddd';
+                    }
+
+                });
+
+                // Make only those nodes visible that belong to the statement selected
+
+                sigma.instances(0).graph.nodes().forEach(function(n) {
+
+                    // Is there no contexts at all? Show the node.
+                    if (nodesOfStatement[keepStatementID].indexOf(n.id) < 0)  {
+                        n.color = '#ddd';
+                        n.label = '';
+                    }
+                    else {
+                        n.color = n.originalColor;
+                        n.label = n.originalLabel;
+                    }
+                });
+            }
+            else if (e.target.className == 'app-link-menu') {
+
+                // Do nothing
+
+            }
+            else {
+
+                if (pinnedNodes.length == 0) {
+                    sigma.instances(0).graph.edges().forEach(function(e) {
+                        e.color = e.originalColor;
+                    });
+
+                    // Make only those nodes visible that belong to the statement selected
+
+                    sigma.instances(0).graph.nodes().forEach(function(n) {
+                        n.color = n.originalColor;
+                        n.label = n.originalLabel;
+                    });
+                }
+
+            }
+
+            sigma.instances(0).refresh();
+        });
+
         $(".entry").on('doubletap', function(e) {
 
             e.preventDefault();
+
+            // Get the content from the form edit and copy it into the switcher panel to show to the user
+
+            var _formcontent = $('#adds-content').html();
+
+            $("#switcher-panel").html(_formcontent);
 
             // Get the statement into the edit box at the top
             $("#statement").val($('.entry-text', e.currentTarget).text());
@@ -653,6 +762,8 @@ sigma.parsers.json(
 
                 });
             });
+
+
 
 
             // Change / add buttons
@@ -741,117 +852,19 @@ sigma.parsers.json(
             $("html, body").animate({ scrollTop: 0 }, "slow");
 
 
-        });
-
-
-        var filteringstarted = 0;
-
-        // Highlight statement if clicked once
-
-        $(".entry").on('click', function(e) {
-
-            e.preventDefault();
+            // THIS WAS BEFORE WHEN YOU CLICK A STATEMENT ONCE
 
             // Shall all statements inside Entry if clicked
 
-            if (e.target.className == 'app-link-menu') {
-
-                if ($(this).find('.app-link-menu').text() == 'hide filtered') {
-                    $(this).find('.nonmatched-sentence').fadeOut(400);
-                    $(this).find('.app-link-menu').text('show filtered');
-                }
-                else {
-                    $(this).find('.nonmatched-sentence').fadeTo(400, '0.4');
-                    $(this).find('.app-link-menu').text('hide filtered');
-                }
-
-            }
-
-            // A parameter to check if we're taking off the flag
-
-            var alreadyClicked = null;
-
-            // Make all entries semitrasparent
 
 
-            if (pinnedNodes.length == 0) {
-
-                $(".entry").each(function() {
-                    if ($(this).css('opacity') < 1) {
-                        $(this).css('opacity', '1');
-                        alreadyClicked = 1;
-                    }
-                    else {
-                        $(this).css('opacity', '0.3');
-                    }
-                });
-
-                // The one clicked is not transparent
-
-                $(this).css('opacity','1');
-
-            }
-
-            var keepStatementID = e.currentTarget.dataset.uid;
-
-
-            console.log(keepStatementID);
-
-            // Make only those edges visible that belong to the statement selected
-
-            if (!alreadyClicked && pinnedNodes.length == 0) {
-
-                sigma.instances(0).graph.edges().forEach(function(e) {
-
-                    if (e.statement_id == keepStatementID) {
-                        e.color = e.originalColor;
-                    }
-                    else {
-                        e.color = '#ddd';
-                    }
-
-                });
-
-                // Make only those nodes visible that belong to the statement selected
-
-                sigma.instances(0).graph.nodes().forEach(function(n) {
-
-                    // Is there no contexts at all? Show the node.
-                    if (nodesOfStatement[keepStatementID].indexOf(n.id) < 0)  {
-                        n.color = '#ddd';
-                        n.label = '';
-                    }
-                    else {
-                        n.color = n.originalColor;
-                        n.label = n.originalLabel;
-                    }
-                });
-            }
-            else if (e.target.className == 'app-link-menu') {
-
-                 // Do nothing
-
-            }
-            else {
-
-                if (pinnedNodes.length == 0) {
-                    sigma.instances(0).graph.edges().forEach(function(e) {
-                            e.color = e.originalColor;
-                    });
-
-                    // Make only those nodes visible that belong to the statement selected
-
-                    sigma.instances(0).graph.nodes().forEach(function(n) {
-                            n.color = n.originalColor;
-                            n.label = n.originalLabel;
-                    });
-                }
-
-            }
-
-            sigma.instances(0).refresh();
 
         });
+
+
+
+        // Highlight statement if clicked once
+
 
 
 
