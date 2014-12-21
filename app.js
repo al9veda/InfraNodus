@@ -121,7 +121,7 @@ app.post('/api2/post',
     entries.submit);
 
 app.get('/contexts/:context?', pass.ensureAuthenticated, entries.list);
-app.get('/users/:user?', validate.getUserID(), entries.list);
+app.get('/users/:user?/:context?', validate.getUserID(), entries.list);
 app.get('/settings', pass.ensureAuthenticated, settings.render);
 app.post('/settings', pass.ensureAuthenticated, settings.modify);
 app.get('/import', pass.ensureAuthenticated, imports.render);
