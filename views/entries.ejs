@@ -60,7 +60,7 @@
                 <ul id="topmenuitems">
                     <% if (perceivername) { %>
                     <li class="pure-menu-selected-top">
-                        <a id="finds" class="switcher set1">view</a>
+                        <a id="finds" class="switcher set1">public view</a>
                     </li>
                     <% } else { %>
                     <li>
@@ -139,7 +139,7 @@
             <% }) %>
 
             <% if ((context && entries.length > 2) && (!perceivername)) { %>
-            <form action='/post' name='deletecontext' id="deletecontext" method='post' class='pure-form' onsubmit="return confirm('Deleting the context will delete all the statements inside. Are you sure?');">
+                <form action='/post' name='deletecontext' id="deletecontext" method='post' class='pure-form' onsubmit="return confirm('Deleting the context will delete all the statements inside. Are you sure?');">
 
                 <input type="hidden" name="context" value="<%= context %>">
                 <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
@@ -149,6 +149,19 @@
 
             </form>
             <% } %>
+                <form action='/context' name='privacycontext' id="privacycontext" method='post' class='pure-form' onsubmit="return confirm('You sure you want to change the privacy setting of this context?');">
+
+                    <input type="hidden" name="context" value="<%= context %>">
+                    &nbsp;<br>
+                    <% console.log('contextpublic?' + contextpublic); if (contextpublic && context) { %>
+                        <input type='submit' name="privacy" value="make private" class="pure-button pure-button-primary">
+                    <% } else { %>
+                        <input type='submit' name="privacy" value="make public" class="pure-button pure-button-primary">
+                    <% }  %>
+
+                </form>
+
+
         </div>
 
         <div id="graph-container"></div>

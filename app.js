@@ -124,7 +124,7 @@ app.post('/api2/post',
     validate.getContextForEntry('entry[body]'),
     entries.submit);
 
-app.get('/contexts/:context?', pass.ensureAuthenticated, entries.list);
+app.get('/contexts/:context?', pass.ensureAuthenticated, validate.getContextPrivacy(), entries.list);
 app.get('/users/:user?/:context?', validate.getUserID(), validate.getContextPrivacy(), entries.list);
 app.get('/settings', pass.ensureAuthenticated, settings.render);
 app.post('/settings', pass.ensureAuthenticated, settings.modify);
