@@ -127,7 +127,6 @@
             <% include messages %>
             <div id="messages"></div>
 
-            <% if ((!contextpublic && !perceivername) || (contextpublic && perceivername)) { %>
             <% entries.forEach(function(entry) { %>
                 <div class='entry' data-uid='<%= entry.uid %>' data-hashtags='<%= entry.name %>'>
                     <p class='entry-text'><%- entry.text %></p>
@@ -138,7 +137,6 @@
                     <div id='original' class='hidden'><%= entry.text %></div>
                 </div>
             <% }) %>
-            <% } %>
 
             <% if (context && entries.length > 2) { %>
             <form action='/post' name='deletecontext' id="deletecontext" method='post' class='pure-form' onsubmit="return confirm('Deleting the context will delete all the statements inside. Are you sure?');">

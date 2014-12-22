@@ -106,7 +106,7 @@ app.post(
 app.get('/api/user/nodes/:context?', api.nodes);
 
 // Internal API to get nodes and statements for somebody else's nodes in context
-app.get('/api/public/nodes/:user?/:context?', validate.getUserID(), api.nodes);
+app.get('/api/public/nodes/:user?/:context?', validate.getUserID(), validate.getContextPrivacy(), api.nodes);
 
 app.get('/api/user/statements/:context?', api.entries);
 
