@@ -88,10 +88,11 @@ exports.nodes = function(req, res, next){
     // And is there one to compare with also?
     if (req.query.addcontext) contexts.push(req.query.addcontext);
 
-    // Is the user logged in? Then he is the receiver
-    if (res.locals.user) {
+    // Is the user logged in? Then he is the receiver but ONLY when he's NOT requesting the public user view (even for himself)
+    if (res.locals.user && !req.params.user) {
         receiver = res.locals.user.uid;
     }
+
     // Is there user in the URL and we know their ID already? Then the receiver will see their graph...
     if (req.params.user && res.locals.viewuser) {
         perceiver = res.locals.viewuser;

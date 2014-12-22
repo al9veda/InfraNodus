@@ -37,7 +37,7 @@ exports.list = function(req, res, next){
 
     //res.locals.user = req.user;
 
-    // Is the user logged in? Then he is the receiver
+    // Is the user logged in? Then he is the receiver - this parameter is obtained through pass login check
     if (res.locals.user) {
         receiver = res.locals.user.uid;
     }
