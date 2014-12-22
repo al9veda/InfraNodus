@@ -29,6 +29,12 @@ exports.list = function(req, res, next){
 
     var perceivername = null;
 
+    var contextpublic = null;
+
+    if (res.locals.contextpublic) {
+        contextpublic = res.locals.contextpublic;
+    }
+
     //res.locals.user = req.user;
 
     // Is the user logged in? Then he is the receiver
@@ -64,7 +70,7 @@ exports.list = function(req, res, next){
         // Add links to @contexts and #hashtags
         for (var i = 0; i < entries.length; ++ i) {
               //entries[i].text = FlowdockText.autoLinkMentions(entries[i].text,{hashtagUrlBase:"/contexts/",hashtagClass:"app-context-link"});
-              entries[i].text = FlowdockText.autoLinkHashtags(entries[i].text,{hashtagUrlBase:"/concepts/",hashtagClass:"app-concept-link"});
+              //entries[i].text = FlowdockText.autoLinkHashtags(entries[i].text,{hashtagUrlBase:"/concepts/",hashtagClass:"app-concept-link"});
               entries[i].text = FlowdockText.autoLinkUrlsCustom(entries[i].text,{class:"app-url-link",target:"_blank"});
         }
 
@@ -83,6 +89,7 @@ exports.list = function(req, res, next){
             context: contexts[0],
             addcontext: req.query.addcontext,
             perceivername: perceivername,
+            contextpublic: contextpublic,
             url: req.query.url,
             urltitle: req.query.urltitle
         });
