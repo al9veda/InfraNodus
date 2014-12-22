@@ -58,8 +58,13 @@
 
             <div id='switcher-selector' class='pure-menu pure-menu-open pure-menu-horizontal'>
                 <ul id="topmenuitems">
+                    <% if (perceivername) { %>
+                    <li class="pure-menu-selected-top">
+                        <a id="finds" class="switcher set1">view</a>
+                    </li>
+                    <% } else { %>
                     <li>
-                        <a id="finds" class="switcher set1">find</a>
+                        <a id="finds" class="switcher set1">view</a>
                     </li>
                     <li class="pure-menu-selected-top">
                         <a id="adds" class="switcher set1">add</a>
@@ -67,6 +72,9 @@
                     <li>
                         <a id="imports" href="/import">import</a>
                     </li>
+
+                    <% }  %>
+
                 </ul>
             </div>
 
@@ -75,9 +83,13 @@
 
             <div id="switcher-panel"></div>
 
-            <!-- form to add, later do import here -->
 
+            <!-- form to add, later do import here -->
+            <% if (!perceivername) { %>
             <div id="adds-content" class="switcher-content set1 show">
+            <% } else { %>
+            <div id="adds-content" class="switcher-content set1">
+            <% } %>
                 <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
                         <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here to visualize the words and their connections, you can also use #hashtags and @mentions.'><% if (url) { %><%= urltitle %> <%= url %> @bookmarks<% } %></textarea>
@@ -94,10 +106,14 @@
 
             </div>
 
+
+
             <!-- form to find -->
-
-            <div id="finds-content" class="switcher-content set1">
-
+            <% if (perceivername) { %>
+                <div id="finds-content" class="switcher-content set1 show">
+            <% } else { %>
+                <div id="finds-content" class="switcher-content set1">
+            <% } %>
                 <form class="pure-form" id="searchform">
                     <input type="text" id="search" size="17" maxlength="20" class="pure-input" placeholder="search...">
                     &nbsp;&nbsp;
