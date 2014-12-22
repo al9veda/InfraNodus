@@ -31,8 +31,8 @@
     <div id="menu">
         <div class="pure-menu pure-menu-open">
         <% if (locals.user || perceivername) { %>
-            <% if (perceivername && !locals.user) { %>
-            <a class="pure-menu-heading" href="/"><%= perceivername %></a>
+            <% if (perceivername) { %>
+            <a class="pure-menu-heading" href="/users/<%= perceivername %>"><%= perceivername %></a>
             <% } else { %>
             <a class="pure-menu-heading" href="/"><%= user.name %></a>
             <% } %>
@@ -1499,7 +1499,17 @@ sigma.parsers.json(
 
         var context_filters = '';
 
-        var currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/">all contexts</a></li>';
+        var currentContextURL = '';
+
+        <% if (perceivername) { %>
+
+            currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/users/<%= perceivername %>">all contexts</a></li>';
+
+        <% } else { %>
+
+            currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/">all contexts</a></li>';
+
+        <% } %>
 
         var addNewContext = '';
 
@@ -1510,13 +1520,24 @@ sigma.parsers.json(
             contextNames.forEach(function(n) {
                 if (n == current_context) {
                     // for the menu
-                    context_filters += '<li class="app-context-link menu-item-divided pure-menu-selected"><a href="/contexts/' + n + '">' + n + '</a></li>';
-                    currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/">all contexts</a></li>';
+                    <% if (perceivername) { %>
+                        context_filters += '<li class="app-context-link menu-item-divided pure-menu-selected"><a href="/users/<%= perceivername %>/' + n + '">' + n + '</a></li>';
+                        currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/users/<%= perceivername %>">all contexts</a></li>';
+                    <% } else { %>
+                        context_filters += '<li class="app-context-link menu-item-divided pure-menu-selected"><a href="/contexts/' + n + '">' + n + '</a></li>';
+                        currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/">all contexts</a></li>';
+                    <% } %>
 
                 }
                 else {
                     // for the menu
-                    context_filters += '<li class="app-context-link menu-item-divided "><a href="/contexts/' + n + '">' + n + '</a></li>';
+                    <% if (perceivername) { %>
+                        context_filters += '<li class="app-context-link menu-item-divided "><a href="/users/<%= perceivername %>/' + n + '">' + n + '</a></li>';
+                    <% } else { %>
+                        context_filters += '<li class="app-context-link menu-item-divided "><a href="/contexts/' + n + '">' + n + '</a></li>';
+
+                    <% } %>
+
                     // for the statement add
                 }
             });
@@ -1530,12 +1551,23 @@ sigma.parsers.json(
 
         search_field = '';
 
-        auxLinks = '<br>' +
-                   '<li class="menu-item-small"><a href="/logout">logout</a></li>' +
-                   '<li class="menu-item-small"><a href="/settings">settings</a></li>' +
-                   '<li class="menu-item-small"><a href="/import">import</a></li>' +
-                   '<li class="menu-item-small"><a href="/api/user/nodes/<%= context %>?gexf=1" target="_blank">export</a></li>' +
+        <% if (perceivername) { %>
+
+            auxLinks = '<br>' +
+                   '<li class="menu-item-small"><a href="/">back to main page</a></li>' +
+                   '<li class="menu-item-small"><a href="/api/public/nodes/<%= perceivername %>/<%= context %>?gexf=1" target="_blank">export</a></li>' +
                    '<li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">help &amp; github</a></li>';
+
+        <% } else { %>
+
+            auxLinks = '<br>' +
+                    '<li class="menu-item-small"><a href="/logout">logout</a></li>' +
+                    '<li class="menu-item-small"><a href="/settings">settings</a></li>' +
+                    '<li class="menu-item-small"><a href="/import">import</a></li>' +
+                    '<li class="menu-item-small"><a href="/api/user/nodes/<%= context %>?gexf=1" target="_blank">export</a></li>' +
+                    '<li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">help &amp; github</a></li>';
+
+        <% } %>
 
         document.getElementById('contexts').innerHTML = search_field +
                                                         currentContextURL +
