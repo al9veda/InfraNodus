@@ -225,10 +225,10 @@ exports.submit = function(req, res, next){
                 }
                 else {
                     if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
-                        res.redirect('/');
+                        res.redirect('/' + res.locals.user.name + '/edit');
                     }
                     else {
-                        res.redirect('/contexts/' + default_context);
+                        res.redirect(res.locals.user.name + '/' + default_context + '/edit');
                     }
 
                 }

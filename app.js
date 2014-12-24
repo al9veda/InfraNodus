@@ -82,8 +82,11 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/register', register.form);
-app.post('/register', register.submit);
+
+// First we declare all the static paths in the script
+
+app.get('/signup', register.form);
+app.post('/signup', register.submit);
 app.get('/login', login.form);
 
 // POST /login
@@ -130,8 +133,6 @@ app.post('/api2/post',
     validate.getContextForEntry('entry[body]'),
     entries.submit);
 
-app.get('/contexts/:context?', pass.ensureAuthenticated, validate.getContextPrivacy(), entries.list);
-app.get('/users/:user?/:context?', validate.getUserID(), validate.getContextPrivacy(), entries.list);
 app.get('/settings', pass.ensureAuthenticated, settings.render);
 app.post('/settings', pass.ensureAuthenticated, settings.modify);
 app.get('/import', pass.ensureAuthenticated, imports.render);
@@ -140,6 +141,12 @@ app.post('/import', pass.ensureAuthenticated, imports.submit);
 app.get('/evernote_oauth', oauths.oauth);
 app.get('/evernote_oauth_callback', oauths.oauth_callback);
 app.get('/evernote_clear', oauths.clear);
+
+// From here we declare all the dynamic paths at the first level of the content tree
+
+app.get('/:user/edit', pass.ensureAuthenticated, entries.list);
+app.get('/:user/:context?/edit', pass.ensureAuthenticated, validate.getContextPrivacy(), entries.list);
+app.get('/:user/:context?', validate.getUserID(), validate.getContextPrivacy(), entries.list);
 
 app.get('/', pass.ensureAuthenticated, entries.list);
 
