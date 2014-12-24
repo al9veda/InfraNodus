@@ -153,9 +153,9 @@
 
                     <input type="hidden" name="context" value="<%= context %>">
                     &nbsp;<br>
-                    <% console.log('contextpublic?' + contextpublic); if (contextpublic && context) { %>
+                    <% if (contextpublic && context && !perceivername) { %>
                         <input type='submit' name="privacy" value="make private" class="pure-button pure-button-primary">
-                    <% } else { %>
+                    <% } else if (!perceivername) { %>
                         <input type='submit' name="privacy" value="make public" class="pure-button pure-button-primary">
                     <% }  %>
 

@@ -102,6 +102,12 @@ app.post(
     entries.submit
 );
 
+app.post(
+    '/context',
+    pass.ensureAuthenticated,
+    validate.changeContextPrivacy()
+);
+
 // Internal API to get nodes and statements for user's own nodes
 app.get('/api/user/nodes/:context?', api.nodes);
 
