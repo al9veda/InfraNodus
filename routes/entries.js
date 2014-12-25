@@ -28,7 +28,7 @@ exports.list = function(req, res, next){
     var perceiver = '';
 
     var perceivername = null;
-
+    console.log('started here');
     var contextpublic = null;
 
     if (res.locals.contextpublic) {
