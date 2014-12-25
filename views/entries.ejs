@@ -1507,7 +1507,7 @@ sigma.parsers.json(
 
     function populateContextMenu (contextNames,nodeNames) {
 
-        var search_field = '';
+        var switch_field = '';
 
         var context_filters = '';
 
@@ -1556,12 +1556,40 @@ sigma.parsers.json(
         }
         // No graph, so show private
         else {
-            context_filters += '<li class="app-context-link menu-item-divided"><a href="/<%= user.name %>/private/edit">private</a></li>';
+            context_filters += '<li class="app-context-link menu-item-divided"><a href="/<%= perceivername %>/private/edit">private</a></li>';
         }
 
         addNewContext = '<li id="addNewContext" class="menu-item-divided"><a href="javascript:">+</a></li><li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
 
-        search_field = '';
+
+        <% if (perceivername) { %>
+
+            <% if (context) { %>
+
+                switch_field = '<li class="menu-item-small"><a href="/<%= perceivername %>/<%= context %>/edit">go to private view</a></li>';
+
+            <% } else { %>
+
+                switch_field = '<li class="menu-item-small"><a href="/<%= perceivername %>/edit">go to private view</a></li>';
+
+            <% } %>
+
+
+        <% } else { %>
+
+        <% if (context) { %>
+
+                switch_field = '<li class="menu-item-small"><a href="/<%= user.name %>/<% context %>">go to public view</a></li>';
+
+            <% } else { %>
+
+                switch_field = '<li class="menu-item-small"><a href="/<%= user.name %>">go to public view</a></li>';
+
+            <% } %>
+
+
+        <% } %>
+
 
         <% if (perceivername) { %>
 
@@ -1581,7 +1609,7 @@ sigma.parsers.json(
 
         <% } %>
 
-        document.getElementById('contexts').innerHTML = search_field +
+        document.getElementById('contexts').innerHTML = switch_field +
                                                         currentContextURL +
                                                         context_filters +
                                                         addNewContext +
