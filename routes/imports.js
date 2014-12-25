@@ -96,6 +96,8 @@ exports.submit = function(req, res,  next) {
 
     var user_id = res.locals.user.uid;
 
+    var user_name = res.locals.user.name;
+
     // What will we analyze?
     var service = req.body.source;
 
@@ -359,7 +361,7 @@ exports.submit = function(req, res,  next) {
 
                             // Move on to the next one
 
-                            res.redirect('/contexts/' + default_context);
+                            res.redirect(res.locals.user.name + '/' + default_context + '/edit');
                         }
 
 
@@ -465,7 +467,7 @@ exports.submit = function(req, res,  next) {
 
                             // Move on to the next one
 
-                            res.redirect('/contexts/' + default_context);
+                            res.redirect(res.locals.user.name + '/' + default_context + '/edit');
                         }
 
 
@@ -868,7 +870,7 @@ exports.submit = function(req, res,  next) {
 
                             // Move on to the next one
 
-                            res.redirect('/contexts/' + default_context);
+                            res.redirect(res.locals.user.name + '/' + default_context + '/edit');
                         }
 
                     });

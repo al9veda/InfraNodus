@@ -2,9 +2,9 @@
     <div class="pure-menu pure-menu-open">
 
         <% if (locals.user) { %>
-        <a class="pure-menu-heading" href="/"><%= user.name %></a>
+        <a class="pure-menu-heading" href="/<%= user.name %>/edit"><%= user.name %></a>
         <ul>
-            <li class="menu-item-divided"><a href="/">all lists</a></li>
+            <li class="menu-item-divided"><a href="/<%= user.name %>/edit">all contexts</a></li>
             <li><a href="/logout">logout</a></li>
         </ul>
         <% } else { %>

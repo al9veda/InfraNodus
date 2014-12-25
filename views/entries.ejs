@@ -1556,7 +1556,7 @@ sigma.parsers.json(
         }
         // No graph, so show private
         else {
-            context_filters += '<li class="app-context-link menu-item-divided"><a href="/contexts/private">private</a></li>';
+            context_filters += '<li class="app-context-link menu-item-divided"><a href="/<%= user.name %>/private/edit">private</a></li>';
         }
 
         addNewContext = '<li id="addNewContext" class="menu-item-divided"><a href="javascript:">+</a></li><li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
