@@ -37,6 +37,7 @@ exports.list = function(req, res, next){
 
     //res.locals.user = req.user;
 
+    // TODO change that so it can really work when the user is logged in but is not viewing his own stuff
     // Is the user logged in? Then he is the receiver - this parameter is obtained through pass login check
     if (res.locals.user) {
         receiver = res.locals.user.uid;
