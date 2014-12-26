@@ -753,6 +753,27 @@ sigma.parsers.json(
 
         });
 
+        // Autocomplete for search input
+        $("#search").autocomplete({
+            source: nodeNames,
+            minLength: 1,
+            delay: 500,
+            messages: {
+                noResults: '',
+                results: function() {}
+            },
+            select: function(event, ui) {
+
+                var filter = ui.item.value;
+
+
+
+            }
+
+        });
+
+        search_graph();
+
         // Make texarea automatically resizeable
         $('textarea').autosize();
 
