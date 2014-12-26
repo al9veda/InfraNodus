@@ -1694,10 +1694,39 @@ sigma.parsers.json(
 
         <% if (perceivername) { %>
 
-            auxLinks = '<br>' +
-                   '<li class="menu-item-small"><a href="/">back to main page</a></li>' +
-                   '<li class="menu-item-small"><a href="/api/public/nodes/<%= perceivername %>/<%= context %>?gexf=1" target="_blank">export</a></li>' +
-                   '<li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">help &amp; github</a></li>';
+            <% if (perceivername == receivername) { %>
+
+                auxLinks = '<br>' +
+                        '<li class="menu-item-small"><a href="/<%= perceivername %>/edit">back to private view</a></li>' +
+                        '<li class="menu-item-small">&nbsp;</li>' +
+                        '<li class="menu-item-small"><a href="/logout">logout</a></li>' +
+                        '<li class="menu-item-small"><a href="/settings">settings</a></li>' +
+                        '<li class="menu-item-small"><a href="/import">import</a></li>' +
+                        '<li class="menu-item-small"><a href="/api/public/nodes/<%= perceivername %>/<%= context %>?gexf=1" target="_blank">export</a></li>' +
+                        '<li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">help &amp; github</a></li>';
+
+
+            <% } else if (receivername) { %>
+
+                auxLinks = '<br>' +
+                        '<li class="menu-item-small"><a href="/<%= receivername %>/edit">back to <%= receivername %></a></li>' +
+                        '<li class="menu-item-small">&nbsp;</li>' +
+                        '<li class="menu-item-small"><a href="/settings">settings</a></li>' +
+                        '<li class="menu-item-small"><a href="/import">import</a></li>' +
+                        '<li class="menu-item-small"><a href="/api/user/nodes/<%= context %>?gexf=1" target="_blank">export</a></li>' +
+                        '<li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">help &amp; github</a></li>';
+
+
+            <% } else { %>
+
+                auxLinks = '<br>' +
+                        '<li class="menu-item-small"><a href="/login">login</a></li>' +
+                        '<li class="menu-item-small"><a href="/signup">signup</a></li>' +
+                        '<li class="menu-item-small">&nbsp;</li>' +
+                        '<li class="menu-item-small"><a href="/api/user/nodes/<%= context %>?gexf=1" target="_blank">export</a></li>' +
+                        '<li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">help &amp; github</a></li>';
+
+            <% } %>
 
         <% } else { %>
 
