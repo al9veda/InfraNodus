@@ -55,14 +55,11 @@
 
         <div id='statements'>
 
+            <% if (!perceivername) { %>
 
             <div id='switcher-selector' class='pure-menu pure-menu-open pure-menu-horizontal'>
                 <ul id="topmenuitems">
-                    <% if (perceivername) { %>
-                    <li class="pure-menu-selected-top">
-                        <a id="finds" class="switcher set1">public view</a>
-                    </li>
-                    <% } else { %>
+
                     <li>
                         <a id="finds" class="switcher set1">view</a>
                     </li>
@@ -73,12 +70,16 @@
                         <a id="imports" href="/import">import</a>
                     </li>
 
-                    <% }  %>
+
 
                 </ul>
             </div>
 
+
             <br>
+
+            <% }  %>
+
             <!-- the panel to show content -->
 
             <div id="switcher-panel"></div>
@@ -222,19 +223,30 @@ var statementsOfContext = [];
 
 var current_context_field = [];
 
+var jsonpath = '';
+
+var addcontext = '';
+
 // Path to the JSON graph file (specific context or a general one)
     <% if (addcontext) { %>
-        var jsonpath = '/api/user/nodes/<%= context %>?addcontext=<%= addcontext %>';
-        var addcontext = "<%= addcontext %>";
+        jsonpath = '/api/user/nodes/<%= context %>?addcontext=<%= addcontext %>';
+        addcontext = "<%= addcontext %>";
 
     <% } else if (showcontexts) { %>
-        var jsonpath = '/api/user/nodes/<%= context %>?showcontexts=<%= showcontexts %>';
-        var addcontext = "";
+        jsonpath = '/api/user/nodes/<%= context %>?showcontexts=<%= showcontexts %>';
+        addcontext = "";
 
     <% } else { %>
-        var jsonpath = '/api/user/nodes/<%= context %>';
-        var addcontext = "";
+        jsonpath = '/api/user/nodes/<%= context %>';
+        addcontext = "";
     <% }  %>
+
+
+// Is the user going to look at somebody else's graph?
+
+    <% if (perceivername) { %>
+        jsonpath = '/api/public/nodes/<%= perceivername %>/<%= context %>';
+    <% } %>
 
 
 // Get current context
@@ -249,12 +261,6 @@ var notfoundNodes = [];
 // Whats the clicked nodes in the graph
 var clickedNodes = [];
 
-
-// Is the user going to look at somebody else's graph?
-
-<% if (perceivername) { %>
-    jsonpath = '/api/public/nodes/<%= perceivername %>/<%= context %>';
-<% } %>
 
 
 // The button to hide / show statements
@@ -1627,21 +1633,29 @@ sigma.parsers.json(
 
         addNewContext = '<li id="addNewContext" class="menu-item-divided"><a href="javascript:">+</a></li><li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
 
+        // We are viewing the user's public page?
 
-        <% if (perceivername) { %>
+        <% if ((perceivername)) { %>
+
+            // So we know whose statements we see, but is it the same as the user who's viewing them?
+            <% if (perceivername == receivername) { %>
 
             <% if (context) { %>
-
                 switch_field = '<li class="menu-item-small"><a href="/<%= perceivername %>/<%= context %>/edit">go to private view</a></li>';
+            <% } else { %>
+                switch_field = '<li class="menu-item-small"><a href="/<%= perceivername %>/edit">go to private view</a></li>';
+            <% } %>
 
+            // So we know whose statements we're going to view, but the user is not the same as the one who made them.
             <% } else { %>
 
-                switch_field = '<li class="menu-item-small"><a href="/<%= perceivername %>/edit">go to private view</a></li>';
+
 
             <% } %>
 
+        // We are viewing the user's private page
 
-        <% } else { %>
+        <% } else {  %>
 
         <% if (context) { %>
 

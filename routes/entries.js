@@ -24,36 +24,40 @@ exports.list = function(req, res, next){
 
     // The one who sees the statements (hello Tengo @1Q84 #Murakami)
     var receiver = '';
+
     // The one who made the statements (hello Fuka-Eri @1Q84 #Murakami)
     var perceiver = '';
+
+    var receivername = null;
 
     var perceivername = null;
 
     var contextpublic = null;
 
+    // We checked the context using validate.getContextPrivacy() function and got the variable for it
     if (res.locals.contextpublic) {
         contextpublic = res.locals.contextpublic;
     }
 
-    //res.locals.user = req.user;
-
-    // TODO change that so it can really work when the user is logged in but is not viewing his own stuff
-    // Is the user logged in? Then he is the receiver - this parameter is obtained through pass login check
+    // If the user is logged in then we know the ID and the name of the user who is viewing
     if (res.locals.user) {
-        receiver = res.locals.user.uid;
+        if (!res.locals.user.publicview) {
+            receiver = res.locals.user.uid;
+        }
+        receivername = res.locals.user.name;
+
     }
-    // Is there user in the URL and we know their ID already? Then the receiver will see their graph...
+
+    // Is there user name in the requested URL AND we know their ID already? Then the entries of that user will be shown
     if (req.params.user && res.locals.viewuser) {
         perceiver = res.locals.viewuser;
         perceivername = req.params.user;
     }
-    // Otherwise they see their own
-    else {
-        if (res.locals.user) {
-            perceiver = res.locals.user.uid;
-        }
-    }
 
+
+    console.log('wtf');
+    console.log(receiver);
+    console.log(perceiver);
     // Let's see what context the user wants to view if there is one
 
     var contexts = [];
@@ -75,8 +79,8 @@ exports.list = function(req, res, next){
               entries[i].text = FlowdockText.autoLinkUrlsCustom(entries[i].text,{class:"app-url-link",target:"_blank"});
         }
 
-        console.log("Showing statements for user "+ receiver);
-        console.log("Statements made by "+ perceiver);
+        console.log("Showing statements to user " + receiver);
+        console.log("Statements made by " + perceiver);
 
         for (var s=0;s<contexts.length;++s) {
             if (contexts[s] == 'undefined' || typeof contexts[s] === 'undefined') {
@@ -90,6 +94,7 @@ exports.list = function(req, res, next){
             context: contexts[0],
             addcontext: req.query.addcontext,
             perceivername: perceivername,
+            receivername: receivername,
             contextpublic: contextpublic,
             showcontexts: req.query.showcontexts,
             url: req.query.url,

@@ -72,8 +72,6 @@ exports.nodes = function(req, res, next){
     // Give this user a variable
     res.locals.user = req.user;
 
-    console.log(req.user);
-
     // Do we want to see graphs that include "near" 4-word gap scan?
 
     if (res.locals.user) {
@@ -99,6 +97,7 @@ exports.nodes = function(req, res, next){
     if (req.params.user && res.locals.viewuser) {
         perceiver = res.locals.viewuser;
     }
+
     // Otherwise they see their own
     else {
         if (res.locals.user) {
