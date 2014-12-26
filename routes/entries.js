@@ -28,7 +28,7 @@ exports.list = function(req, res, next){
     var perceiver = '';
 
     var perceivername = null;
-    console.log('started here');
+
     var contextpublic = null;
 
     if (res.locals.contextpublic) {
@@ -91,6 +91,7 @@ exports.list = function(req, res, next){
             addcontext: req.query.addcontext,
             perceivername: perceivername,
             contextpublic: contextpublic,
+            showcontexts: req.query.showcontexts,
             url: req.query.url,
             urltitle: req.query.urltitle
         });

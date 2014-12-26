@@ -61,6 +61,8 @@ exports.nodes = function(req, res, next){
 
     var contexts = [];
 
+    var showcontexts = '';
+
     // The one who sees the statements (hello Tengo @1Q84 #Murakami)
     var receiver = '';
     // The one who made the statements (hello Fuka-Eri @1Q84 #Murakami)
@@ -104,7 +106,13 @@ exports.nodes = function(req, res, next){
         }
     }
 
-    Entry.getNodes(receiver, perceiver, contexts, fullview, function(err, graph){
+    // Shall we modify the Nodes query, so we can see the contexts?
+
+    if (req.query.showcontexts) {
+        showcontexts = req.query.showcontexts;
+    }
+
+    Entry.getNodes(receiver, perceiver, contexts, fullview, showcontexts, function(err, graph){
         if (err) return next(err);
 
         // Change the result we obtained into a nice json we need

@@ -226,6 +226,11 @@ var current_context_field = [];
     <% if (addcontext) { %>
         var jsonpath = '/api/user/nodes/<%= context %>?addcontext=<%= addcontext %>';
         var addcontext = "<%= addcontext %>";
+
+    <% } else if (showcontexts) { %>
+        var jsonpath = '/api/user/nodes/<%= context %>?showcontexts=<%= showcontexts %>';
+        var addcontext = "";
+
     <% } else { %>
         var jsonpath = '/api/user/nodes/<%= context %>';
         var addcontext = "";
@@ -305,11 +310,16 @@ sigma.parsers.json(
             // Sigma requires that nodes have X, Y, Size and Color properties which our JSON doesn't have. So we add them.
             // We also make the initial graph layout circular, so that ForceAtlas always looks the same
 
+            var maxnodesize = 0;
+
             for (i = 0; i < len; i++) {
+                var nodesize = 0;
                 var angle = Math.PI * 2 * i / len;
                 nodes[i].x = Math.cos(angle);
                 nodes[i].y = Math.sin(angle);
                 nodes[i].size = sigma.graph.degree(nodes[i].id);
+                nodesize = nodes[i].size;
+                if (maxnodesize < nodesize) maxnodesize = nodesize;
                 nodes[i].color = color_context;
             }
 
@@ -393,6 +403,7 @@ sigma.parsers.json(
                 }
 
 
+
                 // Save node's default color, for hide and show later
                 n.originalColor = n.color;
                 n.originalLabel = n.label;
@@ -414,7 +425,62 @@ sigma.parsers.json(
             // Get the context names - all the contexts that exist in the graph we just loaded
             contextNames = _.keys(contextNodeID);
 
+
+
+            // Now we get the context IDs from the graph - a little bit of a workaround
+            var suspects = [];
+            var nonsuspects = [];
+
+            sigma.graph.edges().forEach(function(e) {
+
+                // If an edge has a context prefix, one of its nodes is a context, but we don't know which yet
+
+                if (e.id.substr(0,7) == 'context') {
+                        if (suspects.indexOf(e.source) < 0) {
+                            suspects.push(e.source);
+                        }
+
+                        if (suspects.indexOf(e.target) < 0) {
+                            suspects.push(e.target);
+                        }
+
+                }
+
+                // If an edge doesn't have prefix context, for sure it has only nodes
+                else {
+                        if (nonsuspects.indexOf(e.source) < 0) {
+                            nonsuspects.push(e.source);
+                        }
+
+                        if (nonsuspects.indexOf(e.target) < 0) {
+                            nonsuspects.push(e.target);
+                        }
+                }
+
+
+
+            });
+
+            // Find the difference between two arrays above, so we get contexts only
+            var contextids = _.difference(suspects, nonsuspects);
+
+
+            // Now show those nodes that are contexts bigger and with a special label
+
+            for (i = 0; i < len; i++) {
+
+                if (contextids.indexOf(nodes[i].id) > -1) {
+                    nodes[i].size = maxnodesize;
+                    nodes[i].originalLabel = 'context: ' + nodes[i].originalLabel;
+                    nodes[i].label = 'context: ' + nodes[i].label;
+                }
+
+
+            }
+
+
             // Put the contexts into the menu
+
             populateContextMenu(contextNames,nodeNames);
 
 
