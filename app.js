@@ -147,7 +147,6 @@ app.get('/evernote_clear', oauths.clear);
 app.get('/:user/edit', pass.ensureAuthenticated, entries.list);
 app.get('/:user/:context?/edit', pass.ensureAuthenticated, validate.getContextPrivacy(), entries.list);
 app.get('/:user/:context?', pass.checkUser, validate.getUserID(), validate.getContextPrivacy(), entries.list);
-//TODO change that
 app.get('/', validate.getDefaultUser(), validate.getContextPrivacy(), entries.list);
 
 

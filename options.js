@@ -32,7 +32,9 @@ exports.settings = {
     min_text_length: 4,
 
     // Max number of tags in one statement
-    max_hashtags: 100
+    max_hashtags: 100,
+
+
 
 }
 
@@ -58,6 +60,8 @@ if (fs.existsSync(configPath)) {
                         "@" + parsed['neo4j']['host'];
 
     exports.invite = parsed['secrets']['invitation'];
+
+    exports.default_user = parsed['infranodus']['default_user'];
 
 
 }

@@ -9,6 +9,10 @@
         "invitation": "secretcode"
     },
 
+    "infranodus": {
+        "default_user": ""
+    },
+
     "evernote": {
         "API_CONSUMER_KEY" : "app_name",
         "API_CONSUMER_SECRET" : "app_secret",
