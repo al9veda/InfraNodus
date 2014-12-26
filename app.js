@@ -148,7 +148,7 @@ app.get('/:user/edit', pass.ensureAuthenticated, entries.list);
 app.get('/:user/:context?/edit', pass.ensureAuthenticated, validate.getContextPrivacy(), entries.list);
 app.get('/:user/:context?', validate.getUserID(), validate.getContextPrivacy(), entries.list);
 //TODO change that
-app.get('/d', validate.getDefaultUser(), validate.getContextPrivacy(), entries.list);
+app.get('/', validate.getDefaultUser(), validate.getContextPrivacy(), entries.list);
 
 
 
