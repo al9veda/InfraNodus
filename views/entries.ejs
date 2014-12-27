@@ -245,7 +245,15 @@ var addcontext = '';
 // Is the user going to look at somebody else's graph?
 
     <% if (perceivername) { %>
-        jsonpath = '/api/public/nodes/<%= perceivername %>/<%= context %>';
+        <% if (showcontexts && maxnodes) { %>
+            jsonpath = '/api/public/nodes/<%= perceivername %>/<%= context %>?showcontexts=<%= showcontexts %>&maxnodes=<%= maxnodes %>';
+        <% } else if (showcontexts) { %>
+            jsonpath = '/api/public/nodes/<%= perceivername %>/<%= context %>?showcontexts=<%= showcontexts %>';
+        <% } else if (maxnodes) { %>
+            jsonpath = '/api/public/nodes/<%= perceivername %>/<%= context %>?maxnodes=<%= maxnodes %>';
+        <% } else  { %>
+            jsonpath = '/api/public/nodes/<%= perceivername %>/<%= context %>';
+    <% } %>
     <% } %>
 
 
