@@ -35,7 +35,7 @@ exports.settings = {
     max_hashtags: 100,
 
     // Max nodes to show in a graph
-    max_nodes: 80
+    max_nodes: 20
 
 
 }
