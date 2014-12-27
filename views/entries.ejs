@@ -260,6 +260,8 @@ var addcontext = '';
 // Get current context
 var path = window.location.pathname;
 var current_context = '<%= context %>';
+var current_user = path.replace(/^\/([^\/]*).*$/, '$1');
+
 
 // These are the nodes clicked in the graph
 var pinnedNodes = [];
@@ -570,43 +572,52 @@ sigma.parsers.json(
 
             sigma.bind('clickNode', function(e) {
 
+
+
                 var nodeLabel = e.data.node.originalLabel;
 
-                // Was the node clicked already? No? Add it to array of clicked nodes.
-                // Highlight the clicked node in the text.
 
-                if (splicedNodes.length > 1) {
-                     pinnedNodes = [];
-                     for (var p = 0; p < splicedNodes.length; p++ ){
-                         pinnedNodes[p] = splicedNodes[p];
-                     }
-                }
-                else if (splicedNodes.length == 1) {
-                    pinnedNodes = [];
-                    pinnedNodes[0] = splicedNodes[0];
-                    splicedNodes = [];
-                }
-
-                if (pinnedNodes.indexOf(nodeLabel) < 0) {
-                    pinnedNodes.push(nodeLabel);
+                if (nodeLabel.substr(0,9) == 'context: ') {
+                    window.open('/' + current_user + '/' + nodeLabel.substr(9,nodeLabel.length) + '<% if (!perceivername) { %>/edit<% } %>',"_self");
                 }
                 else {
-                    var pinnedIndex = pinnedNodes.indexOf(nodeLabel);
-                    if (pinnedIndex > -1) {
-                        pinnedNodes.splice(pinnedIndex,1);
-                        $('.entry').fadeIn(400);
+
+                    // Was the node clicked already? No? Add it to array of clicked nodes.
+                    // Highlight the clicked node in the text.
+
+                    if (splicedNodes.length > 1) {
+                         pinnedNodes = [];
+                         for (var p = 0; p < splicedNodes.length; p++ ){
+                             pinnedNodes[p] = splicedNodes[p];
+                         }
+                    }
+                    else if (splicedNodes.length == 1) {
+                        pinnedNodes = [];
+                        pinnedNodes[0] = splicedNodes[0];
+                        splicedNodes = [];
                     }
 
+                    if (pinnedNodes.indexOf(nodeLabel) < 0) {
+                        pinnedNodes.push(nodeLabel);
+                    }
+                    else {
+                        var pinnedIndex = pinnedNodes.indexOf(nodeLabel);
+                        if (pinnedIndex > -1) {
+                            pinnedNodes.splice(pinnedIndex,1);
+                            $('.entry').fadeIn(400);
+                        }
+
+                    }
+
+                    // console.log("node clicked, now will filter for nodes " + pinnedNodes);
+
+
+
+
+                    // Now show / hide statements that have the search field
+
+                    filter_statements(pinnedNodes);
                 }
-
-                // console.log("node clicked, now will filter for nodes " + pinnedNodes);
-
-
-
-
-                // Now show / hide statements that have the search field
-
-                filter_statements(pinnedNodes);
 
 
             });
