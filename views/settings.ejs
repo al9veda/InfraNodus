@@ -57,6 +57,13 @@
                     </label>
                     <br>
 
+                    Graph shows only
+                    <label for="graph-view" class="pure-radio">
+                        <input type="text" id="graph-view" size="4" maxlength="4" class="pure-input" name="maxnodes" placeholder="" value="<% if (!user.maxnodes) { %>100<% } else { %><%=user.maxnodes%><% } %>">
+                        max number of nodes
+                    </label>
+                    <br>
+
                     Visualize in the graph
                     <label for="hashnodes1" class="pure-radio">
                         <input id="hashnodes1" type="radio" name="hashnodes" value="0" <% if (user.hashnodes=='0') { %> checked <% } %>>
@@ -69,7 +76,7 @@
                     </label>
 
                     <label for="hashnodes3" class="pure-radio">
-                        <input id="hashnodes3" type="radio" name="hashnodes" value="1" <% if (user.hashnodes=='2') { %> checked <% } %>>
+                        <input id="hashnodes3" type="radio" name="hashnodes" value="2" <% if (user.hashnodes=='2') { %> checked <% } %>>
                         only #hashtags, ignore words
                     </label>
 

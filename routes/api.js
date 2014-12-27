@@ -111,7 +111,7 @@ exports.nodes = function(req, res, next){
         showcontexts = req.query.showcontexts;
     }
 
-    Entry.getNodes(receiver, perceiver, contexts, fullview, showcontexts, function(err, graph){
+    Entry.getNodes(receiver, perceiver, contexts, fullview, showcontexts, res, function(err, graph){
         if (err) return next(err);
 
         // Change the result we obtained into a nice json we need

@@ -14,6 +14,7 @@
  */
 
 var User = require('../lib/user');
+var options = require('../options');
 
 
 // GET request to the /settings page (view settings)
@@ -39,8 +40,17 @@ exports.modify = function(req, res) {
 
     var hashnodes = req.body.hashnodes;
 
+    var maxnodes = options.settings.max_nodes;
 
-    User.modifySettings(user_id, fullscan, fullview, morphemes, hashnodes, function (err, answer) {
+    if (isInt(req.body.maxnodes)) {
+        maxnodes = req.body.maxnodes;
+    }
+
+    function isInt(value) {
+        return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
+    }
+
+    User.modifySettings(user_id, fullscan, fullview, morphemes, hashnodes, maxnodes, function (err, answer) {
 
         // Error? Go back and display it.
 
