@@ -976,6 +976,10 @@ exports.submit = function(req, res,  next) {
 
                                                     var $ = cheerio.load(result);
 
+                                                    searchQuery = searchQuery.replace(/\./g, "");
+
+                                                    searchQuery = searchQuery.replace(/\,/g, "");
+
                                                     $(".kltat").each(function() {
 
                                                         var link = $(this);
@@ -985,6 +989,8 @@ exports.submit = function(req, res,  next) {
 
                                                         text = text.replace(/\,/g, "");
 
+
+
                                                         var statement = 'people search for #' + searchQuery.replace(/ /g,"_") + ' and #' + text.replace(/ /g,"_") + ' together';
 
                                                         req.body.entry.body = statement;
@@ -993,60 +999,7 @@ exports.submit = function(req, res,  next) {
                                                     });
 
 
-
-
-                                                    $(".klitem").each(function() {
-
-                                                        var graphlink = $(this).attr('href');
-
-                                                        console.log('opening link ' + graphlink);
-
-                                                        page.open("https://www.google.com" + graphlink, function (status) {
-                                                            console.log("opened main page of the related item ", status);
-                                                            page.evaluate(function () { return document.body.innerHTML; }, function (result) {
-
-                                                                // Get the first search results page
-                                                                var $ = cheerio.load(result);
-
-                                                                // Get the link to more results
-
-                                                                var expandedurl = $("._Yqb").attr('href');
-
-                                                                // Open that link
-
-                                                                page.open("https://www.google.com" + expandedurl, function (status) {
-                                                                    console.log("opened google knowledge graph for related item", status);
-                                                                    page.evaluate(function () { return document.body.innerHTML; }, function (result) {
-
-                                                                        var $ = cheerio.load(result);
-
-                                                                        $(".kltat").each(function() {
-
-                                                                            var link = $(this);
-                                                                            var text = link.text();
-
-                                                                            text = text.replace(/\./g, "");
-
-                                                                            text = text.replace(/\,/g, "");
-
-                                                                            var statement = 'people search for #' + searchQuery.replace(/ /g,"_") + ' and #' + text.replace(/ /g,"_") + ' together';
-
-                                                                            req.body.entry.body = statement;
-                                                                            entries.submit(req, res);
-
-
-                                                                        });
-
-
-                                                                    });
-                                                                });
-
-                                                            })
-                                                        });
-
-
-
-                                                    });
+                                            ph.exit();
 
 
                                             // Move on to the next one
@@ -1055,7 +1008,7 @@ exports.submit = function(req, res,  next) {
                                         });
                                     });
 
-                                    // ph.exit();
+
 
                                 });
                             });
@@ -1066,12 +1019,6 @@ exports.submit = function(req, res,  next) {
             });
 
         }
-
-
-
-
-
-
 
     }
 
