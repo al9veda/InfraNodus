@@ -57,6 +57,7 @@
 
                 <br>
 
+                <div id="extracttwitter">
                 Extract:
                 <label for="extract1" class="pure-radio">
                     <input id="extract1" type="radio" name="extract" value="user" checked>
@@ -73,8 +74,9 @@
                     graph of words in user's timeline
                 </label>
                 <br>
+                </div>
 
-                Account or Hashtag:
+                Account / Hashtag / Searchterm:
                 <br>
 
                 <input type='text' name='search' id="search" placeholder='@username or #hashtag' />
@@ -87,6 +89,14 @@
                     <br>Your e-mail and password are not saved, <br>only sent to the server.  <br>
                 </div>
                 <br>
+
+                <div id="limitgkg" style="display: none">
+                    <br>
+                    Max Number of Connections:
+                    <br>
+                    <input type="text" name="limitgkg" id="limitgkgimport" value="5" size="2" maxlength="2" />
+
+                </div>
 
                 <% } else { %>
                 <label for="source2" class="pure-radio">
@@ -111,19 +121,20 @@
                 <br>
 
                 <% } %>
-
                 <br>
                 <br>
 
                 Save In List:
-
                 <input type='text' name='context' value='imported'/>
                 <br>
 
+                <div id="howmanyposts">
                 How Many Recent Posts:
                 <input type='text' name='limit' value='100 ' />
                 <br>
+                </div>
 
+                <div id="importsettings">
                 Settings:
                 <label for="settings1" class="pure-radio">
                     <input id="settings1" type="radio" name="settings" value="morphemes" checked>
@@ -135,6 +146,7 @@
                     Process only hashtags
                 </label>
                 <br>
+                </div>
 
                 <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
                 <input type="hidden" name="statementid" value="">
@@ -184,18 +196,37 @@
                 if( $(this).val() === "email" ) { // this time, we do need to check the value
                     searchbox.show();
                     $("#search").hide();
+                    $("#limitgkg").hide();
+                    $("#extracttwitter").hide();
+                    $("#howmanyposts").show();
+                    $("#importsettings").show();
+
                 }
                 else if ($(this).val() === "evernote") {
                     window.location.href = "/evernote_oauth";
+                    $("#limitgkg").hide();
+                    $("#extracttwitter").hide();
+                    $("#howmanyposts").show();
+                    $("#importsettings").show();
+
                 }
                 else if ($(this).val() === "gkg") {
                     $("#settings1").prop("checked", false);
                     $("#settings2").prop("checked", true);
+                    $("#limitgkg").show();
+                    $("#extracttwitter").hide();
+                    $("#howmanyposts").hide();
+                    $("#importsettings").hide();
+
                 }
                 else
                 {
                     searchbox.hide();
                     $("#search").show();
+                    $("#limitgkg").hide();
+                    $("#extracttwitter").show();
+                    $("#howmanyposts").show();
+                    $("#importsettings").show();
                 }
             });
 

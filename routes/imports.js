@@ -124,6 +124,17 @@ exports.submit = function(req, res,  next) {
             limit = req.body.limit;
     }
 
+    // How many connections to import from Google Knowledge Graph
+    var graphconnections = 20;
+
+    console.log('graphcon' + graphconnections);
+    console.log(req.body.limitgkg);
+    if (req.body.limitgkg && req.body.limitgkg < graphconnections) {
+
+        graphconnections = req.body.limitgkg;
+
+    }
+
     // List to be used for import
     var importContext = 'imported';
     if (req.body.context && req.body.context.length > 2 && req.body.context.length < 20) {
@@ -980,23 +991,23 @@ exports.submit = function(req, res,  next) {
 
                                                     searchQuery = searchQuery.replace(/\,/g, "");
 
-                                                    $(".kltat").each(function() {
+                                                    $(".kltat").filter(function (i) { return i < graphconnections; })
 
-                                                        var link = $(this);
-                                                        var text = link.text();
+                                                    .each(function () {
+                                                            var link = $(this);
+                                                            var text = link.text();
 
-                                                        text = text.replace(/\./g, "");
+                                                            text = text.replace(/\./g, "");
 
-                                                        text = text.replace(/\,/g, "");
+                                                            text = text.replace(/\,/g, "");
 
+                                                            var statement = 'people search for #' + searchQuery.replace(/ /g,"_") + ' and #' + text.replace(/ /g,"_") + ' together';
 
-
-                                                        var statement = 'people search for #' + searchQuery.replace(/ /g,"_") + ' and #' + text.replace(/ /g,"_") + ' together';
-
-                                                        req.body.entry.body = statement;
-                                                        entries.submit(req, res);
-
+                                                            req.body.entry.body = statement;
+                                                            entries.submit(req, res);
                                                     });
+
+
 
 
                                             ph.exit();
