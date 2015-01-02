@@ -909,139 +909,164 @@ exports.submit = function(req, res,  next) {
 
         var searchQuery = searchString;
 
-        var statements = [];
-
-        phantom.create(function (ph) {
-            ph.createPage(function (page) {
-                page.set('settings.userAgent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1');
-                page.open("http://www.google.com/ncr", function (status) {
-                    console.log("opened google NCR ", status);
-                    page.evaluate(function () { return document.title; }, function (result) {
-                        console.log('Page title is ' + result);
-                        page.open("https://www.google.com/search?gws_rd=ssl&site=&source=hp&q=" + searchQuery, function (status) {
-                            console.log("opened google Search Results ", status);
-                            page.evaluate(function () { return document.body.innerHTML; }, function (result) {
-
-                                // Get the first search results page
-
-                                var $ = cheerio.load(result);
-
-                                // Get the link to more results
-
-                                var expandedurl = $("._Yqb").attr('href');
-
-                                // Open that link
-
-                                page.open("https://www.google.com" + expandedurl, function (status) {
-                                    console.log("opened google knowledge graph ", status);
-                                    page.evaluate(function () { return document.body.innerHTML; }, function (result) {
 
 
-                                        async.waterfall([
+        validate.getContextID(user_id, addToContext, function(result, err) {
+            if (err) {
+                res.error('Something went wrong when adding new notes into Neo4J database. Try changing the import list name or open an issue on GitHub.');
+                res.redirect('back');
+            }
+            else {
+                // What are the contexts that already exist for this user and their IDs?
+                // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
 
-                                            function(callback){
-
-                                                var $ = cheerio.load(result);
-
-                                                $(".kltat").each(function() {
-                                                    var link = $(this);
-                                                    var text = link.text();
-
-                                                    var statement = 'people search for #' + searchQuery.replace(/ /g,"_") + ' and #' + text.replace(/ /g,"_") + ' together';
-                                                    statements.push(statement);
-
-                                                });
-
-                                                callback(null,statements);
-
-                                            },
-                                            function(statements, callback){
-
-                                                console.log('Statements imported: ');
-                                                console.log(statements);
-
-                                                ph.exit();
-
-                                                callback(null,statements);
-
-                                            }
-                                        ], function (err, statements) {
-
-                                            if (err) {
-
-                                                console.log(err);
-
-                                            }
-                                            else {
-
-                                                validate.getContextID(user_id, addToContext, function(result, err) {
-                                                    if (err) {
-                                                        res.error('Something went wrong when adding new notes into Neo4J database. Try changing the import list name or open an issue on GitHub.');
-                                                        res.redirect('back');
-                                                    }
-                                                    else {
-                                                        // What are the contexts that already exist for this user and their IDs?
-                                                        // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
-
-                                                        var contexts = result;
+                var contexts = result;
 
 
-                                                        // Create default statement object that has an empty body, default context, and all the context IDs for the user
-                                                        // context: default_context is where all the statements are added anyway
-                                                        // contextids: contexts are the IDs of all the contexts that will be used in those statements
+                // Create default statement object that has an empty body, default context, and all the context IDs for the user
+                // context: default_context is where all the statements are added anyway
+                // contextids: contexts are the IDs of all the contexts that will be used in those statements
 
-                                                        var req = {
-                                                            body:  {
-                                                                entry: {
-                                                                    body: ''
-                                                                },
-                                                                context: default_context
-                                                            },
+                var req = {
+                    body:  {
+                        entry: {
+                            body: ''
+                        },
+                        context: default_context
+                    },
 
-                                                            contextids: contexts,
-                                                            internal: 1
-                                                        };
+                    contextids: contexts,
+                    internal: 1
+                };
 
 
-                                                        for (var key in statements) {
-                                                            if (statements.hasOwnProperty(key)) {
-                                                                req.body.entry.body = statements[key];
-                                                                entries.submit(req, res);
-                                                            }
+                submitRelations(req, res, searchQuery);
 
-                                                        }
+            }
 
-                                                        // Move on to the next one
+        });
 
-                                                        res.redirect(res.locals.user.name + '/' + default_context + '/edit');
-                                                    }
 
-                                                });
+        function submitRelations(req, res, searchQuery) {
+
+            phantom.create(function (ph) {
+                ph.createPage(function (page) {
+                    page.set('settings.userAgent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1');
+                    page.open("http://www.google.com/ncr", function (status) {
+                        console.log("opened google NCR ", status);
+                        page.evaluate(function () { return document.title; }, function (result) {
+                            console.log('Page title is ' + result);
+                            page.open("https://www.google.com/search?gws_rd=ssl&site=&source=hp&q=" + searchQuery, function (status) {
+                                console.log("opened google Search Results ", status);
+                                page.evaluate(function () { return document.body.innerHTML; }, function (result) {
+
+                                    // Get the first search results page
+
+                                    var $ = cheerio.load(result);
+
+                                    // Get the link to more results
+
+                                    var expandedurl = $("._Yqb").attr('href');
+
+                                    // Open that link
+
+                                    page.open("https://www.google.com" + expandedurl, function (status) {
+                                        console.log("opened google knowledge graph ", status);
+                                        page.evaluate(function () { return document.body.innerHTML; }, function (result) {
+
+                                                    var $ = cheerio.load(result);
+
+                                                    $(".kltat").each(function() {
+
+                                                        var link = $(this);
+                                                        var text = link.text();
+
+                                                        text = text.replace(/\./g, "");
+
+                                                        text = text.replace(/\,/g, "");
+
+                                                        var statement = 'people search for #' + searchQuery.replace(/ /g,"_") + ' and #' + text.replace(/ /g,"_") + ' together';
+
+                                                        req.body.entry.body = statement;
+                                                        entries.submit(req, res);
+
+                                                    });
 
 
 
 
-                                            }
+                                                    $(".klitem").each(function() {
+
+                                                        var graphlink = $(this).attr('href');
+
+                                                        console.log('opening link ' + graphlink);
+
+                                                        page.open("https://www.google.com" + graphlink, function (status) {
+                                                            console.log("opened main page of the related item ", status);
+                                                            page.evaluate(function () { return document.body.innerHTML; }, function (result) {
+
+                                                                // Get the first search results page
+                                                                var $ = cheerio.load(result);
+
+                                                                // Get the link to more results
+
+                                                                var expandedurl = $("._Yqb").attr('href');
+
+                                                                // Open that link
+
+                                                                page.open("https://www.google.com" + expandedurl, function (status) {
+                                                                    console.log("opened google knowledge graph for related item", status);
+                                                                    page.evaluate(function () { return document.body.innerHTML; }, function (result) {
+
+                                                                        var $ = cheerio.load(result);
+
+                                                                        $(".kltat").each(function() {
+
+                                                                            var link = $(this);
+                                                                            var text = link.text();
+
+                                                                            text = text.replace(/\./g, "");
+
+                                                                            text = text.replace(/\,/g, "");
+
+                                                                            var statement = 'people search for #' + searchQuery.replace(/ /g,"_") + ' and #' + text.replace(/ /g,"_") + ' together';
+
+                                                                            req.body.entry.body = statement;
+                                                                            entries.submit(req, res);
+
+
+                                                                        });
+
+
+                                                                    });
+                                                                });
+
+                                                            })
+                                                        });
+
+
+
+                                                    });
+
+
+                                            // Move on to the next one
+
+                                            res.redirect(res.locals.user.name + '/' + default_context + '/edit');
                                         });
-
-
-
-
-
-
-
                                     });
+
+                                    // ph.exit();
+
                                 });
-
-                                // ph.exit();
-
                             });
-                        });
 
+                        });
                     });
                 });
             });
-        });
+
+        }
+
 
 
 
