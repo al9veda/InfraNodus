@@ -49,6 +49,10 @@
                     <input id="source3" type="radio" name="source" value="email">
                     iPhone / Gmail notes
                 </label>
+                <label for="source4" class="pure-radio">
+                    <input id="source4" type="radio" name="source" value="gkg">
+                    Google Knowledge Graph for Entity
+                </label>
                 <div id="inputplace"></div>
 
                 <br>
@@ -183,6 +187,10 @@
                 }
                 else if ($(this).val() === "evernote") {
                     window.location.href = "/evernote_oauth";
+                }
+                else if ($(this).val() === "gkg") {
+                    $("#settings1").prop("checked", false);
+                    $("#settings2").prop("checked", true);
                 }
                 else
                 {
