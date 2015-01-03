@@ -127,8 +127,6 @@ exports.submit = function(req, res,  next) {
     // How many connections to import from Google Knowledge Graph
     var graphconnections = 20;
 
-    console.log('graphcon' + graphconnections);
-    console.log(req.body.limitgkg);
     if (req.body.limitgkg && req.body.limitgkg < graphconnections) {
 
         graphconnections = req.body.limitgkg;
@@ -965,24 +963,41 @@ exports.submit = function(req, res,  next) {
                     page.set('settings.userAgent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1');
                     page.open("http://www.google.com/ncr", function (status) {
                         console.log("opened google NCR ", status);
+
+                        if (status == 'fail') {
+                            res.error('Something went wrong opening Google NCR page');
+                            res.redirect('back');
+                        }
+
                         page.evaluate(function () { return document.title; }, function (result) {
                             console.log('Page title is ' + result);
                             page.open("https://www.google.com/search?gws_rd=ssl&site=&source=hp&q=" + searchQuery, function (status) {
                                 console.log("opened google Search Results ", status);
+                                if (status == 'fail') {
+                                    res.error('Something went wrong opening search results. Maybe try again?');
+                                    res.redirect('back');
+                                }
+
                                 page.evaluate(function () { return document.body.innerHTML; }, function (result) {
 
-                                    // Get the first search results page
+                                    // Get the first search results page but only from also search for... sentence
 
-                                    var $ = cheerio.load(result);
+                                    var truncresult = result.substr(result.indexOf('also search for'));
+
+                                    // Load result in Cheerio
+                                    var $ = cheerio.load(truncresult);
 
                                     // Get the link to more results
-
                                     var expandedurl = $("._Yqb").attr('href');
 
                                     // Open that link
 
                                     page.open("https://www.google.com" + expandedurl, function (status) {
                                         console.log("opened google knowledge graph ", status);
+                                        if (status == 'fail') {
+                                            res.error('Something went wrong importing Google Knowledge Graph. Maybe try again?');
+                                            res.redirect('back');
+                                        }
                                         page.evaluate(function () { return document.body.innerHTML; }, function (result) {
 
                                                     var $ = cheerio.load(result);
@@ -991,9 +1006,11 @@ exports.submit = function(req, res,  next) {
 
                                                     searchQuery = searchQuery.replace(/\,/g, "");
 
-                                                    $(".kltat").filter(function (i) { return i < graphconnections; })
+                                                    if ($(".kltat").length < graphconnections) {
+                                                        graphconnections = $(".kltat").length;
+                                                    }
 
-                                                    .each(function () {
+                                                    $(".kltat").each(function (index) {
                                                             var link = $(this);
                                                             var text = link.text();
 
@@ -1001,21 +1018,21 @@ exports.submit = function(req, res,  next) {
 
                                                             text = text.replace(/\,/g, "");
 
-                                                            var statement = 'people search for #' + searchQuery.replace(/ /g,"_") + ' and #' + text.replace(/ /g,"_") + ' together';
+                                                            var statement = 'people who search for #' + searchQuery.replace(/ /g,"_") + ' also search for #' + text.replace(/ /g,"_");
 
                                                             req.body.entry.body = statement;
+
                                                             entries.submit(req, res);
+
+                                                            if (index == (graphconnections - 1)) {
+                                                                ph.exit();
+                                                                res.error('Importing Knowledge Graph from Google. Reload this page in a few seconds.');
+                                                                res.redirect(res.locals.user.name + '/' + default_context + '/edit');
+                                                                return false;
+                                                            }
+
                                                     });
 
-
-
-
-                                            ph.exit();
-
-
-                                            // Move on to the next one
-
-                                            res.redirect(res.locals.user.name + '/' + default_context + '/edit');
                                         });
                                     });
 
