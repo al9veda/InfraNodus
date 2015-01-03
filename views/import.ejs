@@ -51,7 +51,7 @@
                 </label>
                 <label for="source4" class="pure-radio">
                     <input id="source4" type="radio" name="source" value="gkg">
-                    Google Knowledge Graph for Entity
+                    Get Connections for Entity
                 </label>
                 <div id="inputplace"></div>
 
@@ -124,8 +124,8 @@
                 <br>
                 <br>
 
-                Save In List:
-                <input type='text' name='context' value='imported'/>
+                Save In Context:
+                <input type='text' name='context' value='<% if (context) { %><%= context %><% } else { %>imported<% } %>'/>
                 <br>
 
                 <div id="howmanyposts">
@@ -186,8 +186,18 @@
 <script>
     ;(function(){
 
+            <% if (context) { %>
+            $("#source1").prop("checked", false);
+            $("#source4").prop("checked", true);
+            $("#settings1").prop("checked", false);
+            $("#settings2").prop("checked", true);
+            $("#limitgkg").show();
+            $("#extracttwitter").hide();
+            $("#howmanyposts").hide();
+            $("#importsettings").hide();
+            <% } %>
 
-            // toggle email login controls on and off with radio
+        // toggle email login controls on and off with radio
 
             var radioButtons = $("[name=source]"), // get both radiobuttons
                 searchbox  = $("#searchbox");

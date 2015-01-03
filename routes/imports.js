@@ -83,7 +83,7 @@ exports.render = function(req, res) {
     }
     else {
 
-        res.render('import', { title: 'Import Data to InfraNodus', evernote: '' });
+        res.render('import', { title: 'Import Data to InfraNodus', evernote: '', context: req.query.context });
 
     }
 
