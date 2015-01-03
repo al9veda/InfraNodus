@@ -434,9 +434,7 @@ sigma.parsers.json(
 
             nodeNames = _.keys(nodeIDs);
 
-            for (var w=0;w<nodeNames.length;w++) {
-                nodeNames[w] = S(nodeNames[w]).dasherize().chompLeft('-').s;
-            }
+
 
             // Get the context names - all the contexts that exist in the graph we just loaded
             contextNames = _.keys(contextNodeID);
@@ -2065,6 +2063,8 @@ sigma.parsers.json(
     // Autofill initialized only after Sigma above loaded and populated all the nodes
 
     function autofill(nodeNames,contextNames) {
+
+        console.log(nodeNames);
 
         $('#statement').textcomplete([
             { // hashtags-concepts
