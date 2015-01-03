@@ -124,7 +124,7 @@ exports.submit = function(req, res,  next) {
             limit = req.body.limit;
     }
 
-    // How many connections to import from Google Knowledge Graph
+    // How many connections to import from gkg
     var graphconnections = 20;
 
     if (req.body.limitgkg && req.body.limitgkg < graphconnections) {
@@ -907,7 +907,7 @@ exports.submit = function(req, res,  next) {
 
     }
 
-    // Google knowledge graph
+    // gkg
     else if (service == 'gkg') {
 
         var default_context = importContext;
@@ -965,7 +965,7 @@ exports.submit = function(req, res,  next) {
                         console.log("opened google NCR ", status);
 
                         if (status == 'fail') {
-                            res.error('Something went wrong opening Google NCR page');
+                            res.error('Something went wrong getting the results you need.');
                             res.redirect('back');
                         }
 
@@ -993,9 +993,9 @@ exports.submit = function(req, res,  next) {
                                     // Open that link
 
                                     page.open("https://www.google.com" + expandedurl, function (status) {
-                                        console.log("opened google knowledge graph ", status);
+                                        console.log("opened connections page ", status);
                                         if (status == 'fail') {
-                                            res.error('Something went wrong importing Google Knowledge Graph. Maybe try again?');
+                                            res.error('Something went wrong importing connections. Maybe try again?');
                                             res.redirect('back');
                                         }
                                         page.evaluate(function () { return document.body.innerHTML; }, function (result) {
@@ -1026,7 +1026,7 @@ exports.submit = function(req, res,  next) {
 
                                                             if (index == (graphconnections - 1)) {
                                                                 ph.exit();
-                                                                res.error('Importing Knowledge Graph from Google. Reload this page in a few seconds.');
+                                                                res.error('Importing connections... Reload this page in a few seconds.');
                                                                 res.redirect(res.locals.user.name + '/' + default_context + '/edit');
                                                                 return false;
                                                             }
