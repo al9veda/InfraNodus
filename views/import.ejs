@@ -79,7 +79,7 @@
                 Account / Hashtag / Searchterm:
                 <br>
 
-                <input type='text' name='search' id="search" placeholder='@username or #hashtag' />
+                <input type='text' name='search' id="search" placeholder='@username or #hashtag' value="<% if (fornode) { %><%= fornode %><% } %>" />
                 <div id="searchbox" style="display: none">
                     <input type="text" name="email" id="searchbox1" value="your@email.com" />
                     <input type="password" name="password" id="searchbox2" value="password" />
@@ -94,7 +94,7 @@
                     <br>
                     Max Number of Connections:
                     <br>
-                    <input type="text" name="limitgkg" id="limitgkgimport" value="5" size="2" maxlength="2" />
+                    <input type="text" name="limitgkg" id="limitgkgimport" value="7" size="2" maxlength="2" />
 
                 </div>
 
@@ -186,7 +186,7 @@
 <script>
     ;(function(){
 
-            <% if (context) { %>
+            <% if (context && fornode) { %>
             $("#source1").prop("checked", false);
             $("#source4").prop("checked", true);
             $("#settings1").prop("checked", false);

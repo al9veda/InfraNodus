@@ -83,7 +83,7 @@ exports.render = function(req, res) {
     }
     else {
 
-        res.render('import', { title: 'Import Data to InfraNodus', evernote: '', context: req.query.context });
+        res.render('import', { title: 'Import Data to InfraNodus', evernote: '', context: req.query.context, fornode: req.query.fornode });
 
     }
 
@@ -977,68 +977,74 @@ exports.submit = function(req, res,  next) {
                                     res.error('Something went wrong opening search results. Maybe try again?');
                                     res.redirect('back');
                                 }
+                                setTimeout( function() {
+                                    page.evaluate(function () { return document.body.innerHTML; }, function (result) {
 
-                                page.evaluate(function () { return document.body.innerHTML; }, function (result) {
+                                        // Get the first search results page but only from also search for... sentence
+                                        setTimeout( function() {
 
-                                    // Get the first search results page but only from also search for... sentence
+                                            var truncresult = result.substr(result.indexOf('also search for'));
 
-                                    var truncresult = result.substr(result.indexOf('also search for'));
+                                            // Load result in Cheerio
+                                            var $ = cheerio.load(truncresult);
 
-                                    // Load result in Cheerio
-                                    var $ = cheerio.load(truncresult);
 
-                                    // Get the link to more results
-                                    var expandedurl = $("._Yqb").attr('href');
+                                            // Get the link to more results
+                                            var expandedurl = $("._Yqb").attr('href');
 
-                                    // Open that link
+                                            // Open that link
 
-                                    page.open("https://www.google.com" + expandedurl, function (status) {
-                                        console.log("opened connections page ", status);
-                                        if (status == 'fail') {
-                                            res.error('Something went wrong importing connections. Maybe try again?');
-                                            res.redirect('back');
-                                        }
-                                        page.evaluate(function () { return document.body.innerHTML; }, function (result) {
+                                            page.open("https://www.google.com" + expandedurl, function (status) {
+                                                console.log("opened connections page ", status);
+                                                if (status == 'fail') {
+                                                    res.error('Something went wrong importing connections. Maybe try again?');
+                                                    res.redirect('back');
+                                                }
+                                                page.evaluate(function () { return document.body.innerHTML; }, function (result) {
 
-                                                    var $ = cheerio.load(result);
+                                                            var $ = cheerio.load(result);
 
-                                                    searchQuery = searchQuery.replace(/\./g, "");
+                                                            searchQuery = searchQuery.replace(/\./g, "");
 
-                                                    searchQuery = searchQuery.replace(/\,/g, "");
+                                                            searchQuery = searchQuery.replace(/\,/g, "");
 
-                                                    if ($(".kltat").length < graphconnections) {
-                                                        graphconnections = $(".kltat").length;
-                                                    }
-
-                                                    $(".kltat").each(function (index) {
-                                                            var link = $(this);
-                                                            var text = link.text();
-
-                                                            text = text.replace(/\./g, "");
-
-                                                            text = text.replace(/\,/g, "");
-
-                                                            var statement = 'people who search for #' + searchQuery.replace(/ /g,"_") + ' also search for #' + text.replace(/ /g,"_");
-
-                                                            req.body.entry.body = statement;
-
-                                                            entries.submit(req, res);
-
-                                                            if (index == (graphconnections - 1)) {
-                                                                ph.exit();
-                                                                res.error('Importing connections... Reload this page in a few seconds.');
-                                                                res.redirect(res.locals.user.name + '/' + default_context + '/edit');
-                                                                return false;
+                                                            if ($(".kltat").length < graphconnections) {
+                                                                graphconnections = $(".kltat").length;
                                                             }
 
-                                                    });
+                                                            $(".kltat").each(function (index) {
+                                                                    var link = $(this);
+                                                                    var text = link.text();
 
-                                        });
-                                    });
+                                                                    text = text.replace(/\./g, "");
 
+                                                                    text = text.replace(/\,/g, "");
 
+                                                                    var statement = 'people who search for #' + searchQuery.replace(/ /g,"_") + ' also search for #' + text.replace(/ /g,"_");
 
+                                                                    req.body.entry.body = statement;
+
+                                                                    entries.submit(req, res);
+
+                                                                    if (index == (graphconnections - 1)) {
+                                                                        ph.exit();
+                                                                        res.error('Importing connections... Reload this page in a few seconds.');
+                                                                        res.redirect(res.locals.user.name + '/' + default_context + '/edit');
+                                                                        return false;
+                                                                    }
+
+                                                            });
+
+                                                });
+                                            });
+
+                                        }, 1000);
+
+                                    }, 1000);
                                 });
+
+                                // end of eval
+
                             });
 
                         });

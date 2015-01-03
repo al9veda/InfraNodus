@@ -675,7 +675,18 @@ sigma.parsers.json(
     $(document).ready(function(){
 
 
+        $("#imports").click(function(e) {
+            var fornode = '';
+            if (pinnedNodes.length > 0) {
+                 fornode = toTitleCase(pinnedNodes[pinnedNodes.length - 1].replace(/_/g, " "));
+            }
+            $(this).attr("href","/import?context=<%= context %>&fornode=" + fornode);
+        });
 
+        function toTitleCase(str)
+        {
+            return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        }
 
         // Activate content switcher Set1 and set delay time for fade
         jcps.fader(0, '#switcher-panel', '.set1');
