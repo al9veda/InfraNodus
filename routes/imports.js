@@ -63,11 +63,30 @@ var T = new Twit({
 
 exports.render = function(req, res) {
 
-
-
     if (req.session.oauthAccessToken) {
 
+        var client = new Evernote.Client({token: req.session.oauthAccessToken});
 
+        var noteStore = client.getNoteStore();
+
+        notebooks = noteStore.listNotebooks(function(err, notebooks) {
+            //var notebookid = notebooks[1].guid
+            if (err) {
+                req.session.error = JSON.stringify(err);
+                console.log(req.session.error);
+                res.redirect('/');
+            }
+            else {
+
+                var notebooks_names = [];
+
+                for (var t = 0; t < notebooks.length; t++) {
+                    notebooks_names.push(notebooks[t].name);
+                }
+                res.render('import', { title: 'Import Data to InfraNodus', context: '', fornode: '', notebooks: notebooks_names, evernote: req.session.oauthAccessToken});
+            }
+
+        });
 
 
 
@@ -78,12 +97,12 @@ exports.render = function(req, res) {
         });*/
 
 
-        res.render('import', { title: 'Import Data to InfraNodus', evernote: req.session.oauthAccessToken});
+
 
     }
     else {
 
-        res.render('import', { title: 'Import Data to InfraNodus', evernote: '', context: req.query.context, fornode: req.query.fornode });
+        res.render('import', { title: 'Import Data to InfraNodus', evernote: '', context: req.query.context, notebooks: '', fornode: req.query.fornode });
 
     }
 
@@ -510,6 +529,9 @@ exports.submit = function(req, res,  next) {
 
         var default_context = importContext;
 
+        // Which notebooks to import
+        var notebooksToImport = req.body.notebooks;
+
 
         notebooks = noteStore.listNotebooks(function(err, notebooks) {
             //var notebookid = notebooks[1].guid
@@ -528,8 +550,16 @@ exports.submit = function(req, res,  next) {
 
                 var notebooks_db = [];
 
+                var notebooksList = [];
+
                 for (var t = 0; t < notebooks.length; t++) {
-                     notebooks_db[notebooks[t].guid] = notebooks[t].name;
+
+                     // Check if the notebook is in the list of the notebooks to import
+                     if (notebooksToImport.indexOf(notebooks[t].name) > -1) {
+                        notebooks_db[notebooks[t].guid] = notebooks[t].name;
+                        notebooksList.push(notebooks[t].name);
+                     }
+
                 }
 
                 notesMetadataResultSpec.includeNotebookGuid = true;
@@ -559,8 +589,8 @@ exports.submit = function(req, res,  next) {
                                 var addToContexts = [];
                                 // Here we create dummy statements in order to create the new contexts and get the IDs for them from our Neo4J DB
 
-                                for (var m = 0; m < notebooks.length; m++) {
-                                    addToContexts.push(S(notebooks[m].name).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,""));
+                                for (var m = 0; m < notebooksList.length; m++) {
+                                    addToContexts.push(S(notebooksList[m]).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,""));
                                 }
 
                                 validate.getContextID(user_id, addToContexts, function(result, err) {
@@ -606,18 +636,22 @@ exports.submit = function(req, res,  next) {
 
                                 for (var i = 0; i < noteList.notes.length; i++ ) {
 
-                                    var notebook_name = noteList.notes[i].notebookGuid;
+                                    var notebook_id = noteList.notes[i].notebookGuid;
+
+                                    var notebook_name =  notebooks_db[notebook_id];
+
                                     var note_id = noteList.notes[i].guid;
 
-                                    console.log('firstcontexts');
-                                    console.log(contexts);
-                                    getStatement(notebook_name, note_id, contexts);
+
+                                    if (notebooksList.indexOf(notebook_name) > -1) {
+                                        getStatement(notebook_id, note_id, contexts);
+                                    }
 
 
 
                                 }
 
-                                function getStatement(notebook_name, note_id, contexts) {
+                                function getStatement(notebook_id, note_id, contexts) {
 
                                     noteStore.getNoteContent(userInfo, note_id, function(err, result) {
 
@@ -643,7 +677,7 @@ exports.submit = function(req, res,  next) {
                                         var selcontexts2 = [];
 
                                         // What's the notebook name? This will be our context
-                                        var currentcontext = S(notebooks_db[notebook_name]).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                                        var currentcontext = S(notebooks_db[notebook_id]).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
                                         currentcontext = currentcontext.replace(/[^\w]/gi, '');
 
                                         // Now let's find the right ID for that notebook in our database
@@ -679,7 +713,7 @@ exports.submit = function(req, res,  next) {
 
                                     // Move on to the next one
                                 res.error('Importing content... Please, reload this page in a few seconds...');
-                                res.redirect('/');
+                                res.redirect(res.locals.user.name + '/edit');
 
 
 

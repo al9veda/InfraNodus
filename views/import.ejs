@@ -97,6 +97,12 @@
                     <input type="text" name="limitgkg" id="limitgkgimport" value="7" size="2" maxlength="2" />
 
                 </div>
+                <br>
+                <br>
+                Save in Context:
+                <br>
+                <input type='text' name='context' value='<% if (context) { %><%= context %><% } else { %>imported<% } %>'/>
+                <br>
 
                 <% } else { %>
                 <label for="source2" class="pure-radio">
@@ -120,13 +126,22 @@
                 <input type='text' name='search' value="<%= evernote %>" readonly/>
                 <br>
 
-                <% } %>
+
                 <br>
                 <br>
 
-                Save In Context:
-                <input type='text' name='context' value='<% if (context) { %><%= context %><% } else { %>imported<% } %>'/>
+                Import Notebooks:
                 <br>
+                <% if (notebooks) { for (var i=0; i<notebooks.length; i++) { %>
+                <input type="checkbox" name="notebooks" value="<%= notebooks[i] %>" checked><%= notebooks[i] %><br>
+                <% } }  %>
+
+                <br>
+                &nbsp;
+                <input type='hidden' name='context' value='<% if (context) { %><%= context %><% } else { %>imported<% } %>'/>
+                <br>
+                <% } %>
+
 
                 <div id="howmanyposts">
                 How Many Recent Posts:
