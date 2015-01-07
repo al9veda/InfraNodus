@@ -458,7 +458,7 @@ exports.submit = function(req, res,  next) {
 
                         statement = statement.toLowerCase().replace('rt ',' ');
 
-                        if (req.body.excludesearchterm[0] == '1') {
+                        if (req.body.excludesearchterm) {
                             statement = statement.replace(searchquery,' ');
                         }
 
