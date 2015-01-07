@@ -138,7 +138,7 @@ exports.submit = function(req, res,  next) {
     }
 
     // How many recent posts
-    var limit = 201;
+    var limit = 301;
     if (req.body.limit && req.body.limit < limit) {
             limit = req.body.limit;
     }
@@ -187,6 +187,17 @@ exports.submit = function(req, res,  next) {
             type: 'search/tweets',
             params: {
                 q: searchString,
+                count: limit
+            }
+        }
+    }
+    else if (service == 'twitter' && extract == 'tophashtag') {
+        twitterRequest = {
+            type: 'search/tweets',
+            params: {
+                q: searchString,
+                lang: 'en',
+                result_type: 'mixed',
                 count: limit
             }
         }
@@ -446,6 +457,10 @@ exports.submit = function(req, res,  next) {
                         }*/
 
                         statement = statement.toLowerCase().replace('rt ',' ');
+
+                        if (req.body.excludesearchterm[0] == '1') {
+                            statement = statement.replace(searchquery,' ');
+                        }
 
                         statements.push(statement);
                     }

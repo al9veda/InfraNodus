@@ -69,12 +69,24 @@
                     graph of words used with a hashtag
                 </label>
 
-                <label for="extract3" class="pure-radio">
-                    <input id="extract3" type="radio" name="extract" value="timeline">
+               <label for="extract3" class="pure-radio">
+                        <input id="extract3" type="radio" name="extract" value="tophashtag">
+                        top tweets in english with a hashtag
+               </label>
+
+                <label for="extract4" class="pure-radio">
+                    <input id="extract4" type="radio" name="extract" value="timeline">
                     graph of words in user's timeline
                 </label>
+
+                <label for="extractfilter" class="pure-checkbox">
+                <input id="extractfilter" type="checkbox" name="excludesearchterm" value="1" checked> exclude search term from the graph<br>
+                </label>
                 <br>
+
                 </div>
+
+
 
                 Account / Hashtag / Searchterm:
                 <br>
@@ -133,7 +145,7 @@
                 Import Notebooks:
                 <br>
                 <% if (notebooks) { for (var i=0; i<notebooks.length; i++) { %>
-                <input type="checkbox" name="notebooks" value="<%= notebooks[i] %>" checked><%= notebooks[i] %><br>
+                <input type="checkbox" name="notebooks" value="<%= notebooks[i] %>" checked> <%= notebooks[i] %><br>
                 <% } }  %>
 
                 <br>
