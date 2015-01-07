@@ -211,6 +211,17 @@ exports.submit = function(req, res,  next) {
             }
         }
 
+    }
+    else if (service == 'twitter' && extract == 'lists') {
+        var listname = req.body.listname;
+        twitterRequest = {
+            type: 'lists/statuses',
+            params: {
+                slug: listname,
+                owner_screen_name: searchString.substr(1),
+                count: limit
+            }
+        }
 
     }
 
@@ -222,6 +233,7 @@ exports.submit = function(req, res,  next) {
     console.log(importContext);
     console.log(service);
     console.log(extract);
+    console.log(twitterRequest);
 
 
     if (searchString && service == 'twitter') {
@@ -441,7 +453,10 @@ exports.submit = function(req, res,  next) {
 
                     }
 
+                    console.log('total results: ' + data.length);
+
                     for (key in result) {
+                        if (result[key].lang == 'en' || result[key].lang == 'ru') {
                         var statement = result[key].text;
                     /*    var mentions = FlowdockText.extractMentions(statement);
                         for (index in mentions) {
@@ -460,9 +475,13 @@ exports.submit = function(req, res,  next) {
 
                         if (req.body.excludesearchterm) {
                             statement = statement.replace(searchquery,' ');
+                            if (twitterRequest.type == 'lists/statuses') {
+                                statement = statement.replace(listname,' ');
+                            }
                         }
 
                         statements.push(statement);
+                        }
                     }
 
 
