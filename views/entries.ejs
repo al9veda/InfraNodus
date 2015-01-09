@@ -1130,7 +1130,7 @@ sigma.parsers.json(
             var currentDiv = $(this).attr('data-uid');
 
             // Retrieve the statement text from the entry, clean from html
-            var originaltext = S($(this).children('.entry-text').text()).stripTags().s;
+            var originaltext = $(this).children('.entry-text').html();
 
             // Make an array from sentences of that text
             var sentences = originaltext.split(/[.|!|?]\s/gi);
