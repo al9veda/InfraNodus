@@ -363,7 +363,7 @@ exports.submit = function(req, res,  next) {
 
                         // This clears Twitter-specific stopwords we don't need
 
-                        statement = statement.toLowerCase().replace('rt ',' ');
+                        statement = statement.replace(/rt /ig,' ');
 
                         statements.push(statement);
                     }
@@ -455,6 +455,8 @@ exports.submit = function(req, res,  next) {
 
                     console.log('total results: ' + data.length);
 
+
+
                     for (key in result) {
                         if (result[key].lang == 'en' || result[key].lang == 'ru') {
                         var statement = result[key].text;
@@ -471,16 +473,24 @@ exports.submit = function(req, res,  next) {
                             }
                         }*/
 
-                        statement = statement.toLowerCase().replace('rt ',' ');
+                        statement = statement.replace(/rt /ig,' ');
+
+                        if (req.body.showtwitters) {
+                            statement = '@' + result[key].user.screen_name + ' ' + statement;
+                        }
 
                         if (req.body.excludesearchterm) {
-                            statement = statement.replace(searchquery,' ');
+
+                            var searchPattern = new RegExp('('+searchquery+')', 'ig');
+                            statement = statement.replace(searchPattern,' ');
+
                             if (twitterRequest.type == 'lists/statuses') {
-                                statement = statement.replace(listname,' ');
+                                statement = statement.replace(/listname/ig,' ');
                             }
                         }
 
                         statements.push(statement);
+
                         }
                     }
 
