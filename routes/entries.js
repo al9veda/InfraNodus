@@ -149,6 +149,10 @@ exports.submit = function(req, res, next){
 
             var hashtags = validate.getHashtags(statement, res);
 
+            if (req.onlymentions) {
+                hashtags = '';
+            }
+
             var mentions = validate.getMentions(statement);
 
             if  (!hashtags && mentions.length < 1) {
