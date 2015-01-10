@@ -459,6 +459,13 @@ exports.submit = function(req, res,  next) {
                           onlymentions = req.body.onlymentions;
                     }
 
+
+                    // Show only @mentions in the graph?
+                    var excludementions = '';
+                    if (req.body.excludementions) {
+                        excludementions = req.body.excludementions;
+                    }
+
                     console.log('total results: ' + data.length);
 
 
@@ -532,6 +539,7 @@ exports.submit = function(req, res,  next) {
 
                                 contextids: contexts,
                                 onlymentions: onlymentions,
+                                excludementions: excludementions,
                                 internal: 1
                             };
 

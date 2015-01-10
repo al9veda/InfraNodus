@@ -155,6 +155,11 @@ exports.submit = function(req, res, next){
 
             var mentions = validate.getMentions(statement);
 
+            if (req.excludementions) {
+                mentions = '';
+            }
+
+
             if  (!hashtags && mentions.length < 1) {
                 callback('there should be at least one word, #hashtag or @mention.');
             }
