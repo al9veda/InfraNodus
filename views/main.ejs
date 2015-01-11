@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/side-menu.css">
+    <script src="/javascripts/sigma/sigma.min.js"></script>
+    <script src="/javascripts/sigma/plugins/sigma.parsers.json.min.js"></script>
+    <script src="/javascripts/sigma/plugins/sigma.layout.forceAtlas2.js"></script>
+    <script src="/javascripts/sigma/plugins/sigma.plugins.animate.min.js"></script>
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/ui.js"></script>
+
+
+</head>
+<body>
+
+<% include statsabove %>
+
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+
+
+
+    <% include menu %>
+
+
+
+    <div id="content">
+        <div id="introduction">
+            <h1>Retain and share your knowledge as a network.</h1>
+            <h2>Translate your texts, notes, ideas and thoughts into graph to see how it all connects.</h2>
+            <div class="row">
+                <!--left-->
+                <div class="col1 graphshowcase">
+                </div>
+                <!--/left-->
+
+                <!--center-->
+                <div class="col2 graphshowcase">
+                </div>
+                <!--/center-->
+
+                <!--right-->
+                <div class="col3 graphshowcase">
+                </div>
+                <!--/right-->
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+
+
+
+<script src="/javascripts/ui.js"></script>
+
+<% include statsbelow %>
+
+</body>
+</html>

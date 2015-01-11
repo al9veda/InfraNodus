@@ -36,6 +36,7 @@ var validate = require('./lib/middleware/validate');
 var user = require('./lib/middleware/user');
 var register = require('./routes/register');
 var login = require('./routes/login');
+var main = require('./routes/main');
 var messages = require('./lib/messages');
 var http = require('http');
 var path = require('path');
@@ -147,7 +148,7 @@ app.get('/evernote_clear', oauths.clear);
 app.get('/:user/edit', pass.ensureAuthenticated, entries.list);
 app.get('/:user/:context?/edit', pass.ensureAuthenticated, validate.getContextPrivacy(), entries.list);
 app.get('/:user/:context?', pass.checkUser, validate.getUserID(), validate.getContextPrivacy(), entries.list);
-app.get('/', validate.getDefaultUser(), validate.getContextPrivacy(), entries.list);
+app.get('/', main.render);
 
 
 

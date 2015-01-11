@@ -124,6 +124,18 @@ textarea:focus {
     max-width: 95%;
 }
 
+h1 {
+    font: 40px 'IstokWeb-Bold',sans-serif;
+    color: #000;
+    max-width: 95%;
+}
+
+h2 {
+    font: 25px 'IstokWeb-Bold',sans-serif;
+    color: #000;
+    max-width: 95%;
+}
+
 a.app-concept-link {
     text-decoration: none;
     color: #000;
@@ -307,6 +319,7 @@ a:hover.app-more-link {
     z-index: 1;
 }
 
+
 #submenu {
     position: fixed;
     bottom: 15px;
@@ -337,6 +350,29 @@ a:hover.app-more-link {
     z-index: -1;
     padding-left: 40px;
     padding-right: 40px;
+}
+
+
+#introduction {
+    position: relative;
+    margin: 35px 0px 0px 30px;
+}
+
+
+
+.graphshowcase{
+    width: 240px;
+    height: 260px;
+    border: solid 1px #d9d9de;
+    display: inline-block;
+    background-color: white;
+    margin: 20px 20px 0px 0px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -o-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border-radius: 10px;
 }
 
 
