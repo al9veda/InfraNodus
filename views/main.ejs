@@ -6,12 +6,9 @@
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel="stylesheet" href="/stylesheets/side-menu.css">
-    <script src="/javascripts/sigma/sigma.min.js"></script>
-    <script src="/javascripts/sigma/plugins/sigma.parsers.json.min.js"></script>
-    <script src="/javascripts/sigma/plugins/sigma.layout.forceAtlas2.js"></script>
-    <script src="/javascripts/sigma/plugins/sigma.plugins.animate.min.js"></script>
-    <script src="/javascripts/jquery.min.js"></script>
-    <script src="/javascripts/ui.js"></script>
+
+    <srcipt src="/javasrcipts/jquery.min.js"></srcipt>
+    <srcipt src="/javasrcipts/ui.js"></srcipt>
 
 
 </head>
@@ -33,25 +30,53 @@
 
 
     <div id="content">
+
         <div id="introduction">
             <h1>Retain and share your knowledge as a network.</h1>
-            <h2>Translate your texts, notes, ideas and thoughts into graph to see how it all connects.</h2>
+            <h2>Visualize your texts, notes, and thoughts as a graph to have a better overview of ideas and to find inspiration.</h2>
             <div class="row">
-                <!--left-->
-                <div class="col1 graphshowcase">
+                <div class="graphshowcase">
+                <div class="intro"><a href="/login">+ add yours</a></div>
+                    <div class="graphwindow"><span class="Centerer"></span><a href="/login"><img src="/images/sample-graph-add.png" border="0" width="220" height="220"></a></div>
                 </div>
-                <!--/left-->
-
-                <!--center-->
-                <div class="col2 graphshowcase">
+                <div class="graphshowcase">
+                    <div class="intro"><a href="/infragraph/hitech">hitech companies</a></div>
+                    <div class="graphwindow"><span class="Centerer"></span><a href="/infragraph/hitech"><img src="/images/sample-graph-infragraph-hitech.png" border="0"></a></div>
                 </div>
-                <!--/center-->
-
-                <!--right-->
-                <div class="col3 graphshowcase">
+                <div class="graphshowcase">
+                    <div class="intro"> <a href="/travel/berlin">best places in berlin</a>       </div>
+                     <div class="graphwindow"><span class="Centerer"></span><a href="/travel/berlin"><img src="/images/sample-graph-travel-berlin.png" border="0"></a></div>
                 </div>
-                <!--/right-->
+                <div class="graphshowcase">
+                    <div class="intro"> <a href="/musicgraph/labels">electronic music labels</a>   </div>
+                    <div class="graphwindow"><span class="Centerer"></span><a href="/musicgraph/labels"><img src="/images/sample-graph-musicgraph-labels.png" border="0"></a></div>
+                </div>
+                <div class="graphshowcase">
+                    <div class="intro"> <a href="/waytorussia/writers">russian writers</a> </div>
+                    <div class="graphwindow"><span class="Centerer"></span><a href="/waytorussia/writers"><img src="/images/sample-graph-waytorussia-writers.png" border="0"></a></div>
+                </div>
+                <div class="graphshowcase">
+                    <div class="intro"> <a href="/twittergraph/datavizgraph">tweets with #dataviz</a>    </div>
+                    <div class="graphwindow"><span class="Centerer"></span><a href="/twittergraph/datavizgraph"><img src="/images/sample-graph-twittergraph-datavizgraph.png" border="0"></a></div>
+                </div>
+                <div class="graphshowcase">
+                    <div class="intro"> <a href="/infragraph/philosophy">philosophers</a>    </div>
+                    <div class="graphwindow"><span class="Centerer"></span><a href="/infragraph/philosophy"><img src="/images/sample-graph-infragraph-philosophy.png" border="0"></a></div>
+                </div>
             </div>
+            <br>
+            <h2>Watch the demo video to learn how to use InfraNodus:</h2>
+            <iframe src="//player.vimeo.com/video/89807920?title=0&amp;byline=0&amp;portrait=0&amp;autoplay=0&amp;loop=1" width="240" height="150" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            <br>&nbsp;<br>
+            <p>InfraNodus is a free open-source tool made by <a href="http://www.noduslabs.com" target="_blank">Nodus Labs</a>.
+                <br>Contact us to get an <a href="http://noduslabs.com/contact/" target="_blank">invitation code</a> to use this online version <br>
+                or install it on your computer from <a href="http://github.com/noduslabs/infranodus" target="_blank">GitHub</a>.<br>
+            <br>InfraNodus runs on <a href="http://www.neo4j.org" target="_blank">Neo4J</a> graph database,
+                <br><a href="http://www.sigmajs.org" target="_blank">Sigma.Js</a> graph visualization library,
+                <br>Node.Js and uses
+                <br><a href="http://www.textexture.com" target="_blank">Textexture text network analysis algorithm</a>. </p>
+            <br>&nbsp;<br><br>
+
         </div>
     </div>
 
@@ -63,7 +88,7 @@
 
 
 
-<script src="/javascripts/ui.js"></script>
+<srcipt src="/javasrcipts/ui.js"></srcipt>
 
 <% include statsbelow %>
 

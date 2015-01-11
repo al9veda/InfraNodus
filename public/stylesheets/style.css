@@ -359,20 +359,66 @@ a:hover.app-more-link {
 }
 
 
+.intro {
+    font: 20px 'IstokWeb-Bold',sans-serif;
+    color: #000;
+    max-width: 95%;
+
+}
+
+.intro a {
+    font: 18px 'IstokWeb-Bold',sans-serif;
+    color: #000;
+    max-width: 95%;
+    text-decoration: none;
+
+}
+
+
+.intro a:hover {
+    font: 18px 'IstokWeb-Bold',sans-serif;
+    color: #0089E0;
+    max-width: 95%;
+    text-decoration: underline;
+}
+
 
 .graphshowcase{
     width: 240px;
-    height: 260px;
-    border: solid 1px #d9d9de;
+    height: 290px;
     display: inline-block;
     background-color: white;
-    margin: 20px 20px 0px 0px;
+    margin: 20px 20px 10px 0px;
+}
+
+.graphwindow {
+    width: 240px;
+    height: 260px;
+    border: solid 1px #d9d9de;
+    background-color: white;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     -o-border-radius: 10px;
     -ms-border-radius: 10px;
     -khtml-border-radius: 10px;
     border-radius: 10px;
+    text-align: center;
+
+}
+
+.graphwindow img {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: middle;
+}
+
+/*handles the vertical centering*/
+.Centerer
+{
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
 }
 
 
