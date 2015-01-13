@@ -1018,7 +1018,7 @@ Forms Core
     /* height: 2.4em; removed for Skin Builder */
 }
 
-.pure-menu li a { padding: 0.25em 1.4em; }
+.pure-menu li a { padding: 0.25em 0.9em; }
 
 .pure-menu-can-have-children > .pure-menu-label:after {
     content: '\25B8';
