@@ -1148,6 +1148,12 @@ exports.submit = function(req, res,  next) {
         }
 
     }
+    else if (service == 'file') {
+        console.log('here');
+        console.log(req.files);
+        res.redirect('/import');
+
+    }
 
 
 

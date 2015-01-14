@@ -33,7 +33,7 @@
             Enter the type of data you want to import:
             <% include messages %>
 
-            <form action='/import' name='submitform' id="submitform" method='post' class='pure-form pure-form-stacked'>
+            <form action='/import' name='submitform' id="submitform" method='post' enctype="multipart/form-data" class='pure-form pure-form-stacked'>
                 <br>
                 Data source:
                 <% if (!evernote) { %>
@@ -52,6 +52,10 @@
                 <label for="source4" class="pure-radio">
                     <input id="source4" type="radio" name="source" value="gkg">
                     Get Connections for Entity
+                </label>
+                <label for="source5" class="pure-radio">
+                    <input id="source5" type="radio" name="source" value="file">
+                    Upload a File
                 </label>
                 <div id="inputplace"></div>
 
@@ -129,6 +133,12 @@
                     <input type="text" name="port" id="searchbox5" value="993" />
                     <br>Your e-mail and password are not saved, <br>only sent to the server.  <br>
                 </div>
+
+                <div id="filebox" style="display: none">
+                    <input type="file" name="uploadedFile" />
+
+                 </div>
+
                 <br>
 
                 <div id="limitgkg" style="display: none">
@@ -259,6 +269,7 @@
             var radioButtons2 = $("[name=extract]"); // get both radiobuttons
 
             var searchbox  = $("#searchbox");
+            var filebox = $("#filebox");
 
             radioButtons.change(function () {
                 if( $(this).val() === "email" ) { // this time, we do need to check the value
@@ -269,6 +280,9 @@
                     $("#howmanyposts").show();
                     $("#importsettings").show();
 
+                }
+                else if( $(this).val() === "file" ) { // this time, we do need to check the value
+                    filebox.show();
                 }
                 else if ($(this).val() === "evernote") {
                     window.location.href = "/evernote_oauth";
