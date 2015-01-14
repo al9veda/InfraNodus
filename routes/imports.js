@@ -38,6 +38,7 @@ var mimelib = require("mimelib");
 var phantom = require('phantom');
 var cheerio = require('cheerio');
 
+var fs = require('fs');
 
 // Keeping them here as they are useful libs for future use
 
@@ -1149,9 +1150,20 @@ exports.submit = function(req, res,  next) {
 
     }
     else if (service == 'file') {
-        console.log('here');
-        console.log(req.files);
-        res.redirect('/import');
+
+        fs.readFile(req.files.uploadedFile.path, function (err, data) {
+            if (err) throw err;
+            // data will contain your file contents
+            console.log(data.toString('utf8'))
+
+            // delete file
+            fs.unlink(req.files.uploadedFile.path, function (err) {
+                if (err) throw err;
+                console.log('successfully deleted ' + req.files.path);
+            });
+        });
+
+
 
     }
 
