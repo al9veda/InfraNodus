@@ -1153,8 +1153,30 @@ exports.submit = function(req, res,  next) {
 
         fs.readFile(req.files.uploadedFile.path, function (err, data) {
             if (err) throw err;
+
             // data will contain your file contents
-            console.log(data.toString('utf8'))
+            var filecontents = data.toString('utf8');
+
+            var books = filecontents.split("bookMain yourHighlightsHeader");
+
+            for (var i = 0; i < books.length; i++) {
+
+                var $ = cheerio.load(books[i]);
+
+                $(".title").each(function (index) {
+                    var bookname = $(this).text();
+                    console.log(bookname);
+
+                    $(".highlight").each(function (index) {
+                        var hightlights = $(this).text();
+                        console.log(hightlights);
+                    });
+
+                });
+
+
+            }
+
 
             // delete file
             fs.unlink(req.files.uploadedFile.path, function (err) {

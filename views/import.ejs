@@ -110,12 +110,13 @@
                 </div>
 
 
-
+                <div id="searchtermbox">
                 Account / Hashtag / Searchterm:
                 <br>
 
                 <input type='text' name='search' id="search" placeholder='@username or #hashtag' value="<% if (fornode) { %><%= fornode %><% } %>" />
                 <br>
+                </div>
 
                 <div id="listview" style="display: none">
                    &nbsp;<br>
@@ -125,7 +126,9 @@
 
                 </div>
 
-                <div id="searchbox" style="display: none">
+                <div id="emailbox" style="display: none">
+                    Your account details:
+<br>
                     <input type="text" name="email" id="searchbox1" value="your@email.com" />
                     <input type="password" name="password" id="searchbox2" value="password" />
                     <input type="text" name="host" id="searchbox3" value="imap.gmail.com" />
@@ -274,31 +277,46 @@
             radioButtons.change(function () {
                 if( $(this).val() === "email" ) { // this time, we do need to check the value
                     searchbox.show();
-                    $("#search").hide();
                     $("#limitgkg").hide();
                     $("#extracttwitter").hide();
                     $("#howmanyposts").show();
                     $("#importsettings").show();
+                    $("#searchtermbox").hide();
+                    $("#emailbox").show();
+                    filebox.hide();
 
                 }
                 else if( $(this).val() === "file" ) { // this time, we do need to check the value
                     filebox.show();
+                    $("#searchtermbox").hide();
+                    $("#limitgkg").hide();
+                    $("#extracttwitter").hide();
+                    $("#howmanyposts").hide();
+                    $("#importsettings").hide();
                 }
                 else if ($(this).val() === "evernote") {
                     window.location.href = "/evernote_oauth";
                     $("#limitgkg").hide();
                     $("#extracttwitter").hide();
+                    $("#searchtermbox").hide();
                     $("#howmanyposts").show();
                     $("#importsettings").show();
+                    $("#emailbox").hide();
+                    filebox.hide();
+
 
                 }
                 else if ($(this).val() === "gkg") {
                     $("#settings1").prop("checked", false);
                     $("#settings2").prop("checked", true);
+                    $("#searchtermbox").show();
+                    $("#emailbox").hide();
                     $("#limitgkg").show();
                     $("#extracttwitter").hide();
                     $("#howmanyposts").hide();
                     $("#importsettings").hide();
+                    filebox.hide();
+
 
                 }
                 else if ($(this).val() === "lists") {
@@ -306,12 +324,16 @@
                 }
                 else
                 {
-                    searchbox.hide();
-                    $("#search").show();
                     $("#limitgkg").hide();
                     $("#extracttwitter").show();
                     $("#howmanyposts").show();
                     $("#importsettings").show();
+                    $("#emailbox").hide();
+                    filebox.hide();
+                    $("#searchtermbox").show();
+
+
+
                 }
             });
 
