@@ -1157,25 +1157,143 @@ exports.submit = function(req, res,  next) {
             // data will contain your file contents
             var filecontents = data.toString('utf8');
 
-            var books = filecontents.split("bookMain yourHighlightsHeader");
+            var $ = cheerio.load(filecontents);
 
-            for (var i = 0; i < books.length; i++) {
+            async.waterfall([
 
-                var $ = cheerio.load(books[i]);
+                function(callback){
 
-                $(".title").each(function (index) {
-                    var bookname = $(this).text();
-                    console.log(bookname);
+                    var addToContexts = [];
 
-                    $(".highlight").each(function (index) {
-                        var hightlights = $(this).text();
-                        console.log(hightlights);
+                    $(".title").each(function (index) {
+
+                            // Get the book names
+                            var bookname = $(this).text();
+
+
+                            // Translate the book name into the context name
+                            var currentcontext = S(bookname).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                            currentcontext = currentcontext.replace(/[^\w]/gi, '');
+                            currentcontext = currentcontext.substr(0,10);
+
+                            addToContexts.push(currentcontext);
+
                     });
 
-                });
+
+                    validate.getContextID(user_id, addToContexts, function(result, err) {
+                        if (err) {
+                            res.error('Something went wrong when adding Evernote folders into Neo4J database. Try changing the name of your Evernote folder or open an issue on GitHub.');
+                            res.redirect('back');
+                        }
+                        else {
+
+                            // What are the contexts that already exist for this user and their IDs?
+                            // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
+                            var contexts = result;
+
+                            console.log('Extracted contexts from DB with IDs');
+                            console.log(contexts);
+
+                            callback(null, contexts);
+                        }
 
 
-            }
+
+                    });
+
+
+
+                },
+                function(contexts, callback){
+
+                    callback(null,contexts);
+
+                }
+            ], function (err, contexts) {
+
+                if (err) {
+
+                    console.log(err);
+
+                }
+                else {
+
+
+                    var books = filecontents.split("bookMain yourHighlightsHeader");
+
+                    for (var i = 0; i < books.length; i++) {
+
+                        var current_book = books[i];
+                        var $$ = cheerio.load(current_book);
+
+
+                        var bookname = $$(".title").first().text();
+
+                        var currentcontext = S(bookname).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                            currentcontext = currentcontext.replace(/[^\w]/gi, '');
+                            currentcontext = currentcontext.substr(0,10);
+
+
+                        $$(".highlight").each(function (index) {
+
+                            // Get the book names
+                            var highlight = $(this).text();
+
+
+                            var addingcontexts = [];
+                            for (var j = 0; j < contexts.length; j++) {
+                                 if (contexts[j].name == currentcontext) {
+                                      addingcontexts.push(contexts[j]);
+                                 }
+                            }
+
+                            console.log('contextsss');
+                            console.log(contexts);
+                            console.log('addingcontextsss');
+                            console.log(addingcontexts);
+                            saveHighlight(highlight, addingcontexts);
+                        });
+
+
+                    }
+
+                    function saveHighlight(highlight, contexts) {
+
+
+
+                            // and finally create an object to send this entry with the right context
+
+                            var req = {
+                                body:  {
+                                    entry: {
+                                        body: highlight
+                                    },
+                                    context: ''
+                                },
+
+                                contextids: contexts,
+                                internal: 1
+                            };
+
+
+                           entries.submit(req,res);
+
+
+
+
+                    }
+
+                    // Move on to the next one
+                    res.error('Importing content... Please, reload this page in a few seconds...');
+                    res.redirect(res.locals.user.name + '/edit');
+
+
+
+
+                }
+            });
+
 
 
             // delete file
