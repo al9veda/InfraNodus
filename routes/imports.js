@@ -1153,22 +1153,28 @@ exports.submit = function(req, res,  next) {
 
         console.log(req.files);
 
+        // Is the file uploaded and is it a text / html one?
         if (req.files && req.files.uploadedFile.type == 'text/html') {
 
+            // Read that file
             fs.readFile(req.files.uploadedFile.path, function (err, data) {
                 if (err) throw err;
 
                 // data will contain your file contents
                 var filecontents = data.toString('utf8');
 
+                // Load DIVs in the file contents
                 var $ = cheerio.load(filecontents);
 
+                // Now step by step...
                 async.waterfall([
 
                     function(callback){
 
                         var addToContexts = [];
 
+                        // Is there any DIVs with the class .title in that file? This is how we check if it's an Amazon file
+                        // TODO add another check for other type of files
                         if ($(".title").length) {
 
                             $(".title").each(function (index) {
@@ -1209,12 +1215,11 @@ exports.submit = function(req, res,  next) {
                             });
 
                         }
+                        // We didn't find any titles inside the book...
                         else {
                             err = 'Sorry, but InfraNodus does not recognize this kind of file yet...';
                             callback(err);
                         }
-
-
 
 
                     },
@@ -1234,17 +1239,21 @@ exports.submit = function(req, res,  next) {
                     }
                     else {
 
-
+                        // Separate Amazon highlights file into blocks by the books
                         var books = filecontents.split("bookMain yourHighlightsHeader");
+
+                        var numHighlights = 0;
 
                         for (var i = 0; i < books.length; i++) {
 
                             var current_book = books[i];
                             var $$ = cheerio.load(current_book);
 
-
+                            // Get the name of the book
                             var bookname = $$(".title").first().text();
 
+                            // Convert it to the context name
+                            // TODO this repeats the function above from validate.ContextID so make sure not to change it if the above is not changed also
                             var currentcontext = S(bookname).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
                                 currentcontext = currentcontext.replace(/[^\w]/gi, '');
                                 currentcontext = currentcontext.substr(0,10);
@@ -1256,18 +1265,22 @@ exports.submit = function(req, res,  next) {
                                 var highlight = $(this).text();
 
 
+                                // Check the corresponding context ID for the book name
                                 var addingcontexts = [];
+
                                 for (var j = 0; j < contexts.length; j++) {
                                      if (contexts[j].name == currentcontext) {
                                           addingcontexts.push(contexts[j]);
                                      }
                                 }
 
-                                console.log('contextsss');
-                                console.log(contexts);
-                                console.log('addingcontextsss');
-                                console.log(addingcontexts);
-                                saveHighlight(highlight, addingcontexts);
+                                // Only add a statement if it's below the max limit
+                                if (numHighlights < limit) {
+                                     saveHighlight(highlight, addingcontexts);
+                                }
+
+                                numHighlights++;
+
                             });
 
 
