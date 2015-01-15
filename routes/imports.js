@@ -38,6 +38,7 @@ var mimelib = require("mimelib");
 var phantom = require('phantom');
 var cheerio = require('cheerio');
 
+var fs = require('fs');
 
 // Keeping them here as they are useful libs for future use
 
@@ -1146,6 +1147,230 @@ exports.submit = function(req, res,  next) {
             });
 
         }
+
+    }
+    else if (service == 'file') {
+
+        console.log(req.files);
+
+        // Is the file uploaded and is it a text / html one?
+        if (req.files && req.files.uploadedFile.type == 'text/html') {
+
+            // Import parameters
+            var titlefield = '';
+
+            if (req.body.titlefield && req.body.titlefield.length > 0) {
+                titlefield = '.' + req.body.titlefield;
+            }
+
+
+
+            var processfield = '.highlight';
+
+            if (req.body.processfield) {
+                processfield = '.' + req.body.processfield;
+            }
+
+            // Read that file
+            fs.readFile(req.files.uploadedFile.path, function (err, data) {
+                if (err) throw err;
+
+                // data will contain your file contents
+                var filecontents = data.toString('utf8');
+
+                // Load DIVs in the file contents
+                var $ = cheerio.load(filecontents);
+
+                // Now step by step...
+                async.waterfall([
+
+                    function(callback){
+
+                        var addToContexts = [];
+
+                        // Is there any DIVs with the class .title in that file? This is how we check if it's an Amazon file
+                        // TODO add another check for other type of files
+
+                        if (titlefield && $(titlefield).length) {
+                            $(titlefield).each(function (index) {
+
+                                // Get the book names
+                                var bookname = $(this).text();
+
+
+                                // Translate the book name into the context name
+                                var currentcontext = S(bookname).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                                currentcontext = currentcontext.replace(/[^\w]/gi, '');
+                                currentcontext = currentcontext.substr(0,12);
+
+                                addToContexts.push(currentcontext);
+
+                            });
+                         }
+                        else  {
+                            var currentcontext = S(importContext).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                            currentcontext = currentcontext.replace(/[^\w]/gi, '');
+                            currentcontext = currentcontext.substr(0,12);
+                            addToContexts.push(importContext);
+                        }
+
+
+                        validate.getContextID(user_id, addToContexts, function(result, err) {
+
+                                if (err) {
+                                    res.error('Something went wrong when adding contexts into Neo4J database. Could be a problem with the file.');
+                                    res.redirect('back');
+                                }
+
+                                else {
+
+                                    // What are the contexts that already exist for this user and their IDs?
+                                    // Note: actually there's been no contexts, so we just created IDs for all the contexts contained in the statement
+                                    var contexts = result;
+
+                                    console.log('Extracted contexts from DB with IDs');
+                                    console.log(contexts);
+
+                                    callback(null, contexts);
+                                }
+
+                        });
+
+
+
+
+                    },
+                    function(contexts, callback){
+
+                        // Do import fields exist?
+                        if ($(processfield).length) {
+                            callback(null,contexts);
+                        }
+
+                        else {
+                            err = 'Sorry, but InfraNodus does not recognize this kind of content yet. Add a feature request on our GitHub and we will look into it.';
+                            callback(err);
+                        }
+
+
+                    }
+                ], function (err, contexts) {
+
+                    if (err) {
+
+                        console.log(err);
+                        res.error(err);
+                        res.redirect('back');
+
+                    }
+                    else {
+
+                        // Separate Amazon highlights file into blocks by the books
+                        var books = filecontents.split("bookMain yourHighlightsHeader");
+
+                        var numHighlights = 0;
+
+                        for (var i = 0; i < books.length; i++) {
+
+                            var current_book = books[i];
+                            var $$ = cheerio.load(current_book);
+
+                            // Get the name of the book
+                            var bookname = '';
+
+                            if (titlefield && $$(titlefield).length) {
+                                bookname = $$(titlefield).first().text();
+                            }
+                            else {
+                                bookname = importContext;
+                            }
+
+
+
+                            // Convert it to the context name
+                            // TODO this repeats the function above from validate.ContextID so make sure not to change it if the above is not changed also
+                            var currentcontext = S(bookname).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                                currentcontext = currentcontext.replace(/[^\w]/gi, '');
+                                currentcontext = currentcontext.substr(0,12);
+
+
+                            $$(processfield).each(function (index) {
+
+                                // Get the book names
+                                var highlight = $(this).text();
+
+
+                                // Check the corresponding context ID for the book name
+                                var addingcontexts = [];
+
+                                for (var j = 0; j < contexts.length; j++) {
+                                     if (contexts[j].name == currentcontext) {
+                                          addingcontexts.push(contexts[j]);
+                                     }
+                                }
+
+                                // Only add a statement if it's below the max limit
+                                if (numHighlights < limit) {
+                                     saveHighlight(highlight, addingcontexts);
+                                }
+
+                                numHighlights++;
+
+                            });
+
+
+                        }
+
+                        function saveHighlight(highlight, contexts) {
+
+
+
+                                // and finally create an object to send this entry with the right context
+
+                                var req = {
+                                    body:  {
+                                        entry: {
+                                            body: highlight
+                                        },
+                                        context: ''
+                                    },
+
+                                    contextids: contexts,
+                                    internal: 1
+                                };
+
+
+                               entries.submit(req,res);
+
+
+                        }
+
+                        // Move on to the next one
+                        res.error('Importing the content... Please, reload this page in 30 seconds...');
+
+                        if (titlefield.length == 0 && importContext) {
+                            res.redirect(res.locals.user.name + '/' + importContext + '/edit');
+                        } else {
+                            res.redirect(res.locals.user.name + '/edit');
+                        }
+
+                    }
+                });
+
+                // delete file
+                fs.unlink(req.files.uploadedFile.path, function (err) {
+                    if (err) throw err;
+                    console.log('successfully deleted ' + req.files.path);
+                });
+            });
+        }
+
+        else {
+            res.error('Sorry, but InfraNodus does not recognize this kind of content yet. Add a feature request on GitHub and we will look into it.');
+            res.redirect('back');
+        }
+
+
 
     }
 
