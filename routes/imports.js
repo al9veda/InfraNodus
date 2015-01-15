@@ -1248,7 +1248,7 @@ exports.submit = function(req, res,  next) {
                         }
 
                         else {
-                            err = 'Sorry, but InfraNodus does not recognize this kind of content yet. Add in issue on <a href="http://github.com/noduslabs/infranodus/issue" target="_blank">GitHub</a> and we will look into it.';
+                            err = 'Sorry, but InfraNodus does not recognize this kind of content yet. Add a feature request on our GitHub and we will look into it.';
                             callback(err);
                         }
 
@@ -1366,7 +1366,7 @@ exports.submit = function(req, res,  next) {
         }
 
         else {
-            res.error('Sorry, but InfraNodus does not recognize this kind of content yet. Add in issue on <a href="http://github.com/noduslabs/infranodus/issue" target="_blank">GitHub</a> and we will look into it.');
+            res.error('Sorry, but InfraNodus does not recognize this kind of content yet. Add a feature request on GitHub and we will look into it.');
             res.redirect('back');
         }
 

@@ -158,12 +158,12 @@
                     <label for="titlefield" class="pure-radio">
                         Separate into contexts based on html class<br>
                         or leave empty to import everything in one.
-                        <input type="text" name="titlefield" id="titlefield" value="title"/>
+                        <input type="text" name="titlefield" id="titlefield" readonly="true" value="title"/>
                     </label>
                     <br>
                     <label for="processfield" class="pure-radio">
                         Statements to import are in the class
-                        <input type="text" name="processfield" id="processfield" value="highlight"/>
+                        <input type="text" name="processfield" id="processfield" readonly="true" value="highlight"/>
                     </label>
 
                 </div>
@@ -378,16 +378,23 @@
             if ($(this).val() === "zettel") {
                 $("#processfield").val('zettelcontent');
                 $("#titlefield").val('');
+                $("#processfield").prop("readonly",true);
+                $("#titlefield").prop("readonly",true);
             }
             else if ($(this).val() === "amazon")
             {
                 $("#processfield").val('highlight');
                 $("#titlefield").val('title');
+                $("#processfield").prop("readonly",true);
+                $("#titlefield").prop("readonly",true);
 
             }
             else if ($(this).val() === "other")
             {
                 $("#processfield").val('');
+                $("#titlefield").val('');
+                $("#processfield").prop("readonly",false);
+                $("#titlefield").prop("readonly",false);
             }
         });
 
