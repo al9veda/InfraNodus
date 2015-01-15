@@ -1156,6 +1156,21 @@ exports.submit = function(req, res,  next) {
         // Is the file uploaded and is it a text / html one?
         if (req.files && req.files.uploadedFile.type == 'text/html') {
 
+            // Import parameters
+            var titlefield = '';
+
+            if (req.body.titlefield && req.body.titlefield.length > 0) {
+                titlefield = '.' + req.body.titlefield;
+            }
+
+
+
+            var processfield = '.highlight';
+
+            if (req.body.processfield) {
+                processfield = '.' + req.body.processfield;
+            }
+
             // Read that file
             fs.readFile(req.files.uploadedFile.path, function (err, data) {
                 if (err) throw err;
@@ -1175,9 +1190,9 @@ exports.submit = function(req, res,  next) {
 
                         // Is there any DIVs with the class .title in that file? This is how we check if it's an Amazon file
                         // TODO add another check for other type of files
-                        if ($(".title").length) {
 
-                            $(".title").each(function (index) {
+                        if (titlefield && $(titlefield).length) {
+                            $(titlefield).each(function (index) {
 
                                 // Get the book names
                                 var bookname = $(this).text();
@@ -1186,18 +1201,27 @@ exports.submit = function(req, res,  next) {
                                 // Translate the book name into the context name
                                 var currentcontext = S(bookname).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
                                 currentcontext = currentcontext.replace(/[^\w]/gi, '');
-                                currentcontext = currentcontext.substr(0,10);
+                                currentcontext = currentcontext.substr(0,12);
 
                                 addToContexts.push(currentcontext);
 
                             });
+                         }
+                        else  {
+                            var currentcontext = S(importContext).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                            currentcontext = currentcontext.replace(/[^\w]/gi, '');
+                            currentcontext = currentcontext.substr(0,12);
+                            addToContexts.push(importContext);
+                        }
 
 
-                            validate.getContextID(user_id, addToContexts, function(result, err) {
+                        validate.getContextID(user_id, addToContexts, function(result, err) {
+
                                 if (err) {
-                                    res.error('Something went wrong when adding Evernote folders into Neo4J database. Try changing the name of your Evernote folder or open an issue on GitHub.');
+                                    res.error('Something went wrong when adding contexts into Neo4J database. Could be a problem with the file.');
                                     res.redirect('back');
                                 }
+
                                 else {
 
                                     // What are the contexts that already exist for this user and their IDs?
@@ -1210,22 +1234,24 @@ exports.submit = function(req, res,  next) {
                                     callback(null, contexts);
                                 }
 
+                        });
 
 
-                            });
-
-                        }
-                        // We didn't find any titles inside the book...
-                        else {
-                            err = 'Sorry, but InfraNodus does not recognize this kind of file yet...';
-                            callback(err);
-                        }
 
 
                     },
                     function(contexts, callback){
 
-                        callback(null,contexts);
+                        // Do import fields exist?
+                        if ($(processfield).length) {
+                            callback(null,contexts);
+                        }
+
+                        else {
+                            err = 'Sorry, but InfraNodus does not recognize this kind of content yet. Add in issue on <a href="http://github.com/noduslabs/infranodus/issue" target="_blank">GitHub</a> and we will look into it.';
+                            callback(err);
+                        }
+
 
                     }
                 ], function (err, contexts) {
@@ -1250,16 +1276,25 @@ exports.submit = function(req, res,  next) {
                             var $$ = cheerio.load(current_book);
 
                             // Get the name of the book
-                            var bookname = $$(".title").first().text();
+                            var bookname = '';
+
+                            if (titlefield && $$(titlefield).length) {
+                                bookname = $$(titlefield).first().text();
+                            }
+                            else {
+                                bookname = importContext;
+                            }
+
+
 
                             // Convert it to the context name
                             // TODO this repeats the function above from validate.ContextID so make sure not to change it if the above is not changed also
                             var currentcontext = S(bookname).dasherize().chompLeft('-').camelize().s.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
                                 currentcontext = currentcontext.replace(/[^\w]/gi, '');
-                                currentcontext = currentcontext.substr(0,10);
+                                currentcontext = currentcontext.substr(0,12);
 
 
-                            $$(".highlight").each(function (index) {
+                            $$(processfield).each(function (index) {
 
                                 // Get the book names
                                 var highlight = $(this).text();
@@ -1308,21 +1343,15 @@ exports.submit = function(req, res,  next) {
                                entries.submit(req,res);
 
 
-
-
                         }
 
                         // Move on to the next one
-                        res.error('Importing content... Please, reload this page in 30 seconds...');
+                        res.error('Importing the content... Please, reload this page in 30 seconds...');
                         res.redirect(res.locals.user.name + '/edit');
-
-
 
 
                     }
                 });
-
-
 
                 // delete file
                 fs.unlink(req.files.uploadedFile.path, function (err) {
@@ -1331,8 +1360,9 @@ exports.submit = function(req, res,  next) {
                 });
             });
         }
+
         else {
-            res.error('This is not an html / text file...');
+            res.error('Sorry, but InfraNodus does not recognize this kind of content yet. Add in issue on <a href="http://github.com/noduslabs/infranodus/issue" target="_blank">GitHub</a> and we will look into it.');
             res.redirect('back');
         }
 

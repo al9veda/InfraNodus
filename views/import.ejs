@@ -139,20 +139,46 @@
 
                 <div id="filebox" style="display: none">
                     <input type="file" name="uploadedFile" />
+<br>&nbsp;<br>
+                    <label for="file1" class="pure-radio">
+                        <input id="file1" type="radio" name="filetype" value="amazon" checked>
+                        import Amazon Kindle Highlights (<a href="/images/amazon-import.jpg" target="_blank">help</a>)
+                    </label>
 
-                 </div>
+                    <label for="file2" class="pure-radio">
+                        <input id="file2" type="radio" name="filetype" value="zettel">
+                        import Zettelnotes file
+                    </label>
 
-                <br>
+                    <label for="file3" class="pure-radio">
+                        <input id="file3" type="radio" name="filetype" value="other">
+                        other filetype
+                    </label>
+                    <br>
+                    <label for="titlefield" class="pure-radio">
+                        Separate into contexts based on html class<br>
+                        or leave empty to import everything in one.
+                        <input type="text" name="titlefield" id="titlefield" value="title"/>
+                    </label>
+                    <br>
+                    <label for="processfield" class="pure-radio">
+                        Statements to import are in the class
+                        <input type="text" name="processfield" id="processfield" value="highlight"/>
+                    </label>
+
+                </div>
+
+
 
                 <div id="limitgkg" style="display: none">
                     <br>
                     Max Number of Connections:
                     <br>
                     <input type="text" name="limitgkg" id="limitgkgimport" value="7" size="2" maxlength="2" />
-
+                    <br>
                 </div>
-                <br>
 
+                <br>&nbsp;<br>
                 Save in Context:
                 <br>
                 <input type='text' name='context' value='<% if (context) { %><%= context %><% } else { %>imported<% } %>'/>
@@ -270,6 +296,7 @@
 
             var radioButtons = $("[name=source]"); // get both radiobuttons
             var radioButtons2 = $("[name=extract]"); // get both radiobuttons
+            var radioButtons3 = $("[name=filetype]"); // get both radiobuttons
 
             var searchbox  = $("#searchbox");
             var filebox = $("#filebox");
@@ -343,6 +370,21 @@
             else
             {
                 $("#listview").hide();
+            }
+        });
+
+        // Later we can add more functions here
+        radioButtons3.change(function () {
+            if ($(this).val() === "zettel") {
+                $("#processfield").val('zettelcontent');
+            }
+            else if ($(this).val() === "amazon")
+            {
+                $("#processfield").val('highlight');
+            }
+            else if ($(this).val() === "other")
+            {
+                $("#processfield").val('');
             }
         });
 
