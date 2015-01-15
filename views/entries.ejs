@@ -156,7 +156,7 @@
                     &nbsp;<br>
                     <% if (contextpublic && context && !perceivername) { %>
                         <input type='submit' name="privacy" value="make private" class="pure-button pure-button-primary">
-                    <% } else if (!perceivername) { %>
+                    <% } else if (!perceivername && context) { %>
                         <input type='submit' name="privacy" value="make public" class="pure-button pure-button-primary">
                     <% }  %>
 
