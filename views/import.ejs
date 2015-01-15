@@ -377,10 +377,13 @@
         radioButtons3.change(function () {
             if ($(this).val() === "zettel") {
                 $("#processfield").val('zettelcontent');
+                $("#titlefield").val('');
             }
             else if ($(this).val() === "amazon")
             {
                 $("#processfield").val('highlight');
+                $("#titlefield").val('title');
+
             }
             else if ($(this).val() === "other")
             {

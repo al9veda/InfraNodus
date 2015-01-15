@@ -1347,8 +1347,12 @@ exports.submit = function(req, res,  next) {
 
                         // Move on to the next one
                         res.error('Importing the content... Please, reload this page in 30 seconds...');
-                        res.redirect(res.locals.user.name + '/edit');
 
+                        if (titlefield.length == 0 && importContext) {
+                            res.redirect(res.locals.user.name + '/' + importContext + '/edit');
+                        } else {
+                            res.redirect(res.locals.user.name + '/edit');
+                        }
 
                     }
                 });
