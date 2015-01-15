@@ -1820,7 +1820,10 @@ sigma.parsers.json(
         $('#addcontextinput').submit(function(e) {
             e.preventDefault(); // to stop the form from submitting
             if ($('#addcontextname').val().length > 0) {
-                window.location.href = "/<%= user.name %>/" + $('#addcontextname').val() + '/edit';
+                var contextredirect = $('#addcontextname').val();
+                contextredirect = contextredirect.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                contextredirect = contextredirect.replace(/[^\w]/gi, '');
+                window.location.href = "/<%= user.name %>/" + contextredirect + '/edit';
             }
 
         });
