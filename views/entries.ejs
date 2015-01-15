@@ -1680,7 +1680,13 @@ sigma.parsers.json(
             context_filters += '<li class="app-context-link menu-item-divided"><a href="/<%= perceivername %>/private/edit">private</a></li>';
         }
 
-        addNewContext = '<li id="addNewContext" class="menu-item-divided"><a href="javascript:">+</a></li><li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
+        <% if (!perceivername) { %>
+            addNewContext = '<li id="addNewContext" class="menu-item-divided"><a id="addcontextbutton" href="javascript:">+</a>&nbsp;<form action="http://www.example.com" method="GET" class="pure-form" id="addcontextinput"><input type="text" id="addcontextname" size="7" class="pure-input"></form></li><li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
+        <% } else { %>
+            addNewContext = '<li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
+
+        <% } %>
+
 
         // We are viewing the user's public page?
 
@@ -1804,23 +1810,22 @@ sigma.parsers.json(
 
         $(document).on("click", "#addNewContext", function(e){
 
-            current_context_field = [];
+            $("#addcontextinput").css("visibility", "visible");
+            $("#addcontextname").focus();
 
-            $("#addToContexts").tagHandler({
-                assignedTags: current_context_field,
-                availableTags: contextNames,
-                autocomplete: true,
-                afterAdd: function(tag) {
-                    current_context_field.push(tag);
-                    $("#addedContexts").val(current_context_field.join());
-                    console.log('contexts in statement field: ' + current_context_field.join());
-                }
-            });
-
-            $("#tagInputBox").focus();
 
 
         });
+
+        <% if (!perceivername) { %>
+        $('#addcontextinput').submit(function(e) {
+            e.preventDefault(); // to stop the form from submitting
+            if ($('#addcontextname').val().length > 0) {
+                window.location.href = "/<%= user.name %>/" + $('#addcontextname').val() + '/edit';
+            }
+
+        });
+        <% } %>
 
         // Now time to trigger the actions we want to have when user clicks on the contexts
         addContextTriggers();

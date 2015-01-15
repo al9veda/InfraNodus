@@ -436,6 +436,20 @@ a:hover.app-more-link {
    */
 
 
+
+#addcontextbutton {
+    float: left;
+}
+#addcontextinput {
+    visibility: hidden;
+    z-index:99;
+    margin: -20px 0px 0px 30px !important;
+
+}
+
+
+
+
 .hidden {display:none}
 
 body {
