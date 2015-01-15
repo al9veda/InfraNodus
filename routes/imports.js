@@ -589,9 +589,15 @@ exports.submit = function(req, res,  next) {
 
         var default_context = importContext;
 
-        // Which notebooks to import
-        var notebooksToImport = req.body.notebooks;
+        // Which notebooks to import - this is for checkboxes
+        // var notebooksToImport = req.body.notebooks;
 
+        // And this is for radio option
+        var notebooksToImport = [];
+
+        if (req.body.notebooks) {
+            notebooksToImport.push(req.body.notebooks);
+        }
 
         notebooks = noteStore.listNotebooks(function(err, notebooks) {
             //var notebookid = notebooks[1].guid
@@ -612,24 +618,34 @@ exports.submit = function(req, res,  next) {
 
                 var notebooksList = [];
 
+                var onenotebookid = [];
+
                 for (var t = 0; t < notebooks.length; t++) {
 
                      // Check if the notebook is in the list of the notebooks to import
                      if (notebooksToImport.indexOf(notebooks[t].name) > -1) {
                         notebooks_db[notebooks[t].guid] = notebooks[t].name;
                         notebooksList.push(notebooks[t].name);
+                        onenotebookid = notebooks[t].guid;
                      }
 
                 }
 
+                // This is for checkboxes to filter which notebook we import
+                if (notebooksList.length == 1) {
+                    noteFilter.notebookGuid = onenotebookid;
+                }
+
                 notesMetadataResultSpec.includeNotebookGuid = true;
+
+                if (notebooksToImport.length > 0) {
 
                 noteStore.findNotesMetadata(userInfo, noteFilter, offset, count, notesMetadataResultSpec, function(err, noteList) {
                     if (err) {
+
                         console.log(err);
-                        console.log(noteList);
+
                     } else {
-                        console.log(noteList);
 
                         var notebook_name = [];
 
@@ -792,6 +808,12 @@ exports.submit = function(req, res,  next) {
 
 
                 });
+
+                }
+                else {
+                    res.error('You did not select any notebooks, please, try again');
+                    res.redirect('back');
+                }
             }
 
 

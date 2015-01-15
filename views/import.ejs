@@ -207,13 +207,10 @@
                 <br>
 
 
-                <br>
-                <br>
-
                 Import Notebooks:
                 <br>
                 <% if (notebooks) { for (var i=0; i<notebooks.length; i++) { %>
-                <input type="checkbox" name="notebooks" value="<%= notebooks[i] %>" checked> <%= notebooks[i] %><br>
+                <input type="radio" name="notebooks" value="<%= notebooks[i] %>"> <%= notebooks[i] %><br>
                 <% } }  %>
 
                 <br>
