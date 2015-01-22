@@ -1915,8 +1915,8 @@ sigma.parsers.json(
 
 
             // Debug: show which nodes are clicked
-            console.log(pins);
 
+            console.log(pins);
 
             // Are any nodes at all selected on the graph?
 
@@ -1924,67 +1924,7 @@ sigma.parsers.json(
 
             // Now we reiterate through every node in the graph
 
-            sigma.instances(0).graph.nodes().filter(function(n) {
-
-                var pinSearch = '';
-
-                // Lemmataze search query if we're coming from search box
-
-                if (origin == 'search') {
-                    var nodeLemma = window.jstemmer(n.originalLabel);
-
-
-                    if (nodeLemma.length > 0) {
-                        pinSearch = nodeLemma;
-                    }
-                    else {
-                        pinSearch = n.originalLabel;
-                    }
-                }
-
-                // This means the user clicked on the tag or on the graph, so we use that exact parameter to search
-
-                else {
-                    pinSearch = n.originalLabel;
-                }
-
-                // Is the node one of the ones clicked?
-
-                if (pins.indexOf(pinSearch) > -1) {
-
-                    // The node clicked
-                    var nodeId = n.id;
-
-                    // Its neighbors
-                    var nnodes = sigma.instances(0).graph.neighbors(nodeId);
-
-                    // We want to keep showing the neighbors of the clicked node...
-                    for (key in nnodes) {
-                        toKeep.push(nnodes[key]);
-                    }
-
-                    // ... and the node itself
-                    toKeep.push(n);
-
-                }
-
-            });
-
-            // Make array of nodes to keep unique to avoid duplicates
-            toKeep = _.uniq(toKeep);
-
-
-            // Now convert this to an array that will be understood by the functions below
-
-            for (key in toKeep) {
-                toKeepMap[toKeep[key].id] = toKeep[key];
-            }
-
-
-
-            sigma.instances(0).graph.nodes().forEach(function(n) {
-
-                if (toKeepMap[n.id])  {
+                sigma.instances(0).graph.nodes().filter(function(n) {
 
                     var pinSearch = '';
 
@@ -2008,36 +1948,95 @@ sigma.parsers.json(
                         pinSearch = n.originalLabel;
                     }
 
+                    // Is the node of the graph one of the ones that was clicked before?
 
                     if (pins.indexOf(pinSearch) > -1) {
-                            n.color = '#0089e0';
 
+                        // The node clicked
+                        var nodeId = n.id;
+
+                        // Its neighbors
+                        var nnodes = sigma.instances(0).graph.neighbors(nodeId);
+
+                        // We want to keep showing the neighbors of the clicked node...
+                        for (key in nnodes) {
+                            toKeep.push(nnodes[key]);
+                        }
+
+                        // ... and the node itself
+                        toKeep.push(n);
+
+                    }
+
+                });
+
+                // Make array of nodes to keep unique to avoid duplicates
+                toKeep = _.uniq(toKeep);
+
+
+                // Now convert this to an array that will be understood by the functions below
+
+                for (key in toKeep) {
+                    toKeepMap[toKeep[key].id] = toKeep[key];
+                }
+
+
+                // For each node in the graph
+
+                sigma.instances(0).graph.nodes().forEach(function(n) {
+
+                    if (toKeepMap[n.id])  {
+
+                        var pinSearch = '';
+
+                        // Lemmataze search query if we're coming from search box
+
+                        if (origin == 'search') {
+                            var nodeLemma = window.jstemmer(n.originalLabel);
+
+
+                            if (nodeLemma.length > 0) {
+                                pinSearch = nodeLemma;
+                            }
+                            else {
+                                pinSearch = n.originalLabel;
+                            }
+                        }
+
+                        // This means the user clicked on the tag or on the graph, so we use that exact parameter to search
+
+                        else {
+                            pinSearch = n.originalLabel;
+                        }
+
+
+                        if (pins.indexOf(pinSearch) > -1) {
+                                n.color = '#0089e0';
+
+                            }
+                            else {
+                                n.color = n.originalColor;
+
+                            }
+                            n.label = n.originalLabel;
+
+                    }
+                        else  {
+                            n.color = '#ddd';
+                            n.label = '';
+                        }
+                });
+
+                sigma.instances(0).graph.edges().forEach(function(e) {
+                        if (toKeepMap[e.source] && toKeepMap[e.target]) {
+                            e.color = e.originalColor;
                         }
                         else {
-                            n.color = n.originalColor;
-
+                            e.color = '#ddd';
                         }
-                        n.label = n.originalLabel;
+                });
 
-                }
-                    else  {
-                        n.color = '#ddd';
-                        n.label = '';
-                    }
-            });
 
-            sigma.instances(0).graph.edges().forEach(function(e) {
-                    if (toKeepMap[e.source] && toKeepMap[e.target]) {
-                        e.color = e.originalColor;
-                    }
-                    else {
-                        e.color = '#ddd';
-                    }
-            });
-
-            // Since the data has been modified, we need to
-            // call the refresh method to make the colors
-            // update effective.
 
             }
 
@@ -2061,6 +2060,10 @@ sigma.parsers.json(
                 });
 
             }
+
+            // Since the data has been modified, we need to
+            // call the refresh method to make the colors
+            // update effective.
 
             sigma.instances(0).refresh();
 
