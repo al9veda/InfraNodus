@@ -1922,57 +1922,83 @@ sigma.parsers.json(
 
             if (pins.length > 0) {
 
-            // Now we reiterate through every node in the graph
 
-                sigma.instances(0).graph.nodes().filter(function(n) {
+                // Reiterate for each pinned node
 
-                    var pinSearch = '';
+                for (var i = 0; i < pins.length; i ++) {
 
-                    // Lemmataze search query if we're coming from search box
+                    // Now we reiterate through every node in the graph
 
-                    if (origin == 'search') {
-                        var nodeLemma = window.jstemmer(n.originalLabel);
+                    sigma.instances(0).graph.nodes().filter(function(n) {
+
+                        var pinSearch = '';
+
+                        // Lemmataze search query if we're coming from search box
+
+                        if (origin == 'search') {
+
+                            var nodeLemma = window.jstemmer(n.originalLabel);
 
 
-                        if (nodeLemma.length > 0) {
-                            pinSearch = nodeLemma;
+                            if (nodeLemma.length > 0) {
+                                pinSearch = nodeLemma;
+                            }
+                            else {
+                                pinSearch = n.originalLabel;
+                            }
                         }
+
+                        // This means the user clicked on the tag or on the graph, so we use that exact parameter to search
+
                         else {
                             pinSearch = n.originalLabel;
                         }
-                    }
 
-                    // This means the user clicked on the tag or on the graph, so we use that exact parameter to search
+                        // Is the current node of the graph one of the ones that was clicked before?
 
-                    else {
-                        pinSearch = n.originalLabel;
-                    }
+                        if (pins[i] == pinSearch) {
 
-                    // Is the node of the graph one of the ones that was clicked before?
 
-                    if (pins.indexOf(pinSearch) > -1) {
 
-                        // The node clicked
-                        var nodeId = n.id;
+                            // The ID of the current node is...
+                            var nodeId = n.id;
 
-                        // Its neighbors
-                        var nnodes = sigma.instances(0).graph.neighbors(nodeId);
+                            // Its neighbors are...
+                            var nnodes = sigma.instances(0).graph.neighbors(nodeId);
 
-                        // We want to keep showing the neighbors of the clicked node...
-                        for (key in nnodes) {
-                            toKeep.push(nnodes[key]);
+                            var nnodesArray = []
+
+                            // We create an array from neighbors that looks like toKeep one
+
+                            for (key in nnodes) {
+                                nnodesArray.push(nnodes[key]);
+                            }
+
+                            // If that's not the first iteration, we only keep intersection of both
+
+                            if (i > 0) {
+                                toKeep = _.intersection(toKeep, nnodesArray);
+                            }
+                            else {
+                                toKeep = nnodesArray;
+                            }
+
+                            // add the node itself to keep
+                            toKeep.push(n);
+
+
+
                         }
 
-                        // ... and the node itself
-                        toKeep.push(n);
+                    });
 
-                    }
-
-                });
+                }
 
                 // Make array of nodes to keep unique to avoid duplicates
+
                 toKeep = _.uniq(toKeep);
 
+                console.log(toKeep);
 
                 // Now convert this to an array that will be understood by the functions below
 
