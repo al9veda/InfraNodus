@@ -1152,11 +1152,11 @@ sigma.parsers.json(
                 // Transform the sentence into a series of morphemes
                 var sentences_lemmas = sentences[i].split(' ');
 
-
-                for (var z = 0; z < sentences_lemmas.length; z++) {
+                // SEARCH MOD
+                /*for (var z = 0; z < sentences_lemmas.length; z++) {
                     sentences_lemmas[z] = window.jstemmer(sentences_lemmas[z]);
                 }
-
+*/
 
                 var sentences_lemmas_string = sentences_lemmas.join(' ');
 
@@ -1167,7 +1167,10 @@ sigma.parsers.json(
                     // Is the search term cyrillic?
                     var search_cyrillic = pinnedNodes[j].match(/[а-яА-Я]/);
 
-                    var search_lemma = window.jstemmer(pinnedNodes[j]);
+                    // SEARCHMOD
+                    // var search_lemma = window.jstemmer(pinnedNodes[j]);
+
+                    var search_lemma = pinnedNodes[j];
 
                     searchlemmas.push(search_lemma);
 
@@ -1885,7 +1888,10 @@ sigma.parsers.json(
                     // Is the search term cyrillic?
                     var search_cyrillic = searchArray[j].match(/[а-яА-Я]/);
 
-                    var search_lemma = window.jstemmer(searchArray[j]);
+                    // SEARCHMOD
+                    // var search_lemma = window.jstemmer(searchArray[j]);
+
+                    var search_lemma = searchArray[j];
 
                     searchPhraseLemmas.push(search_lemma);
 
@@ -1935,7 +1941,8 @@ sigma.parsers.json(
 
                         // Lemmataze search query if we're coming from search box
 
-                        if (origin == 'search') {
+                        // SEARCHMOD
+                       /* if (origin == 'search') {
 
                             var nodeLemma = window.jstemmer(n.originalLabel);
 
@@ -1952,7 +1959,9 @@ sigma.parsers.json(
 
                         else {
                             pinSearch = n.originalLabel;
-                        }
+                        }*/
+
+                        pinSearch = n.originalLabel;
 
                         // Is the current node of the graph one of the ones that was clicked before?
 
@@ -2016,8 +2025,8 @@ sigma.parsers.json(
                         var pinSearch = '';
 
                         // Lemmataze search query if we're coming from search box
-
-                        if (origin == 'search') {
+                        // SEARCHMOD
+                       /* if (origin == 'search') {
                             var nodeLemma = window.jstemmer(n.originalLabel);
 
 
@@ -2033,7 +2042,9 @@ sigma.parsers.json(
 
                         else {
                             pinSearch = n.originalLabel;
-                        }
+                        }*/
+
+                        pinSearch = n.originalLabel;
 
 
                         if (pins.indexOf(pinSearch) > -1) {
