@@ -76,7 +76,9 @@ exports.list = function(req, res, next){
         for (var i = 0; i < entries.length; ++ i) {
               //entries[i].text = FlowdockText.autoLinkMentions(entries[i].text,{hashtagUrlBase:"/contexts/",hashtagClass:"app-context-link"});
               //entries[i].text = FlowdockText.autoLinkHashtags(entries[i].text,{hashtagUrlBase:"/concepts/",hashtagClass:"app-concept-link"});
-              entries[i].text = FlowdockText.autoLinkUrlsCustom(entries[i].text,{class:"app-url-link",target:"_blank"});
+            entries[i].text = validate.safe_tags(entries[i].text);
+            entries[i].text = FlowdockText.autoLinkUrlsCustom(entries[i].text,{class:"app-url-link",target:"_blank"});
+
         }
 
         console.log("Showing statements to user " + receiver);
