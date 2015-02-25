@@ -40,6 +40,8 @@ var cheerio = require('cheerio');
 
 var fs = require('fs');
 
+var google = require('google');
+
 // Keeping them here as they are useful libs for future use
 
 //var iconv = require('iconv-lite'); // converting encodings
@@ -1391,6 +1393,101 @@ exports.submit = function(req, res,  next) {
             res.error('Sorry, but InfraNodus does not recognize this kind of content yet. Add a feature request on GitHub and we will look into it.');
             res.redirect('back');
         }
+
+
+
+    }
+
+    else if (service == 'googlesearch')  {
+
+            google.lang = 'us';
+            google.tld = 'us';
+
+            google.resultsPerPage = limit;
+            var nextCounter = 0;
+
+
+            var statements = [];
+
+            var default_context = importContext;
+
+            var addToContexts = [];
+            addToContexts.push(default_context);
+
+            var excludesearchquery = req.body.excludesearchquery;
+
+            validate.getContextID(user_id, addToContexts, function(result, err) {
+
+            if (err) {
+                console.log(err);
+                res.error('Something went wrong when adding a new context into the database. Try changing its name or open an issue on GitHub.');
+                res.redirect('back');
+            }
+
+            else {
+                var contexts = result;
+                var req = {
+                    body:  {
+                        entry: {
+                            body: ''
+                        },
+                        context: default_context
+                    },
+
+                    contextids: contexts,
+                    internal: 1
+                };
+
+
+                google(searchString, function(err, next, links){
+
+                    if (err)    {
+                        console.log(err);
+                        res.error(JSON.stringify(err));
+                        res.redirect('back');
+                    }
+
+                    for (var i = 0; i < links.length; ++i) {
+                        var searchtext = ''
+                        // searchtext = links[i].title;
+                        searchtext += links[i].description;
+                        searchtext += ' ' + links[i].link;
+                        searchtext = searchtext.replace(/(0?[1-9]|[12][0-9]|3[01])\s{1}(Jan|Feb|Mar|Apr|May|Jun|Jul|Apr|Sep|Oct|Nov|Dec)\s{1}\d{4}/g, '');
+
+                        if (excludesearchquery) {
+                            var searchterms = searchString.split(/\s*\b\s*/);
+                            console.log(searchterms);
+                            console.log('splitted');
+                            for (var k = 0; k < searchterms.length; k++) {
+                                var searchPattern = new RegExp('('+searchterms[k]+')', 'ig');
+                                searchtext = searchtext.replace(searchPattern,' ');
+                                console.log('removed');
+                            }
+                        }
+
+                        req.body.entry.body = searchtext;
+                        entries.submit(req, res);
+                    }
+
+                    if (nextCounter < 4) {
+                        nextCounter += 1;
+                        if (next) next();
+                    }
+
+                });
+
+
+                // Move on to the next one
+
+                res.redirect(res.locals.user.name + '/' + default_context + '/edit');
+
+            }
+            });
+
+
+
+
+
 
 
 

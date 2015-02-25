@@ -57,6 +57,10 @@
                     <input id="source5" type="radio" name="source" value="file">
                     Upload a File
                 </label>
+                <label for="source6" class="pure-radio">
+                    <input id="source6" type="radio" name="source" value="googlesearch">
+                    Google Search
+                </label>
                 <div id="inputplace"></div>
 
                 <br>
@@ -107,6 +111,13 @@
 
                 <br>
 
+                </div>
+
+                <div id="googlesearch">
+                    <label for="extractfilter" class="pure-checkbox">
+                        <input id="extractfilter" type="checkbox" name="excludesearchquery" value="1"> exclude search terms from the graph<br>
+                    </label>
+                    <br><br>
                 </div>
 
 
@@ -307,6 +318,8 @@
                     $("#importsettings").show();
                     $("#searchtermbox").hide();
                     $("#emailbox").show();
+                    $("#googlesearch").hide();
+
                     filebox.hide();
 
                 }
@@ -316,6 +329,8 @@
                     $("#limitgkg").hide();
                     $("#extracttwitter").hide();
                     $("#importsettings").hide();
+                    $("#googlesearch").hide();
+
                 }
                 else if ($(this).val() === "evernote") {
                     window.location.href = "/evernote_oauth";
@@ -325,6 +340,8 @@
                     $("#howmanyposts").show();
                     $("#importsettings").show();
                     $("#emailbox").hide();
+                    $("#googlesearch").hide();
+
                     filebox.hide();
 
 
@@ -338,12 +355,24 @@
                     $("#extracttwitter").hide();
                     $("#howmanyposts").hide();
                     $("#importsettings").hide();
+                    $("#googlesearch").hide();
+
                     filebox.hide();
 
 
                 }
                 else if ($(this).val() === "lists") {
                     $("#listview").show();
+                }
+                else if ($(this).val() === "googlesearch") {
+                    $("#settings2").prop("checked", false);
+                    $("#settings1").prop("checked", true);
+                    $("#emailbox").hide();
+                    $("#limitgkg").hide();
+                    $("#extracttwitter").hide();
+                    $("#googlesearch").show();
+                    filebox.hide();
+
                 }
                 else
                 {
@@ -354,6 +383,8 @@
                     $("#emailbox").hide();
                     filebox.hide();
                     $("#searchtermbox").show();
+                    $("#googlesearch").hide();
+
 
 
 
