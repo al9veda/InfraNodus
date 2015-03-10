@@ -42,6 +42,11 @@ var fs = require('fs');
 
 var google = require('google');
 
+// Lemmatizer module initialization
+var Lemmer = require('node-lemmer').Lemmer;
+var lemmerEng = new Lemmer('english');
+var lemmerRus = new Lemmer('russian');
+
 // Keeping them here as they are useful libs for future use
 
 //var iconv = require('iconv-lite'); // converting encodings
@@ -1448,20 +1453,49 @@ exports.submit = function(req, res,  next) {
                     }
 
                     for (var i = 0; i < links.length; ++i) {
-                        var searchtext = ''
+
+                        var searchtext = '';
+
+                        // We don't show titles because otherwise there's overload of search terms in the graph
                         // searchtext = links[i].title;
+
                         searchtext += links[i].description;
                         searchtext += ' ' + links[i].link;
                         searchtext = searchtext.replace(/(0?[1-9]|[12][0-9]|3[01])\s{1}(Jan|Feb|Mar|Apr|May|Jun|Jul|Apr|Sep|Oct|Nov|Dec)\s{1}\d{4}/g, '');
 
                         if (excludesearchquery) {
-                            var searchterms = searchString.split(/\s*\b\s*/);
-                            console.log(searchterms);
-                            console.log('splitted');
+                            var searchterms = searchString.split(" ");
+
                             for (var k = 0; k < searchterms.length; k++) {
+
+                                // Remove the search term from the Google results
+                                // TODO maybe there's a way of keeping them in the text and removing the nodes
                                 var searchPattern = new RegExp('('+searchterms[k]+')', 'ig');
                                 searchtext = searchtext.replace(searchPattern,' ');
-                                console.log('removed');
+
+                                // Now we find lemmas, so we deal with plural cases and also with Russian word endings and suffixes
+                                // TODO this whole thing should be moved outside of this function and Russian lemmas should be added to stopwords not deleted from text
+
+                                if (/[а-яА-ЯЁё]/.test(searchterms[k]) == true) {
+                                    var lemmaterm = lemmerRus.lemmatize(searchterms[k]);
+                                    if (lemmaterm[0] != undefined) {
+                                        searchPattern = new RegExp('('+lemmaterm[0]['text'].toLowerCase()+')', 'ig');
+                                        searchtext = searchtext.replace(searchPattern,' ');
+                                    }
+                                }
+
+                                // English?
+
+                                else {
+                                    var lemmaterm = lemmerEng.lemmatize(searchterms[k]);
+                                    if (lemmaterm[0] != undefined) {
+                                        searchPattern = new RegExp('('+lemmaterm[0]['text'].toLowerCase()+')', 'ig');
+                                        searchtext = searchtext.replace(searchPattern,' ');
+                                    }
+                                }
+
+
+
                             }
                         }
 
