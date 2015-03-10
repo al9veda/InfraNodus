@@ -115,7 +115,7 @@
 
                 <div id="googlesearch">
                     <label for="extractfilter" class="pure-checkbox">
-                        <input id="extractfilter" type="checkbox" name="excludesearchquery" value="1"> exclude search terms from the graph<br>
+                        <input id="extractfilter" type="checkbox" name="excludesearchquery" value="1" checked> exclude search terms from the graph<br>
                     </label>
                     <br><br>
                 </div>
@@ -300,6 +300,10 @@
             $("#importsettings").hide();
             <% } %>
 
+        $('form#submitform').submit(function(){
+            $(this).find('input[type=submit]').attr('disabled', 'disabled');
+        });
+
         // toggle email login controls on and off with radio
 
             var radioButtons = $("[name=source]"); // get both radiobuttons
@@ -308,8 +312,10 @@
 
             var searchbox  = $("#searchbox");
             var filebox = $("#filebox");
+            $("#googlesearch").hide();
 
-            radioButtons.change(function () {
+
+        radioButtons.change(function () {
                 if( $(this).val() === "email" ) { // this time, we do need to check the value
                     searchbox.show();
                     $("#limitgkg").hide();

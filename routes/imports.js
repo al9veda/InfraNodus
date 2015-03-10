@@ -1467,19 +1467,26 @@ exports.submit = function(req, res,  next) {
 
                         req.body.entry.body = searchtext;
                         entries.submit(req, res);
+
                     }
 
+                    // Pager for Google results
                     if (nextCounter < 4) {
                         nextCounter += 1;
                         if (next) next();
+                        if (nextCounter == 1) {
+                            setTimeout(function(){
+                                res.error('Loading... You might want to reload the page in a few seconds to see more results.')
+                                res.redirect(res.locals.user.name + '/' + default_context + '/edit');
+                            },2000);
+
+                        }
                     }
 
                 });
 
 
-                // Move on to the next one
 
-                res.redirect(res.locals.user.name + '/' + default_context + '/edit');
 
             }
             });
