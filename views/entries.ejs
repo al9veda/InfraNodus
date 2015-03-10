@@ -93,7 +93,7 @@
             <% } %>
                 <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
-                        <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here to visualize the words and their connections, you can also use #hashtags and @mentions.'><% if (url) { %><%= urltitle %> <%= url %> @bookmarks<% } %></textarea>
+                        <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here to visualize the words and their connections, you can also use #hashtags and @mentions.'><% if (url) { %><%= urltitle %> <%= url %><% } %></textarea>
                         <div id="addToContextsLabel">contexts:</div>
                         <ul id="addToContexts"></ul>
                         <input type="hidden" id="addedContexts" name="addedContexts">

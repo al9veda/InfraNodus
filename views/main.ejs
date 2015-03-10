@@ -89,6 +89,33 @@
             <h2>Learn how <a href="http://noduslabs.com/tag/infranodus" target="_blank">network graphs</a> can be used for research and to generate new ideas. <br><br>Also, watch the demo video to learn how to use InfraNodus:</h2>
             <iframe src="//player.vimeo.com/video/89807920?title=0&amp;byline=0&amp;portrait=0&amp;autoplay=0&amp;loop=1" width="240" height="150" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
             <br>&nbsp;<br>
+            <p>Use InfraNodus to save interesting excerpts from online texts. <br>
+                Drag this bookmarklet into your browser's toolbar: <a style="cursor: move;" href="javascript:var a=window,b=document,c=encodeURIComponent,s='';s=document.getSelection().toString();if(s!=''){d=a.open('http://infranodus.com/bookmarks/edit?url='+c(b.location)+'&urltitle='+c(s),'bkmk_popup','left='+((a.screenX||a.screenLeft)+10)+',top='+((a.screenY||a.screenTop)+10)+',height=420px,width=550px,resizable=1,alwaysRaised=1');}else{d=a.open('http://infranodus.com/bookmarks/edit?url='+c(b.location)+'&urltitle='+c(b.title),'bkmk_popup','left='+((a.screenX||a.screenLeft)+10)+',top='+((a.screenY||a.screenTop)+10)+',height=420px,width=550px,resizable=1,alwaysRaised=1');}a.setTimeout(function(){d.focus()},300);">GraphMark</a>
+                <br><a href="javascript:toggleios();" id="displayios">iPad/iPhone</a> instructions
+                <br>
+            <div id="ioshelp" style="display: none; max-width: 500px; font: 12px !important;">&nbsp;<br>
+                <ol>
+                    <li>Open this page from your iPad or iPhone.</li>
+                    <li>Click the action button (Square with Arrow on it) on your iPad / iPhone and choose "Add Bookmark".</li>
+                    <li>Edit the Title of the bookmark to say "InfraNodus" (or whatever you like).</li>
+                    <li>Save the bookmark</li>
+                    <li>Copy the code below. (Hold your finger down on it until the copy paste handles pop up, then select it all and copy it).
+
+                        <div style="min-width:240px; max-width: 600px; overflow:auto"><pre>javascript:var a=window,b=document,c=encodeURIComponent,s='';s=document.getSelection().toString();if(s!=''){d=a.open('http://infranodus.com/bookmarks/edit?url='+c(b.location)+'&urltitle='+c(s),'bkmk_popup','left='+((a.screenX||a.screenLeft)+10)+',top='+((a.screenY||a.screenTop)+10)+',height=420px,width=550px,resizable=1,alwaysRaised=1');}else{d=a.open('http://infranodus.com/bookmarks/edit?url='+c(b.location)+'&urltitle='+c(b.title),'bkmk_popup','left='+((a.screenX||a.screenLeft)+10)+',top='+((a.screenY||a.screenTop)+10)+',height=420px,width=550px,resizable=1,alwaysRaised=1');}a.setTimeout(function(){d.focus()},300);</pre></div>
+
+                    </li>
+                    <li>Open your bookmarks (tap the book symbol).</li>
+                    <li>Edit your bookmarks (tap the edit button).</li>
+                    <li>Choose the "InfraNodus" bookmark you just created.</li>
+                    <li>Tap on the URL and delete it.</li>
+                    <li>Paste the code you copied in the earlier step (tap and hold your finger in the empty field until the Paste option appears).</li>
+                    <li>Return to the bookmarks, tap "Done" and you're finished.</li>
+                    <li>To use it, when you're on the page or youtube video you'd like to visualize as a network, open the Bookmarks folder (tap the book symbol) and tap the "Textexture" bookmark. You'll be able to edit any notes and save the link straight into Delicious.</li>
+                </ol>
+            </div>
+
+            <br>&nbsp;<br>
+
             <div id="footer">
                 <p>InfraNodus is a free open-source cognitive reconfiguration tool made by <a href="http://www.noduslabs.com" target="_blank">Nodus Labs</a>.
                     <br>Contact us (@noduslabs) to get an <a href="http://noduslabs.com/contact/" target="_blank">invitation code</a> to use this online version or install it on your computer from <a href="http://github.com/noduslabs/infranodus" target="_blank">GitHub</a>.<br>
@@ -110,6 +137,21 @@
 
 
 <script src="/javascripts/ui.js"></script>
+
+<script language="javascript">
+    function toggleios() {
+        var ele = document.getElementById("ioshelp");
+        var text = document.getElementById("displayios");
+        if(ele.style.display == "block") {
+            ele.style.display = "none";
+            text.innerHTML = "iPad/iPhone";
+        }
+        else {
+            ele.style.display = "block";
+            text.innerHTML = "hide iPad/iPhone";
+        }
+    }
+</script>
 
 <% include statsbelow %>
 
