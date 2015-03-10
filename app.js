@@ -24,6 +24,8 @@
  * title, publisher and year.
  */
 
+require('newrelic');
+
 var api = require('./routes/api');
 var api2 = require('./routes/api2');
 var express = require('express');
