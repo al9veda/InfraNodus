@@ -1,5 +1,5 @@
 /**
- * InfraNodus is a lightweight interface to graph databases.
+ * InfraNodus is a non-linear reading device.
  *
  * Inspired from ThisIsLike.Com and KnowNodes (now Rhizi) we
  * want to create a basic interface for rich edge annotation of graphs
@@ -23,8 +23,6 @@
  * that you acknowledge that you are using it and identify the source:
  * title, publisher and year.
  */
-
-require('newrelic');
 
 var api = require('./routes/api');
 var api2 = require('./routes/api2');
