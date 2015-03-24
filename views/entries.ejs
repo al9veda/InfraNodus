@@ -280,6 +280,11 @@ $("#graph-link").click(function(e) {
     $("#statements").fadeToggle();
 });
 
+
+    <% if (background == '1' || background == 'graph') { %>
+        $("#statements").fadeToggle();
+    <% } %>
+
 // Add a method to the graph model that returns an
 // object with every neighbors of a node inside:
 

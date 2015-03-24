@@ -99,6 +99,7 @@ exports.list = function(req, res, next){
             receivername: receivername,
             contextpublic: contextpublic,
             showcontexts: req.query.showcontexts,
+            background: req.query.background,
             maxnodes: req.query.maxnodes,
             url: req.query.url,
             urltitle: req.query.urltitle

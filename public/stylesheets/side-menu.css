@@ -160,22 +160,19 @@ small screens.
     display: block; /* show this only on small screens */
     top: 0;
     right: 0; /* "#menu width" */
-    background: #000;
-    background: rgba(0,0,0,0.7);
+    background: rgba(31,141,214,1);
     font-size: 8px; /* change this value to increase/decrease button size */
     width: 2em;
     height: auto;
     padding: 2.1em 1.6em;
     z-index: 10;
-    background:  rgba(0,0,0,0.7);
     background-image: url('../images/graph.png');
     background-repeat:no-repeat;
     background-position:center;
 }
 
-#graph-link:hover,
-#graph-link:focus {
-    background: #000;
+#graph-link:hover {
+    background: rgba(0,0,0,0.7);
     background-image: url('../images/graph.png');
     background-repeat:no-repeat;
     background-position:center;
