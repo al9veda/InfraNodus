@@ -271,19 +271,30 @@ var notfoundNodes = [];
 // Whats the clicked nodes in the graph
 var clickedNodes = [];
 
+// Inactivity timeout
+
+var inactiveTimeout = '';
+
 
 
 // The button to hide / show statements
 
 $("#graph-link").click(function(e) {
     e.preventDefault();
-    $("#statements").fadeToggle();
+    toggle_statements();
 });
 
 
     <% if (background == '1' || background == 'graph') { %>
-        $("#statements").fadeToggle();
+        toggle_statements();
     <% } %>
+
+
+
+function toggle_statements() {
+    $("#statements").fadeToggle();
+}
+
 
 // Add a method to the graph model that returns an
 // object with every neighbors of a node inside:
@@ -615,11 +626,36 @@ sigma.parsers.json(
                     // console.log("node clicked, now will filter for nodes " + pinnedNodes);
 
 
-
-
                     // Now show / hide statements that have the search field
 
                     filter_statements(pinnedNodes);
+
+
+                    // If the window is wide enough to show the menu AND div with statemetns is not visible
+
+                    var isHidden = $("#statements").is(":hidden");
+
+                    if (isHidden) {
+
+                        console.log('initiating timeout');
+
+                        function showStatements () {
+                                $('#statements').show();
+                                console.log('show');
+                        }
+
+                        inactiveTimeout = setTimeout(showStatements, 6000);
+
+                        $('#graph-container').bind('click dblclick scroll mousemove keypress', function(){
+                            clearTimeout(inactiveTimeout);
+                            console.log('сброс');
+
+                        });
+
+                    }
+
+
+
                 }
 
 
