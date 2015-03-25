@@ -272,8 +272,13 @@ var notfoundNodes = [];
 var clickedNodes = [];
 
 // Inactivity timeout
+var inactiveTimeout = null;
 
-var inactiveTimeout = '';
+// This variable shows if there was a meaningful interaction with the graph yet
+var graphInteraction = null;
+
+// Loaded with graph only?
+var graphOnly = null;
 
 
 
@@ -281,18 +286,34 @@ var inactiveTimeout = '';
 
 $("#graph-link").click(function(e) {
     e.preventDefault();
+
+    // The user clicked on the graph icon, so we reset his graph interaction activity for timeout later
+    graphInteraction = null;
+    clearTimeout(inactiveTimeout);
+
     toggle_statements();
 });
 
 
-    <% if (background == '1' || background == 'graph') { %>
-        toggle_statements();
-    <% } %>
+// Are we loading the page to only show the graph?
+
+<% if (background == '1' || background == 'graph') { %>
+    toggle_statements();
+    graphOnly = 1;
+<% } %>
 
 
+// Hide / Show Statements DIV
 
 function toggle_statements() {
     $("#statements").fadeToggle();
+}
+
+function showStatements () {
+        var isHidden_ = $("#statements").is(":hidden");
+        if (isHidden_) {
+            $('#statements').fadeIn();
+        }
 }
 
 
@@ -586,7 +607,8 @@ sigma.parsers.json(
 
             sigma.bind('clickNode', function(e) {
 
-
+                // A node was clicked, so we assume there was a meaningful graph interaction
+                graphInteraction = 1;
 
                 var nodeLabel = e.data.node.originalLabel;
 
@@ -631,33 +653,29 @@ sigma.parsers.json(
                     filter_statements(pinnedNodes);
 
 
-                    // If the window is wide enough to show the menu AND div with statemetns is not visible
+                    // If the window is wide enough to show the menu AND div with statements is not visible
 
                     var isHidden = $("#statements").is(":hidden");
 
                     if (isHidden) {
 
-                        console.log('initiating timeout');
+                        var delayShow = 6000;
 
-                        function showStatements () {
-                                $('#statements').show();
-                                console.log('show');
-                        }
+                        clearTimeout(inactiveTimeout);
+                        inactiveTimeout = setTimeout(showStatements, delayShow);
 
-                        inactiveTimeout = setTimeout(showStatements, 6000);
-
-                        $('#graph-container').bind('click dblclick scroll mousemove keypress', function(){
-                            clearTimeout(inactiveTimeout);
-                            console.log('сброс');
-
+                        $('#graph-container').unbind('mousemove orientationchange scroll swipe tap swipeleft swiperight scrolltop');
+                        $('#graph-container').bind('mousemove orientationchange scroll swipe tap swipeleft swiperight scrolltop', function(){
+                            if (graphInteraction) {
+                                clearTimeout(inactiveTimeout);
+                                inactiveTimeout = setTimeout(showStatements, delayShow);
+                            }
                         });
+
 
                     }
 
-
-
                 }
-
 
             });
 
