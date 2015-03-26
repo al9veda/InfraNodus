@@ -2287,6 +2287,30 @@ sigma.parsers.json(
     }
 
 
+    // LiveChat functionality
+
+    if (window.addEventListener) {
+        window.addEventListener("message", function (event) {
+            if (event.data != null || event.data != "") {
+
+                var message_array = event.data.split("%3B");
+
+                if (message_array[0] == 'message_received' || message_array[0] == 'message_sent') {
+                    $('#statement').text(decodeURIComponent(message_array[1].replace(/%25/g,'%')));
+                }
+
+
+            }
+        });
+    }
+    else {
+        window.attachEvent("onmessage", function (event) {
+            if (event.data != null || event.data != "") {
+            }
+        });
+    }
+
+
 
 
 
