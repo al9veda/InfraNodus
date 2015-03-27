@@ -2311,8 +2311,12 @@ sigma.parsers.json(
                     }
                     else
                     {
-                         var urlMatch = /(\bhttps?:\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-                         window.location.href = urlMatch.exec(message_clean)[0];
+                        var urlMatch = /(\bhttps?:\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+
+                        setTimeout(function() {
+                            window.location.href = urlMatch.exec(message_clean)[0];
+                        },4000);
+
 
                     }
                 }
