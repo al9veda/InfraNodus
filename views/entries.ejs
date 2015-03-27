@@ -167,7 +167,14 @@
 
         <div id="graph-container"></div>
 
-        <div id="graph-tools"><a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a>&nbsp;&nbsp;&nbsp;<a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a></div>
+
+       <div id="graph-reload">
+                <a href="javascript:" id="improve-layout"><img src="/images/layout.png" border="0"></a>
+       </div>
+
+        <div id="graph-tools">
+            <a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a><br><a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a>
+        </div>
 
     </div>
 
@@ -715,6 +722,19 @@ sigma.parsers.json(
                 c.goTo({
                     ratio: c.ratio * c.settings('zoomingRatio')
                 });
+            });
+
+            $("#improve-layout").on('click', function(e) {
+
+                sigma.startForceAtlas2();
+
+                // Don't run it forever not to overheat :)
+
+                setTimeout(function() {
+
+                    sigma.stopForceAtlas2();
+                }, 3000);
+
             });
 
 

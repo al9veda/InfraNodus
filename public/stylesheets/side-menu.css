@@ -180,12 +180,25 @@ small screens.
 
 #graph-tools {
     position: fixed;
-    display: none; /* show this only on small screens */
-    bottom: 0;
-    right: 0; /* "#menu width" */
+    display: none;
+    top: 80px;
+    text-align: right;
+    right: -2px; /* "#menu width" */
     font-size: 8px; /* change this value to increase/decrease button size */
    /* width: 2em;
     height: auto;*/
+    padding: 2.1em 1.6em;
+    z-index: 10;
+}
+
+#graph-reload {
+    position: fixed;
+    top: 40px;
+    text-align: right;
+    right: -2px; /* "#menu width" */
+    font-size: 8px; /* change this value to increase/decrease button size */
+    /* width: 2em;
+     height: auto;*/
     padding: 2.1em 1.6em;
     z-index: 10;
 }
