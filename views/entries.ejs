@@ -2296,8 +2296,25 @@ sigma.parsers.json(
                 var message_array = event.data.split("%3B");
 
                 if (message_array[0] == 'message_received' || message_array[0] == 'message_sent') {
-                    $('#statement').text(decodeURIComponent(message_array[1].replace(/%25/g,'%')));
-                    document.forms["submitform"].submit();
+
+                    var message_clean = decodeURIComponent(message_array[1].replace(/%25/g,'%'));
+
+                    var urlRegex =/(\bhttp?:\/\/infranodus\.com)/ig;
+
+                    var urlExtract = urlRegex.exec(message_clean);
+
+                    // message_clean !== 'So, shall we begin our conversation?' && message_clean !== 'So, shall we continue our conversation?' &&
+
+                    if (urlExtract == null) {
+                        $('#statement').text(message_clean);
+                        document.forms["submitform"].submit();
+                    }
+                    else
+                    {
+                         var urlMatch = /(\bhttps?:\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+                         window.location.href = urlMatch.exec(message_clean)[0];
+
+                    }
                 }
 
 
@@ -2322,6 +2339,7 @@ sigma.parsers.json(
         <script type="text/javascript">
             var __lc = {};
             __lc.license = 5876601;
+            __lc.group = 2;
 
             (function() {
                 var lc = document.createElement('script'); lc.type = 'text/javascript'; lc.async = true;
