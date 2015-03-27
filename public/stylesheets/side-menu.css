@@ -217,6 +217,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         padding-right: 2em;
     }
 
+
     #layout {
         padding-left: 150px; /* left col width "#menu" */
         left: 0;
@@ -228,7 +229,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     .menu-link {
         position: fixed;
         left: 150px;
-        /*display: none;*/
+        display: none;
     }
 
     #layout.active .menu-link {
@@ -238,6 +239,10 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     #graph-tools {
         display: block;
     }
+    #graph-container {
+        left: 150px;
+    }
+
 
 
 }
