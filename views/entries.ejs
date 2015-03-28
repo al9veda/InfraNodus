@@ -243,6 +243,8 @@
 
     var go_next_add = getUrlVars()["go_next_add"];
 
+    var go_next_override = getUrlVars()["go_next_override"];
+
     var link_hashtags = getUrlVars()["link_hashtags"];
 
     var convert_hashtags = getUrlVars()["convert_hashtags"];
@@ -823,7 +825,12 @@ sigma.parsers.json(
                 }
 
                 if (searchQuery.length > 0 || go_next_add) {
-                    window.open(forwardTo + searchQuery,'_blank');
+
+                    if (go_next_override) {
+                        window.open('http://google.com/search?q=' + searchQuery,'_blank');
+                    } else {
+                        window.open(forwardTo + searchQuery,'_blank');
+                    }
                 }
                 else {
                     alert("Click this after you select a few nodes to find them on the web.");
