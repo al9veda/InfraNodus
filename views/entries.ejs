@@ -169,7 +169,8 @@
 
 
        <div id="graph-reload">
-                <a href="javascript:" id="improve-layout"><img src="/images/layout.png" border="0"></a>
+                <a href="javascript:" id="improve-layout"><img src="/images/layout.png" border="0"></a><br><a href="javascript:" id="go-next"><img src="/images/arrow-right.png" border="0"></a>
+
        </div>
 
         <div id="graph-tools">
@@ -734,6 +735,14 @@ sigma.parsers.json(
 
                     sigma.stopForceAtlas2();
                 }, 3000);
+
+            });
+
+
+            $("#go-next").on('click', function(e) {
+
+                var searchQuery = pinnedNodes.join("+");
+                window.open('https://www.google.com/search?q=' + searchQuery,'_blank');
 
             });
 

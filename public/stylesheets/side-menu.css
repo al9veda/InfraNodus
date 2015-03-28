@@ -181,7 +181,7 @@ small screens.
 #graph-tools {
     position: fixed;
     display: none;
-    top: 80px;
+    top: 110px;
     text-align: right;
     right: -2px; /* "#menu width" */
     font-size: 8px; /* change this value to increase/decrease button size */
