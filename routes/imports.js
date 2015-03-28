@@ -178,6 +178,21 @@ exports.submit = function(req, res,  next) {
         req.body.context = importContext;
     }
 
+    // Add a link to the URL after import?
+
+    var append_url = '';
+
+    if (req.body.hide_always) {
+        append_url = '?hide_always=1';
+    }
+    else if (req.body.hide_when_small) {
+        append_url = '?hide_when_small=1';
+    }
+
+    if (req.body.go_next_add) {
+        append_url = append_url + '&go_next_add=' + req.body.go_next_add;
+    }
+
     // We extract only hashtags or hashtags and morphemes
     // TODO reset res.locals after that parameter change
 
@@ -1519,8 +1534,13 @@ exports.submit = function(req, res,  next) {
                         if (next) next();
                         if (nextCounter == 1) {
                             setTimeout(function(){
-                                res.error('Loading... You might want to reload the page in a few seconds to see more results.')
-                                res.redirect(res.locals.user.name + '/' + default_context + '/edit');
+                                if (!append_url) {
+                                    res.error('Loading... You might want to reload the page in a few seconds to see more results.')
+                                    res.redirect(res.locals.user.name + '/' + default_context + '/edit');
+                                } else {
+                                    res.redirect(res.locals.user.name + '/' + default_context + '/edit' + append_url);
+                                }
+
                             },2000);
 
                         }

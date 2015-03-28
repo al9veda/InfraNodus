@@ -33,7 +33,7 @@
 
             <form action='/import' name='submitform' id="submitform" method='post' enctype="multipart/form-data" class='pure-form pure-form-stacked'>
 
-                <input type='text' size="14" maxlength="50" name='search' id="search" class="pure-input" placeholder='search terms' value="<% if (fornode) { %><%= fornode %><% } %>" /> &nbsp;&nbsp; <input class="pure-button" type='submit' name="submit" value=">" class="pure-button pure-button-primary">
+                <input type='text' size="14" maxlength="50" name='search' id="search" class="pure-input" placeholder='search terms' value="<% if (fornode) { %><%= fornode %><% } %>" /> &nbsp;&nbsp; <input class="pure-button" type='submit' name="btnSubmit" value=">" class="pure-button pure-button-primary">
 
                 <br>&nbsp;<br>
                 Type in your search query, and we will show you which words are the most related to your query, so you can continue your search in a more informed way.
@@ -52,7 +52,8 @@
                 <input type="hidden" name="source" value="googlesearch">
                 <input type='hidden' name='limit' value='20' />
                 <input type="hidden" name="settings" value="morphemes">
-
+                <input type="hidden" id="hide_always" name="hide_always" value="1">
+                <input type="hidden" id="go_next_add" name="go_next_add" value="">
                 <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
                 <input type="hidden" name="statementid" value="">
 
@@ -94,149 +95,32 @@
 <script>
     ;(function(){
 
-            <% if (context && fornode) { %>
-            $("#source1").prop("checked", false);
-            $("#source4").prop("checked", true);
-            $("#settings1").prop("checked", false);
-            $("#settings2").prop("checked", true);
-            $("#limitgkg").show();
-            $("#extracttwitter").hide();
-            $("#howmanyposts").hide();
-            $("#importsettings").hide();
-            <% } %>
+        var cleared_to_submit = 0;
 
-        $('form#submitform').submit(function(){
-            $(this).find('input[type=submit]').attr('disabled', 'disabled');
+        $('form#submitform').submit(function(event){
+
+            if(cleared_to_submit){
+                cleared_to_submit = 0;
+                return;
+
+            }else{
+
+                event.preventDefault();
+
+              //  $(this).find('input[type=submit]').attr('disabled', 'disabled');
+
+                if ($("#extractfilter").prop("checked")) {
+                    var current_query = $("#search").val();
+                    $("#go_next_add").val(current_query);
+                }
+
+                cleared_to_submit = 1;
+
+                $('form')[0].submit();  //resubmit form
+
+            }
+
         });
-
-        // toggle email login controls on and off with radio
-
-            var radioButtons = $("[name=source]"); // get both radiobuttons
-            var radioButtons2 = $("[name=extract]"); // get both radiobuttons
-            var radioButtons3 = $("[name=filetype]"); // get both radiobuttons
-
-            var searchbox  = $("#searchbox");
-            var filebox = $("#filebox");
-            $("#googlesearch").hide();
-
-
-        radioButtons.change(function () {
-                if( $(this).val() === "email" ) { // this time, we do need to check the value
-                    searchbox.show();
-                    $("#limitgkg").hide();
-                    $("#extracttwitter").hide();
-                    $("#howmanyposts").show();
-                    $("#importsettings").show();
-                    $("#searchtermbox").hide();
-                    $("#emailbox").show();
-                    $("#googlesearch").hide();
-
-                    filebox.hide();
-
-                }
-                else if( $(this).val() === "file" ) { // this time, we do need to check the value
-                    filebox.show();
-                    $("#searchtermbox").hide();
-                    $("#limitgkg").hide();
-                    $("#extracttwitter").hide();
-                    $("#importsettings").hide();
-                    $("#googlesearch").hide();
-
-                }
-                else if ($(this).val() === "evernote") {
-                    window.location.href = "/evernote_oauth";
-                    $("#limitgkg").hide();
-                    $("#extracttwitter").hide();
-                    $("#searchtermbox").hide();
-                    $("#howmanyposts").show();
-                    $("#importsettings").show();
-                    $("#emailbox").hide();
-                    $("#googlesearch").hide();
-
-                    filebox.hide();
-
-
-                }
-                else if ($(this).val() === "gkg") {
-                    $("#settings1").prop("checked", false);
-                    $("#settings2").prop("checked", true);
-                    $("#searchtermbox").show();
-                    $("#emailbox").hide();
-                    $("#limitgkg").show();
-                    $("#extracttwitter").hide();
-                    $("#howmanyposts").hide();
-                    $("#importsettings").hide();
-                    $("#googlesearch").hide();
-
-                    filebox.hide();
-
-
-                }
-                else if ($(this).val() === "lists") {
-                    $("#listview").show();
-                }
-                else if ($(this).val() === "googlesearch") {
-                    $("#settings2").prop("checked", false);
-                    $("#settings1").prop("checked", true);
-                    $("#emailbox").hide();
-                    $("#limitgkg").hide();
-                    $("#extracttwitter").hide();
-                    $("#googlesearch").show();
-                    filebox.hide();
-
-                }
-                else
-                {
-                    $("#limitgkg").hide();
-                    $("#extracttwitter").show();
-                    $("#howmanyposts").show();
-                    $("#importsettings").show();
-                    $("#emailbox").hide();
-                    filebox.hide();
-                    $("#searchtermbox").show();
-                    $("#googlesearch").hide();
-
-
-
-
-                }
-            });
-
-        radioButtons2.change(function () {
-            if ($(this).val() === "lists") {
-                $("#listview").show();
-            }
-            else
-            {
-                $("#listview").hide();
-            }
-        });
-
-        // Later we can add more functions here
-        radioButtons3.change(function () {
-            if ($(this).val() === "zettel") {
-                $("#processfield").val('zettelcontent');
-                $("#titlefield").val('');
-                $("#processfield").prop("readonly",true);
-                $("#titlefield").prop("readonly",true);
-            }
-            else if ($(this).val() === "amazon")
-            {
-                $("#processfield").val('highlight');
-                $("#titlefield").val('title');
-                $("#processfield").prop("readonly",true);
-                $("#titlefield").prop("readonly",true);
-
-            }
-            else if ($(this).val() === "other")
-            {
-                $("#processfield").val('');
-                $("#titlefield").val('');
-                $("#processfield").prop("readonly",false);
-                $("#titlefield").prop("readonly",false);
-            }
-        });
-
 
 
     })();
