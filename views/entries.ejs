@@ -243,6 +243,8 @@
 
     var go_next_add = getUrlVars()["go_next_add"];
 
+    var link_hashtags = getUrlVars()["link_hashtags"];
+
 
     if (go_next_url) {
         if ((go_next_url.substr(go_next_url.length - 1) == 's' || go_next_url.substr(go_next_url.length - 6) == 'search' || go_next_url.substr(go_next_url.length - 5) == 'query')) {
@@ -260,7 +262,10 @@
         forwardTo = 'https://wikipedia.org/wiki/Special:Search?search=';
     }
     else if (go_next_site == 'amazon') {
-        forwardTo = 'http://www.amazon.com/s/field-keywords=fdsasfd+dfsads';
+        forwardTo = 'http://www.amazon.com/s/field-keywords=';
+    }
+    else if (go_next_site == 'twitter') {
+        forwardTo = 'http://twitter.com/search?q=';
     }
 
 
@@ -2401,13 +2406,16 @@ sigma.parsers.json(
 
 
     var hashRegex = /(?:\s|^)(?:#(?!\d+(?:\s|$)))(\w+)(?=\s|$)/gi;
-    $(".entry").each(function() {
-        // Retrieve the statement text from the entry, clean from html
-        var originale = $(this).children('.entry-text').html();
-        // Replace with hashtags
-        $(this).children('.entry-text').html(originale.replace(hashRegex,replaceHashtags));
 
-    });
+    if (link_hashtags) {
+        $(".entry").each(function() {
+            // Retrieve the statement text from the entry, clean from html
+            var originale = $(this).children('.entry-text').html();
+            // Replace with hashtags
+            $(this).children('.entry-text').html(originale.replace(/#(\w+)/g,  " <a href='" + forwardTo + "$1' class='app-concept-link' target='_blank'>$&</a>"));
+
+        });
+    }
 
 
     // LiveChat functionality
