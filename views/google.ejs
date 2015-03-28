@@ -33,25 +33,29 @@
 
             <form action='/import' name='submitform' id="submitform" method='post' enctype="multipart/form-data" class='pure-form pure-form-stacked'>
 
-                <input type='text' name='search' id="search" placeholder='search terms' value="<% if (fornode) { %><%= fornode %><% } %>" /> &nbsp;                 <input type='submit' name="submit" value="save" class="pure-button pure-button-primary">
+                <input type='text' size="14" maxlength="50" name='search' id="search" class="pure-input" placeholder='search terms' value="<% if (fornode) { %><%= fornode %><% } %>" /> &nbsp;&nbsp; <input class="pure-button" type='submit' name="submit" value=">" class="pure-button pure-button-primary">
 
+                <br>&nbsp;<br>
+                Type in your search query, and we will show you which words are the most related to your query, so you can continue your search in a more informed way.
+
+                <br>&nbsp;<br>
 
                 <label for="extractfilter" class="pure-checkbox">
-                    <input id="extractfilter" type="hidden" name="excludesearchquery" value="1"> exclude search terms from the graph<br>
+                    <input id="extractfilter" type="checkbox" name="excludesearchquery" value="1" checked> exclude search terms from the graph<br>
                 </label>
 
+                <label for="savegraph" class="pure-input">
+                    saving in <input style="display:inline;" id="savegraph" type='text' size="10" maxlength="15" name='context' value='<% if (context) { %><%= context %><% } else { %>google<% } %>'/> list
+                </label>
+
+
                 <input type="hidden" name="source" value="googlesearch">
-                <input type='hidden' name='limit' value='100' />
+                <input type='hidden' name='limit' value='20' />
                 <input type="hidden" name="settings" value="morphemes">
 
                 <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
                 <input type="hidden" name="statementid" value="">
 
-
-                Save As:
-                <br>
-                <input type='text' name='context' value='<% if (context) { %><%= context %><% } else { %>google<% } %>'/>
-                <br>
 
 
 
@@ -68,7 +72,6 @@
 
         <div id="graph-container"></div>
 
-        <div id="graph-tools"><a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a>&nbsp;&nbsp;&nbsp;<a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a></div>
 
     </div>
 
