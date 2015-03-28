@@ -169,7 +169,7 @@
 
 
        <div id="graph-reload">
-                <a href="javascript:" id="go_next"><img src="/images/arrow-right.png" vspace="0" border="0"></a><br><a href="javascript:location.reload();"><img src="/images/layout.png" vspace="0" border="0"></a><br><br><a href="javascript:" id="improve-layout"><img style="top:20px" src="/images/recycle.png" border="0"></a>
+                <a href="javascript:" id="go_next"><img src="/images/arrow-right.png" vspace="0" border="0"></a><br><a href="javascript:location.reload();"><img src="/images/layout.png" vspace="6" border="0"></a><br><a href="javascript:" id="improve-layout"><img src="/images/recycle.png" vspace="3" border="0"></a>
 
        </div>
 
@@ -245,6 +245,11 @@
 
     var link_hashtags = getUrlVars()["link_hashtags"];
 
+    var convert_hashtags = getUrlVars()["convert_hashtags"];
+
+    var hide_always = getUrlVars()["hide_always"];
+
+    var hide_when_small = getUrlVars()["hide_when_small"];
 
     if (go_next_url) {
         if ((go_next_url.substr(go_next_url.length - 1) == 's' || go_next_url.substr(go_next_url.length - 6) == 'search' || go_next_url.substr(go_next_url.length - 5) == 'query')) {
@@ -2415,6 +2420,17 @@ sigma.parsers.json(
             $(this).children('.entry-text').html(originale.replace(/#(\w+)/g,  " <a href='" + forwardTo + "$1' class='app-concept-link' target='_blank'>$&</a>"));
 
         });
+    }
+
+    if (hide_always) {
+        toggle_statements();
+    }
+
+    if (hide_when_small) {
+        if ($('#menuLink').is(':visible')) {
+            toggle_statements();
+        }
+
     }
 
 
