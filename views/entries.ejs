@@ -169,7 +169,7 @@
 
 
        <div id="graph-reload">
-                <a href="javascript:" id="improve-layout"><img src="/images/layout.png" border="0"></a><br><a href="javascript:" id="go-next"><img src="/images/arrow-right.png" border="0"></a>
+                <a href="javascript:" id="improve-layout"><img src="/images/layout.png" border="0"></a><br><a href="javascript:" id="go_next"><img src="/images/arrow-right.png" border="0"></a>
 
        </div>
 
@@ -739,10 +739,59 @@ sigma.parsers.json(
             });
 
 
-            $("#go-next").on('click', function(e) {
+            // Forward from the graph function
+
+            $("#go_next").on('click', function(e) {
 
                 var searchQuery = pinnedNodes.join("+");
-                window.open('https://www.google.com/search?q=' + searchQuery,'_blank');
+
+
+                /* {
+
+                 Which queries to add to search keywords from the graph:
+                 "go_next_add": "keyword",
+                 Which website to refer people to with the keywords (include search string with URL)
+                 "go_next_url" : "http://soundcloud.com/search?q="
+                 }
+
+                 */
+
+                var forwardTo = 'https://www.google.com/search?q=';
+
+                var go_next_url = getUrlVars()["go_next_url"];
+
+                var go_next_site = getUrlVars()["go_next_site"];
+
+                if (go_next_url) {
+                    forwardTo = go_next_url;
+                }
+                else if (go_next_site == 'soundcloud') {
+                    forwardTo = 'https://soundcloud.com/search?q=';
+                }
+                else if (go_next_site == 'youtube') {
+                    forwardTo = 'https://www.youtube.com/results?search_query=';
+                }
+                else if (go_next_site == 'wikipedia') {
+                    forwardTo = 'https://wikipedia.org/wiki/Special:Search?search=';
+                }
+                else if (go_next_site == 'amazon') {
+                    forwardTo = 'http://www.amazon.com/s/field-keywords=fdsasfd+dfsads';
+                }
+
+                var go_next_add = getUrlVars()["go_next_add"];
+
+                if (go_next_add) {
+                    searchQuery = searchQuery + '+' + go_next_add;
+                }
+
+                if (searchQuery.length > 0 || go_next_add) {
+                    window.open(forwardTo + searchQuery,'_blank');
+                }
+                else {
+                    alert("Click this after you select a few nodes to find them on the web.");
+                }
+
+
 
             });
 
@@ -2313,6 +2362,21 @@ sigma.parsers.json(
 
         });
 
+    }
+
+    // Get URL variables in the form of an array
+
+    function getUrlVars()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
     }
 
 
