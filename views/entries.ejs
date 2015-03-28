@@ -2380,6 +2380,27 @@ sigma.parsers.json(
     }
 
 
+
+
+    var hashRegex = /(?:\s|^)(?:#(?!\d+(?:\s|$)))(\w+)(?=\s|$)/gi;
+
+    function replaceHashtags(hash){
+        var replacementString = $.trim(hash);
+        var forwardUrl = "http://google.com/search?q=";
+        return ' <a href="' + forwardUrl + replacementString.substr(1) +'" target="_blank">' + replacementString + '</a>';
+    }
+
+
+
+    $(".entry").each(function() {
+        // Retrieve the statement text from the entry, clean from html
+        var originale = $(this).children('.entry-text').html();
+        // Replace with hashtags
+        $(this).children('.entry-text').html(originale.replace(hashRegex,replaceHashtags));
+
+    });
+
+
     // LiveChat functionality
 
     if (window.addEventListener) {
