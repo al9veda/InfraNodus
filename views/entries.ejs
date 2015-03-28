@@ -827,7 +827,12 @@ sigma.parsers.json(
                 if (searchQuery.length > 0 || go_next_add) {
 
                     if (go_next_override) {
-                        window.open('http://google.com/search?q=' + searchQuery,'_blank');
+                        if (pinnedNodes.length > go_next_override) {
+                            window.open('http://google.com/search?q=' + searchQuery,'_blank');
+                        }
+                       else {
+                            window.open(forwardTo + searchQuery,'_blank');
+                        }
                     } else {
                         window.open(forwardTo + searchQuery,'_blank');
                     }
