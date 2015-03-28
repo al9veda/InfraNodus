@@ -245,6 +245,9 @@
 
 
     if (go_next_url) {
+        if ((go_next_url.substr(go_next_url.length - 1) == 's' || go_next_url.substr(go_next_url.length - 6) == 'search' || go_next_url.substr(go_next_url.length - 5) == 'query')) {
+           go_next_url = go_next_url + '=';
+        }
         forwardTo = go_next_url;
     }
     else if (go_next_site == 'soundcloud') {
