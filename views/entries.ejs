@@ -206,6 +206,64 @@
 
 <script>
 ;(function(){
+    // Get URL variables in the form of an array
+
+    function getUrlVars()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+
+
+
+    // First we query URL parameters
+
+    /* {
+
+     Which queries to add to search keywords from the graph:
+     "go_next_add": "keyword",
+     Which website to refer people to with the keywords (include search string with URL)
+     "go_next_url" : "http://soundcloud.com/search?q="
+     }
+
+     */
+
+    var forwardTo = 'https://www.google.com/search?q=';
+
+    var go_next_url = getUrlVars()["go_next_url"];
+
+    var go_next_site = getUrlVars()["go_next_site"];
+
+    var go_next_add = getUrlVars()["go_next_add"];
+
+
+    if (go_next_url) {
+        forwardTo = go_next_url;
+    }
+    else if (go_next_site == 'soundcloud') {
+        forwardTo = 'https://soundcloud.com/search?q=';
+    }
+    else if (go_next_site == 'youtube') {
+        forwardTo = 'https://www.youtube.com/results?search_query=';
+    }
+    else if (go_next_site == 'wikipedia') {
+        forwardTo = 'https://wikipedia.org/wiki/Special:Search?search=';
+    }
+    else if (go_next_site == 'amazon') {
+        forwardTo = 'http://www.amazon.com/s/field-keywords=fdsasfd+dfsads';
+    }
+
+
+
+
+// MAIN SETTINGS START
 
 // Create node ID - Name index for filtering
 var nodeIDs = [];
@@ -746,39 +804,6 @@ sigma.parsers.json(
                 var searchQuery = pinnedNodes.join("+");
 
 
-                /* {
-
-                 Which queries to add to search keywords from the graph:
-                 "go_next_add": "keyword",
-                 Which website to refer people to with the keywords (include search string with URL)
-                 "go_next_url" : "http://soundcloud.com/search?q="
-                 }
-
-                 */
-
-                var forwardTo = 'https://www.google.com/search?q=';
-
-                var go_next_url = getUrlVars()["go_next_url"];
-
-                var go_next_site = getUrlVars()["go_next_site"];
-
-                if (go_next_url) {
-                    forwardTo = go_next_url;
-                }
-                else if (go_next_site == 'soundcloud') {
-                    forwardTo = 'https://soundcloud.com/search?q=';
-                }
-                else if (go_next_site == 'youtube') {
-                    forwardTo = 'https://www.youtube.com/results?search_query=';
-                }
-                else if (go_next_site == 'wikipedia') {
-                    forwardTo = 'https://wikipedia.org/wiki/Special:Search?search=';
-                }
-                else if (go_next_site == 'amazon') {
-                    forwardTo = 'http://www.amazon.com/s/field-keywords=fdsasfd+dfsads';
-                }
-
-                var go_next_add = getUrlVars()["go_next_add"];
 
                 if (go_next_add) {
                     searchQuery = searchQuery + '+' + go_next_add;
@@ -2364,34 +2389,15 @@ sigma.parsers.json(
 
     }
 
-    // Get URL variables in the form of an array
-
-    function getUrlVars()
-    {
-        var vars = [], hash;
-        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-        for(var i = 0; i < hashes.length; i++)
-        {
-            hash = hashes[i].split('=');
-            vars.push(hash[0]);
-            vars[hash[0]] = hash[1];
-        }
-        return vars;
-    }
-
-
-
-
-    var hashRegex = /(?:\s|^)(?:#(?!\d+(?:\s|$)))(\w+)(?=\s|$)/gi;
+   // Replace hashtags function
 
     function replaceHashtags(hash){
         var replacementString = $.trim(hash);
-        var forwardUrl = "http://google.com/search?q=";
-        return ' <a href="' + forwardUrl + replacementString.substr(1) +'" target="_blank">' + replacementString + '</a>';
+        return ' <a href="' + forwardTo + replacementString.substr(1) +'" class="app-concept-link" target="_blank">' + replacementString + '</a>';
     }
 
 
-
+    var hashRegex = /(?:\s|^)(?:#(?!\d+(?:\s|$)))(\w+)(?=\s|$)/gi;
     $(".entry").each(function() {
         // Retrieve the statement text from the entry, clean from html
         var originale = $(this).children('.entry-text').html();
