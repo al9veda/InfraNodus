@@ -120,6 +120,15 @@ exports.render = function(req, res) {
 };
 
 
+// GET request to the /google page (view settings)
+
+exports.renderGoogle = function(req, res) {
+
+        res.render('google', { title: 'Google the Google', evernote: '', context: req.query.context, notebooks: '', fornode: req.query.fornode });
+
+};
+
+
 // POST request to the settings page (change settings)
 
 exports.submit = function(req, res,  next) {

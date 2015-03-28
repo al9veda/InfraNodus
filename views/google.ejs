@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/jquery.textcomplete.css' />
+    <link rel="stylesheet" href="/stylesheets/side-menu.css">
+    <link rel="stylesheet" href="/stylesheets/jquery-ui.min.css">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+
+
+</head>
+<body>
+<% include statsabove %>
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+
+    <% include menu %>
+
+
+
+
+    <div id='content'>
+
+        <div id='statements'>
+
+
+            <form action='/import' name='submitform' id="submitform" method='post' enctype="multipart/form-data" class='pure-form pure-form-stacked'>
+
+                <input type='text' name='search' id="search" placeholder='search terms' value="<% if (fornode) { %><%= fornode %><% } %>" /> &nbsp;                 <input type='submit' name="submit" value="save" class="pure-button pure-button-primary">
+
+
+                <label for="extractfilter" class="pure-checkbox">
+                    <input id="extractfilter" type="hidden" name="excludesearchquery" value="1"> exclude search terms from the graph<br>
+                </label>
+
+                <input type="hidden" name="source" value="googlesearch">
+                <input type='hidden' name='limit' value='100' />
+                <input type="hidden" name="settings" value="morphemes">
+
+                <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
+                <input type="hidden" name="statementid" value="">
+
+
+                Save As:
+                <br>
+                <input type='text' name='context' value='<% if (context) { %><%= context %><% } else { %>google<% } %>'/>
+                <br>
+
+
+
+
+
+
+            </form>   &nbsp;<br>&nbsp;<br>
+
+
+
+
+
+        </div>
+
+        <div id="graph-container"></div>
+
+        <div id="graph-tools"><a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a>&nbsp;&nbsp;&nbsp;<a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a></div>
+
+    </div>
+
+
+
+
+</div>
+
+
+<script src="/javascripts/jquery.min.js"></script>
+<script src="/javascripts/jquery-ui.min.js"></script>
+<script src="/javascripts/string.min.js"></script>
+<script src="/javascripts/underscore-min.js"></script>
+<script src="/javascripts/jquery.textcomplete.js"></script>
+<script src='/javascripts/jquery.autosize.js'></script>
+<script src="/javascripts/ui.js"></script>
+<script src="/javascripts/jquery.mobile-events.min.js"></script>
+
+
+<script>
+    ;(function(){
+
+            <% if (context && fornode) { %>
+            $("#source1").prop("checked", false);
+            $("#source4").prop("checked", true);
+            $("#settings1").prop("checked", false);
+            $("#settings2").prop("checked", true);
+            $("#limitgkg").show();
+            $("#extracttwitter").hide();
+            $("#howmanyposts").hide();
+            $("#importsettings").hide();
+            <% } %>
+
+        $('form#submitform').submit(function(){
+            $(this).find('input[type=submit]').attr('disabled', 'disabled');
+        });
+
+        // toggle email login controls on and off with radio
+
+            var radioButtons = $("[name=source]"); // get both radiobuttons
+            var radioButtons2 = $("[name=extract]"); // get both radiobuttons
+            var radioButtons3 = $("[name=filetype]"); // get both radiobuttons
+
+            var searchbox  = $("#searchbox");
+            var filebox = $("#filebox");
+            $("#googlesearch").hide();
+
+
+        radioButtons.change(function () {
+                if( $(this).val() === "email" ) { // this time, we do need to check the value
+                    searchbox.show();
+                    $("#limitgkg").hide();
+                    $("#extracttwitter").hide();
+                    $("#howmanyposts").show();
+                    $("#importsettings").show();
+                    $("#searchtermbox").hide();
+                    $("#emailbox").show();
+                    $("#googlesearch").hide();
+
+                    filebox.hide();
+
+                }
+                else if( $(this).val() === "file" ) { // this time, we do need to check the value
+                    filebox.show();
+                    $("#searchtermbox").hide();
+                    $("#limitgkg").hide();
+                    $("#extracttwitter").hide();
+                    $("#importsettings").hide();
+                    $("#googlesearch").hide();
+
+                }
+                else if ($(this).val() === "evernote") {
+                    window.location.href = "/evernote_oauth";
+                    $("#limitgkg").hide();
+                    $("#extracttwitter").hide();
+                    $("#searchtermbox").hide();
+                    $("#howmanyposts").show();
+                    $("#importsettings").show();
+                    $("#emailbox").hide();
+                    $("#googlesearch").hide();
+
+                    filebox.hide();
+
+
+                }
+                else if ($(this).val() === "gkg") {
+                    $("#settings1").prop("checked", false);
+                    $("#settings2").prop("checked", true);
+                    $("#searchtermbox").show();
+                    $("#emailbox").hide();
+                    $("#limitgkg").show();
+                    $("#extracttwitter").hide();
+                    $("#howmanyposts").hide();
+                    $("#importsettings").hide();
+                    $("#googlesearch").hide();
+
+                    filebox.hide();
+
+
+                }
+                else if ($(this).val() === "lists") {
+                    $("#listview").show();
+                }
+                else if ($(this).val() === "googlesearch") {
+                    $("#settings2").prop("checked", false);
+                    $("#settings1").prop("checked", true);
+                    $("#emailbox").hide();
+                    $("#limitgkg").hide();
+                    $("#extracttwitter").hide();
+                    $("#googlesearch").show();
+                    filebox.hide();
+
+                }
+                else
+                {
+                    $("#limitgkg").hide();
+                    $("#extracttwitter").show();
+                    $("#howmanyposts").show();
+                    $("#importsettings").show();
+                    $("#emailbox").hide();
+                    filebox.hide();
+                    $("#searchtermbox").show();
+                    $("#googlesearch").hide();
+
+
+
+
+                }
+            });
+
+        radioButtons2.change(function () {
+            if ($(this).val() === "lists") {
+                $("#listview").show();
+            }
+            else
+            {
+                $("#listview").hide();
+            }
+        });
+
+        // Later we can add more functions here
+        radioButtons3.change(function () {
+            if ($(this).val() === "zettel") {
+                $("#processfield").val('zettelcontent');
+                $("#titlefield").val('');
+                $("#processfield").prop("readonly",true);
+                $("#titlefield").prop("readonly",true);
+            }
+            else if ($(this).val() === "amazon")
+            {
+                $("#processfield").val('highlight');
+                $("#titlefield").val('title');
+                $("#processfield").prop("readonly",true);
+                $("#titlefield").prop("readonly",true);
+
+            }
+            else if ($(this).val() === "other")
+            {
+                $("#processfield").val('');
+                $("#titlefield").val('');
+                $("#processfield").prop("readonly",false);
+                $("#titlefield").prop("readonly",false);
+            }
+        });
+
+
+
+    })();
+</script>
+
+
+
+
+<% include statsbelow %>
+</body>
+</html>
