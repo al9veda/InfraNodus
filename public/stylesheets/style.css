@@ -319,6 +319,17 @@ a:hover.app-more-link {
     z-index: 1;
 }
 
+.hide-statements {
+    height: 5px;
+    position: fixed!important;
+    bottom: 0;
+    margin-bottom: -15px;
+}
+
+.hide-menu {
+    display: none!important;
+}
+
 
 #submenu {
     position: fixed;

@@ -27,11 +27,6 @@ The `#menu` `<div>` is the parent `<div>` that contains the `.pure-menu` that
 appears on the left side of the page.
 */
 
-.hide-statements {
-    height: 50px;
-    position: fixed!important;
-    bottom: 0;
-}
 
 #menu {
     margin-left: -150px; /* "#menu" width */
@@ -182,6 +177,10 @@ small screens.
     background-image: url('../images/close.png');
     background-repeat:no-repeat;
     background-position:center;
+}
+
+.graph-chat {
+    background-image: url('../images/chat.png')!important;
 }
 
 #graph-tools {

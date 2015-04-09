@@ -75,10 +75,11 @@
 
 
                 </ul>
+
+                <br>&nbsp;<br>
+
             </div>
 
-
-            <br>
 
             <% }  %>
 
@@ -389,8 +390,18 @@ $("#graph-link").click(function(e) {
 // Hide / Show Statements DIV
 
 function toggle_statements() {
+    $('#graph-link').toggleClass('graph-chat');
     $('#statements').toggleClass("hide-statements");
+    $('#switcher-selector').toggleClass("hide-menu");
 
+    if ($('#switcher-selector').hasClass('hide-menu')) {
+        $('#switcher-panel').toggleClass("hide-menu");
+        // $('#finds').trigger('click');
+    }
+    else {
+        $('#switcher-panel').toggleClass("hide-menu");
+        $('#adds').trigger('click');
+    }
    // $("#statements").fadeToggle();
 }
 
