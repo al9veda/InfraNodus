@@ -1374,7 +1374,7 @@ sigma.parsers.json(
 
                 // At least one node not found? Mark it as non matched
 
-                if (nodesfound == pinnedNodes.length) {
+                if (nodesfound >= pinnedNodes.length) {
                     sentences[i] = sentences[i] + '.';
                 }
                 else {
@@ -1390,13 +1390,13 @@ sigma.parsers.json(
 
             if (startmark == sentences.length) {
                 newtext = originaltext;
-                $(this).find('.entry-menu').fadeOut(500);
+                // $(this).find('.entry-menu').fadeOut(500);
                 showingsomething = showingsomething + 1;
             }
 
             else {
-                newtext = sentences.join(' ');
-                $(this).find('.entry-menu').fadeIn(500);
+                newtext = originaltext; // sentences.join(' '); if we want to hide non-matched sentences
+                // $(this).find('.entry-menu').fadeIn(500);
                 if (startmark != 0) {
                     showingsomething = showingsomething + 1;
                 }
@@ -1464,7 +1464,7 @@ sigma.parsers.json(
 
                 $(this).children('.entry-text').html(newtext);
 
-                $(this).find('.nonmatched-sentence').fadeOut(500);
+                // $(this).find('.nonmatched-sentence').fadeOut(500); this is only if we want to fade non-matched sentences - see above also
 
 
                 // Show tags that are currently used in search
