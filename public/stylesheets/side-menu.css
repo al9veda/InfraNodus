@@ -210,7 +210,7 @@ small screens.
 /*
 Hides the menu at `48em`, but modify this based on your app's needs.
 */
-@media (min-width: 48em) {
+@media (min-width: 480em) {
 
     .content {
         padding-left: 2em;
@@ -236,6 +236,15 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         left: 150px;
     }
 
+
+
+
+}
+
+
+@media (min-width: 48em) {
+
+
     #graph-tools {
         display: block;
     }
@@ -246,4 +255,3 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 
 
 }
-
