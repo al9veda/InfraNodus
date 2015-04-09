@@ -186,25 +186,25 @@ small screens.
 #graph-tools {
     position: fixed;
     display: none;
-    top: 160px;
+    top: 110px;
     text-align: right;
     right: -2px; /* "#menu width" */
     font-size: 8px; /* change this value to increase/decrease button size */
    /* width: 2em;
     height: auto;*/
-    padding: 2.1em 1.6em;
+    padding: 2.1em 1.2em;
     z-index: 10;
 }
 
 #graph-reload {
     position: fixed;
-    top: 40px;
+    top: 0px;
     text-align: right;
     right: -2px; /* "#menu width" */
     font-size: 8px; /* change this value to increase/decrease button size */
     /* width: 2em;
      height: auto;*/
-    padding: 2.1em 1.6em;
+    padding: 6em 2.4em;
     z-index: 10;
 }
 
@@ -257,6 +257,18 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         left: 150px;
     }
 
+
+}
+
+@media (min-width: 475px) {
+
+
+
+
+    #graph-reload {
+        padding: 10px;
+
+    }
 
 
 }

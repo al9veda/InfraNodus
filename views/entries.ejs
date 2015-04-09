@@ -22,9 +22,7 @@
     <!-- Hamburger icon -->
     <span></span>
     </a>
-
-
-    <div id="menu">
+     <div id="menu">
         <div class="pure-menu pure-menu-open">
         <% if (locals.user || perceivername) { %>
             <% if (perceivername) { %>
@@ -43,21 +41,15 @@
 
         <% } %>
         </div>
-
-    </div>
-
-
-    <div id='content'>
-
-
-        <div id='statements'>
-
-            <a href="javascript:" id="graph-link">
-                <!-- Graph icon -->
+   </div>
+     <div id='content'>
+             <div id='statements'>
+             <a href="javascript:" id="graph-link">
                 <span></span>
             </a>
 
-            <% if (!perceivername) { %>
+
+       <% if (!perceivername) { %>
 
             <div id='switcher-selector' class='pure-menu pure-menu-open pure-menu-horizontal' style="background: none;">
                 <ul id="topmenuitems">
@@ -86,7 +78,6 @@
             <!-- the panel to show content -->
 
             <div id="switcher-panel"></div>
-
 
             <!-- form to add, later do import here -->
             <% if (!perceivername) { %>
@@ -122,10 +113,10 @@
                     <input type="text" id="search" size="14" maxlength="20" class="pure-input" placeholder="search...">
                     &nbsp;&nbsp;
                     <input type='submit' name="submit" value=">" class="pure-button pure-button-primary">
-
-                </form>
+             </form>
             </div>
 
+            <div id="entries">
             &nbsp;<br>
 
             <% include messages %>
@@ -165,7 +156,7 @@
 
                 </form>
 
-
+            </div>
         </div>
 
         <div id="graph-container"></div>
@@ -391,16 +382,20 @@ $("#graph-link").click(function(e) {
 
 function toggle_statements() {
     $('#graph-link').toggleClass('graph-chat');
+    $('#entries').toggleClass("hide-entries");
     $('#statements').toggleClass("hide-statements");
-    $('#switcher-selector').toggleClass("hide-menu");
 
-    if ($('#switcher-selector').hasClass('hide-menu')) {
-        $('#switcher-panel').toggleClass("hide-menu");
-        // $('#finds').trigger('click');
+    if ($('#graph-link').hasClass('graph-chat')) {
+        //$('#switcher-panel').toggleClass("hide-menu");
+        $('#finds').trigger('click');
+        $('#switcher-selector').toggleClass("hide-menu");
     }
     else {
-        $('#switcher-panel').toggleClass("hide-menu");
-        $('#adds').trigger('click');
+        // $('#switcher-panel').toggleClass("hide-menu");
+        $('#switcher-selector').toggleClass("hide-menu");
+        if (pinnedNodes.length == 0) {
+            $('#adds').trigger('click');
+        }
     }
    // $("#statements").fadeToggle();
 }
@@ -875,6 +870,7 @@ sigma.parsers.json(
     $(document).ready(function(){
 
 
+
         $("#imports").click(function(e) {
             var fornode = '';
             if (pinnedNodes.length > 0) {
@@ -1268,6 +1264,19 @@ sigma.parsers.json(
             var time = date + '/' + month + '/' + year + ' ' + hour + ':' + min + ':' + sec ;
             return time;
         }
+
+        if (hide_always) {
+
+            toggle_statements();
+        }
+
+        if (hide_when_small) {
+            if ($('#menuLink').is(':visible')) {
+                toggle_statements();
+            }
+
+        }
+
 
     });
 
@@ -2454,17 +2463,6 @@ sigma.parsers.json(
             $(this).children('.entry-text').html(originale.replace(/#(\w+)/g,  " <a href='" + forwardTo + "$1' class='app-concept-link' target='_blank'>$&</a>"));
 
         });
-    }
-
-    if (hide_always) {
-        toggle_statements();
-    }
-
-    if (hide_when_small) {
-        if ($('#menuLink').is(':visible')) {
-            toggle_statements();
-        }
-
     }
 
 
