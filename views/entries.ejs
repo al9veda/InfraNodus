@@ -23,10 +23,6 @@
     <span></span>
     </a>
 
-    <a href="javascript:" id="graph-link">
-    <!-- Graph icon -->
-    <span></span>
-    </a>
 
     <div id="menu">
         <div class="pure-menu pure-menu-open">
@@ -53,7 +49,13 @@
 
     <div id='content'>
 
+
         <div id='statements'>
+
+            <a href="javascript:" id="graph-link">
+                <!-- Graph icon -->
+                <span></span>
+            </a>
 
             <% if (!perceivername) { %>
 
@@ -169,7 +171,7 @@
 
 
        <div id="graph-reload">
-                <a href="javascript:" id="go_next"><img src="/images/arrow-right.png" vspace="0" border="0"></a><br><a href="javascript:location.reload();"><img src="/images/layout.png" vspace="6" border="0"></a><br><a href="javascript:" id="improve-layout"><img src="/images/recycle.png" vspace="3" border="0"></a>
+                <a href="javascript:" id="go_next"><img src="/images/eyezoom.png" vspace="0" border="0"></a><br><a href="javascript:location.reload();"><img src="/images/reload.png" vspace="6" border="0"></a><br><a href="javascript:" id="improve-layout"><img src="/images/diamond.png" vspace="3" border="0"></a>
 
        </div>
 
@@ -387,7 +389,9 @@ $("#graph-link").click(function(e) {
 // Hide / Show Statements DIV
 
 function toggle_statements() {
-    $("#statements").fadeToggle();
+    $('#statements').toggleClass("hide-statements");
+
+   // $("#statements").fadeToggle();
 }
 
 function showStatements () {
