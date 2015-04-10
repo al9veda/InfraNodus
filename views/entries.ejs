@@ -258,6 +258,9 @@
 
     var hide_when_small = getUrlVars()["hide_when_small"];
 
+    var language = getUrlVars()["language"];
+
+
     if (go_next_url) {
         if ((go_next_url.substr(go_next_url.length - 1) == 's' || go_next_url.substr(go_next_url.length - 6) == 'search' || go_next_url.substr(go_next_url.length - 5) == 'query')) {
            go_next_url = go_next_url + '=';
@@ -920,6 +923,14 @@ sigma.parsers.json(
 
                 // We speak The Queens English here, my good man
                 recognition.lang = 'en-US'
+
+                if (language == 'ru' || language == 'russian' || localStorage.getItem('language') == 'ru') {
+                    recognition.lang = 'ru';
+                    localStorage.setItem('language', 'ru');
+                }
+                else if (language = 'en' || language == 'en-US' || localStorage.getItem('language') == 'en') {
+                    localStorage.setItem('language', 'en');
+                }
 
                 // Kick off the Speech to Text recognition process
                 recognition.start();
