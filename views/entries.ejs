@@ -402,7 +402,14 @@ function toggle_statements() {
     }*/
 
     $("#statements").fadeToggle();
+    if (!$("#chat-link").hasClass('chat-highlight')) {
+        localStorage.setItem('graph', 1);
+    }
+    else {
+        localStorage.setItem('graph', 0);
+    }
     $("#chat-link").toggleClass('chat-highlight');
+
 
 }
 
@@ -895,7 +902,7 @@ sigma.parsers.json(
             var previoustalk = '';
 
             // Are we processing a short phrase or performing continuous dictation?
-            recognition.continuous = true;
+            recognition.continuous = false;
 
             // Do we require interim results in addition to the final results?
             recognition.interimResults = true;
@@ -910,6 +917,10 @@ sigma.parsers.json(
             recognition.onstart = function(event){
                 console.log("onstart", event);
             }
+            // Set up
+            recognition.onspeechstart = function(event){
+                 console.log("onspeechstart", event);
+            }
 
             // Process parsed result
             recognition.onresult = function(event){
@@ -921,29 +932,47 @@ sigma.parsers.json(
             // Handle error
             recognition.onerror = function(event){
                 console.log("onerror", event);
+                 if (event.error == 'no-speech') {
+
+                }
             }
 
             // Housekeeping after success or failed parsing
+            recognition.onspeechend = function(){
+                console.log("onspeechend");
+                if (voiceresult.length > 4) {
+                    setTimeout(function(){
+                        document.forms["submitform"].submit();
+                    }, 1000);
+
+                }
+                else {
+                    previoustalk = voiceresult + '';
+                   // recognition.start();
+                }
+
+            }
+
             recognition.onend = function(){
                 console.log("onend");
                 if (voiceresult.length > 4) {
-                    document.forms["submitform"].submit();
+                    setTimeout(function(){
+                        document.forms["submitform"].submit();
+                    }, 1000);
+
                 }
                 else {
-                    previoustalk = voiceresult + '\n\n';
+                    previoustalk = voiceresult + '';
                     recognition.start();
                 }
 
             }
-
         }
 
         // END Speech recognition module
 
 
-        if (localStorage.getItem('graph')) {
-            toggle_statements();
-        }
+
 
         $("#chat-link").click(function(e) {
             e.preventDefault();
@@ -953,6 +982,8 @@ sigma.parsers.json(
             clearTimeout(inactiveTimeout);
 
             toggle_statements();
+
+
         });
 
         $("#imports").click(function(e) {
@@ -1350,7 +1381,6 @@ sigma.parsers.json(
         }
 
         if (hide_always) {
-
             toggle_statements();
             localStorage.setItem('graph', 1);
         }
@@ -1367,14 +1397,20 @@ sigma.parsers.json(
 // Are we loading the page to only show the graph?
 
         <% if (background == '1' || background == 'graph') { %>
-            $('#finds').trigger('click');
+           // $('#finds').trigger('click');
 
             toggle_statements();
             localStorage.setItem('graph', 1);
             graphOnly = 1;
         <% } %>
 
-
+        if (localStorage.getItem('graph') == 1) {
+            var isHidden__ = $("#statements").is(":hidden");
+            if (!isHidden__) {
+                $('#statements').fadeOut();
+                $("#chat-link").toggleClass('chat-highlight');
+            }
+        }
 
     });
 

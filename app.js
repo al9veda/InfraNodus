@@ -39,6 +39,9 @@ var login = require('./routes/login');
 var main = require('./routes/main');
 var messages = require('./lib/messages');
 var http = require('http');
+var https = require('https');
+var pem = require('pem');
+
 var path = require('path');
 
 var pass = require('./lib/pass')
@@ -80,7 +83,7 @@ app.use(routes.badrequest);
 
 // development only
 if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+    app.use(express.errorHandler());
 }
 
 
@@ -162,7 +165,12 @@ if (process.env.ERROR_ROUTE) {
 }
 
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+
+pem.createCertificate({days:31, selfSigned:true}, function(err, keys){
+
+    https.createServer({key: keys.serviceKey, cert: keys.certificate},app).listen(app.get('port'), function(){
+        console.log('Express server listening on port ' + app.get('port'));
+    });
+
 });
 
