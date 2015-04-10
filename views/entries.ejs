@@ -175,10 +175,11 @@
             <div id="graph-tools">
                 <a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a><br><a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a>
          </div>
-
+            <% if (!perceivername) { %>
             <div id="microphone-link">
                 <a href="javascript:" id="microphonecontrol"><img src="/images/microphone.png" border="0"></a>
             </div>
+            <% } %>
       </div>
 
     </div>
@@ -894,7 +895,7 @@ sigma.parsers.json(
 
     $(document).ready(function(){
 
-
+        <% if (!perceivername) { %>
         // START Speech Recognition Module only for Chrome
 
         if ('webkitSpeechRecognition' in window) {
@@ -994,7 +995,7 @@ sigma.parsers.json(
         }
 
         // END Speech recognition module
-
+         <% } %>
 
 
 
