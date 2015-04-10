@@ -161,19 +161,21 @@
 
         <div id="graph-container"></div>
 
+
                 <a href="javascript:" id="chat-link">
                     <!-- Graph icon -->
                     <span></span>
                 </a>
-
-       <div id="graph-reload">
+        <div id="controls">
+                <div id="graph-reload">
                 <a href="javascript:" id="go_next"><img src="/images/eyezoom.png" vspace="0" border="0"></a><br><a href="javascript:location.reload();"><img src="/images/reload.png" vspace="6" border="0"></a><br><a href="javascript:" id="improve-layout"><img src="/images/diamond.png" vspace="3" border="0"></a>
 
-       </div>
-
-        <div id="graph-tools">
-            <a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a><br><a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a>
         </div>
+
+            <div id="graph-tools">
+                <a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a><br><a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a>
+         </div>
+      </div>
 
     </div>
 
@@ -408,6 +410,7 @@ function showStatements () {
         var isHidden_ = $("#statements").is(":hidden");
         if (isHidden_) {
             $('#statements').fadeIn();
+            $("#chat-link").toggleClass('chat-highlight');
         }
 }
 

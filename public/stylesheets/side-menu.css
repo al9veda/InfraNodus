@@ -156,6 +156,10 @@ small screens.
 
 
 
+#controls {
+    top: 40px;
+}
+
 #graph-link {
     position: absolute;
     display: block; /* show this only on small screens */
@@ -182,7 +186,7 @@ small screens.
 #chat-link {
 
 
-
+    margin-top: 0px;
     background: white;
     position: fixed;
     display: block;
@@ -191,7 +195,7 @@ small screens.
     font-size: 8px; /* change this value to increase/decrease button size */
     width: 2em;
     height: auto;
-    padding: 2.1em 1.6em;
+    padding: 2.6em 2.6em;
     z-index: 11;
     background-image: url('../images/chat.png');
     background-repeat:no-repeat;
@@ -233,8 +237,8 @@ small screens.
    /* width: 2em;
     height: auto;*/
     padding-top: 7em;
-    padding-right: 1.4em;
-    z-index: 10;
+    padding-right: 2.4em;
+    z-index: 9;
 }
 
 #graph-reload {
@@ -245,7 +249,7 @@ small screens.
     font-size: 8px; /* change this value to increase/decrease button size */
     /* width: 2em;
      height: auto;*/
-    padding: 5.5em 1.4em;
+    padding: 6em 2.4em;
     z-index: 10;
 }
 
@@ -303,15 +307,39 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 
 }
 
-@media (min-width: 475px) {
+@media (max-width: 460px) {
 
 
 
+    #chat-link {
+        margin-top: 0px;
+        background: none;
+        position: fixed;
+        display: block;
+        top: 0;
+        right: 0; /* "#menu width" */
+        font-size: 8px; /* change this value to increase/decrease button size */
+        width: 2em;
+        height: auto;
+        padding: 2.6em 2.6em;
+        z-index: 11;
+        background-image: url('../images/close.png');
+        background-repeat:no-repeat;
+        background-position:center;
+    }
 
-   /* #graph-reload {
-        padding: 10px;
+    #chat-link:hover {
+        background: rgba(0,0,0,0.1);
+        background-image: url('../images/close.png');
+        background-repeat:no-repeat;
+        background-position:center;
+    }
 
-    }*/
+    #graph-link {
+        display:none;
+    }
+
+
 
 
 }
