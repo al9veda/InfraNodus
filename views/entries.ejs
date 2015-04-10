@@ -926,11 +926,16 @@ sigma.parsers.json(
 
 
 
-                if (language == 'en' || language == 'en-US' || localStorage.getItem('language') == 'en') {
+                if (language == 'en' || language == 'en-US') {
                     localStorage.setItem('language', 'en');
                 }
 
-                else if (language == 'ru' || language == 'russian' || localStorage.getItem('language') == 'ru') {
+                else if (language == 'ru' || language == 'russian') {
+                    recognition.lang = 'ru';
+                    localStorage.setItem('language', 'ru');
+                }
+
+                if (localStorage.getItem('language') == 'ru') {
                     recognition.lang = 'ru';
                     localStorage.setItem('language', 'ru');
                 }
