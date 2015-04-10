@@ -924,12 +924,15 @@ sigma.parsers.json(
                 // We speak The Queens English here, my good man
                 recognition.lang = 'en-US'
 
-                if (language == 'ru' || language == 'russian' || localStorage.getItem('language') == 'ru') {
+
+
+                if (language == 'en' || language == 'en-US' || localStorage.getItem('language') == 'en') {
+                    localStorage.setItem('language', 'en');
+                }
+
+                else if (language == 'ru' || language == 'russian' || localStorage.getItem('language') == 'ru') {
                     recognition.lang = 'ru';
                     localStorage.setItem('language', 'ru');
-                }
-                else if (language = 'en' || language == 'en-US' || localStorage.getItem('language') == 'en') {
-                    localStorage.setItem('language', 'en');
                 }
 
                 // Kick off the Speech to Text recognition process
