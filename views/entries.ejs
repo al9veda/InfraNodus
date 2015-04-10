@@ -883,6 +883,54 @@ sigma.parsers.json(
 
     $(document).ready(function(){
 
+
+        // START Speech Recognition Module only for Chrome
+
+        if (('webkitSpeechRecognition' in window) && location.protocol === 'https:') {
+
+            var recognition = new webkitSpeechRecognition();
+
+            var voiceresult = '';
+
+            // Are we processing a short phrase or performing continuous dictation?
+            recognition.continuous = true;
+
+            // Do we require interim results in addition to the final results?
+            recognition.interimResults = true;
+
+            // We speak The Queens English here, my good man
+            recognition.lang = 'en-US'
+
+            // Kick off the Speech to Text recognition process
+            recognition.start();
+
+            // Set up
+            recognition.onstart = function(event){
+                console.log("onstart", event);
+            }
+
+            // Process parsed result
+            recognition.onresult = function(event){
+                // console.log("onresult", event);
+                voiceresult = event.results[0][0].transcript;
+                $('#statement').val(voiceresult);
+            }
+
+            // Handle error
+            recognition.onerror = function(event){
+                console.log("onerror", event);
+            }
+
+            // Housekeeping after success or failed parsing
+            recognition.onend = function(){
+                console.log("onend");
+                recognition.start();
+            }
+
+        }
+
+        // END Speech recognition module
+
         $("#chat-link").click(function(e) {
             e.preventDefault();
 
@@ -1928,7 +1976,7 @@ sigma.parsers.json(
         }
 
         <% if (!perceivername) { %>
-            addNewContext = '<li id="addNewContext" class="menu-item-divided"><a id="addcontextbutton" href="javascript:">+</a>&nbsp;<form action="http://www.example.com" method="GET" class="pure-form" id="addcontextinput"><input type="text" id="addcontextname" size="7" class="pure-input"></form></li><li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
+            addNewContext = '<li id="addNewContext" class="menu-item-divided"><a id="addcontextbutton" href="javascript:">+</a>&nbsp;<form action="/post" method="GET" class="pure-form" id="addcontextinput"><input type="text" id="addcontextname" size="7" class="pure-input"></form></li><li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
         <% } else { %>
             addNewContext = '<li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
 
