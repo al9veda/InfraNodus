@@ -227,6 +227,26 @@ small screens.
     background-position:center;
 }
 
+#microphone-link {
+    display: none;
+    opacity: 0.5;
+    position: fixed;
+    top: 180px;
+    text-align: right;
+    right: -2px; /* "#menu width" */
+    font-size: 8px; /* change this value to increase/decrease button size */
+    /* width: 2em;
+     height: auto;*/
+    padding: 8em 2.3em;
+    z-index: 10;
+
+}
+
+.microphone-on {
+    opacity: 1!important;
+}
+
+
 #graph-tools {
     position: fixed;
     display: none;

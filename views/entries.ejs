@@ -175,6 +175,10 @@
             <div id="graph-tools">
                 <a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a><br><a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a>
          </div>
+
+            <div id="microphone-link">
+                <a href="javascript:" id="microphonecontrol"><img src="/images/microphone.png" border="0"></a>
+            </div>
       </div>
 
     </div>
@@ -893,80 +897,100 @@ sigma.parsers.json(
 
         // START Speech Recognition Module only for Chrome
 
-        if (('webkitSpeechRecognition' in window) && location.protocol === 'https:') {
+        if ('webkitSpeechRecognition' in window) {
 
-            var recognition = new webkitSpeechRecognition();
+            $('#microphone-link').fadeIn();
 
-            var voiceresult = '';
+            if (location.protocol === 'https:') {
 
-            var previoustalk = '';
+                $('#microphone-link').toggleClass('microphone-on');
 
-            // Are we processing a short phrase or performing continuous dictation?
-            recognition.continuous = false;
+                var recognition = new webkitSpeechRecognition();
 
-            // Do we require interim results in addition to the final results?
-            recognition.interimResults = true;
+                var voiceresult = '';
 
-            // We speak The Queens English here, my good man
-            recognition.lang = 'en-US'
+                var previoustalk = '';
 
-            // Kick off the Speech to Text recognition process
-            recognition.start();
+                // Are we processing a short phrase or performing continuous dictation?
+                recognition.continuous = false;
 
-            // Set up
-            recognition.onstart = function(event){
-                console.log("onstart", event);
-            }
-            // Set up
-            recognition.onspeechstart = function(event){
-                 console.log("onspeechstart", event);
-            }
+                // Do we require interim results in addition to the final results?
+                recognition.interimResults = true;
 
-            // Process parsed result
-            recognition.onresult = function(event){
-                // console.log("onresult", event);
-                voiceresult = previoustalk + event.results[0][0].transcript;
-                $('#statement').val(voiceresult);
-            }
+                // We speak The Queens English here, my good man
+                recognition.lang = 'en-US'
 
-            // Handle error
-            recognition.onerror = function(event){
-                console.log("onerror", event);
-                 if (event.error == 'no-speech') {
+                // Kick off the Speech to Text recognition process
+                recognition.start();
 
+                // Set up
+                recognition.onstart = function(event){
+                    console.log("onstart", event);
                 }
-            }
-
-            // Housekeeping after success or failed parsing
-            recognition.onspeechend = function(){
-                console.log("onspeechend");
-                if (voiceresult.length > 4) {
-                    setTimeout(function(){
-                        document.forms["submitform"].submit();
-                    }, 1000);
-
-                }
-                else {
-                    previoustalk = voiceresult + '';
-                   // recognition.start();
+                // Set up
+                recognition.onspeechstart = function(event){
+                     console.log("onspeechstart", event);
                 }
 
-            }
-
-            recognition.onend = function(){
-                console.log("onend");
-                if (voiceresult.length > 4) {
-                    setTimeout(function(){
-                        document.forms["submitform"].submit();
-                    }, 1000);
-
-                }
-                else {
-                    previoustalk = voiceresult + '';
-                    recognition.start();
+                // Process parsed result
+                recognition.onresult = function(event){
+                    // console.log("onresult", event);
+                    voiceresult = previoustalk + event.results[0][0].transcript;
+                    $('#statement').val(voiceresult);
                 }
 
+                // Handle error
+                recognition.onerror = function(event){
+                    console.log("onerror", event);
+                     if (event.error == 'no-speech') {
+
+                    }
+                }
+
+                // Housekeeping after success or failed parsing
+                recognition.onspeechend = function(){
+                    console.log("onspeechend");
+                    if (voiceresult.length > 4) {
+                        setTimeout(function(){
+                            document.forms["submitform"].submit();
+                        }, 1000);
+
+                    }
+                    else {
+                        previoustalk = voiceresult + '';
+                       // recognition.start();
+                    }
+
+                }
+
+                recognition.onend = function(){
+                    console.log("onend");
+                    if (voiceresult.length > 4) {
+                        setTimeout(function(){
+                            document.forms["submitform"].submit();
+                        }, 1000);
+
+                    }
+                    else {
+                        previoustalk = voiceresult + '';
+                        recognition.start();
+                    }
+
+                }
+
+
             }
+
+            $("#microphonecontrol").click(function(e) {
+                e.preventDefault();
+                if (window.location.protocol == "http:") {
+                    window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+                }
+                else if ((window.location.protocol == "https:")) {
+                    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
+                }
+            });
+
         }
 
         // END Speech recognition module
