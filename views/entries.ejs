@@ -926,8 +926,14 @@ sigma.parsers.json(
             // Housekeeping after success or failed parsing
             recognition.onend = function(){
                 console.log("onend");
-                previoustalk = voiceresult + '\n\n';
-                recognition.start();
+                if (voiceresult.length > 4) {
+                    document.forms["submitform"].submit();
+                }
+                else {
+                    previoustalk = voiceresult + '\n\n';
+                    recognition.start();
+                }
+
             }
 
         }
