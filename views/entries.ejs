@@ -161,6 +161,10 @@
 
         <div id="graph-container"></div>
 
+                <a href="javascript:" id="chat-link">
+                    <!-- Graph icon -->
+                    <span></span>
+                </a>
 
        <div id="graph-reload">
                 <a href="javascript:" id="go_next"><img src="/images/eyezoom.png" vspace="0" border="0"></a><br><a href="javascript:location.reload();"><img src="/images/reload.png" vspace="6" border="0"></a><br><a href="javascript:" id="improve-layout"><img src="/images/diamond.png" vspace="3" border="0"></a>
@@ -370,18 +374,15 @@ $("#graph-link").click(function(e) {
 });
 
 
-// Are we loading the page to only show the graph?
 
-<% if (background == '1' || background == 'graph') { %>
-    toggle_statements();
-    graphOnly = 1;
-<% } %>
+
 
 
 // Hide / Show Statements DIV
 
 function toggle_statements() {
-    $('#graph-link').toggleClass('graph-chat');
+
+    /*$('#graph-link').toggleClass('graph-chat');
     $('#entries').toggleClass("hide-entries");
     $('#statements').toggleClass("hide-statements");
 
@@ -396,14 +397,24 @@ function toggle_statements() {
         if (pinnedNodes.length == 0) {
             $('#adds').trigger('click');
         }
-    }
-   // $("#statements").fadeToggle();
+    }*/
+
+    $("#statements").fadeToggle();
+    $("#chat-link").toggleClass('chat-highlight');
+
 }
 
 function showStatements () {
         var isHidden_ = $("#statements").is(":hidden");
         if (isHidden_) {
             $('#statements').fadeIn();
+        }
+}
+
+function showEntries () {
+        var isHidden_ = $("#entries").is(":hidden");
+        if (isHidden_) {
+            $('#entries').fadeIn();
         }
 }
 
@@ -869,7 +880,15 @@ sigma.parsers.json(
 
     $(document).ready(function(){
 
+        $("#chat-link").click(function(e) {
+            e.preventDefault();
 
+            // The user clicked on the graph icon, so we reset his graph interaction activity for timeout later
+            graphInteraction = null;
+            clearTimeout(inactiveTimeout);
+
+            toggle_statements();
+        });
 
         $("#imports").click(function(e) {
             var fornode = '';
@@ -1276,6 +1295,17 @@ sigma.parsers.json(
             }
 
         }
+
+
+// Are we loading the page to only show the graph?
+
+        <% if (background == '1' || background == 'graph') { %>
+            $('#finds').trigger('click');
+
+            toggle_statements();
+            graphOnly = 1;
+        <% } %>
+
 
 
     });

@@ -320,9 +320,7 @@ a:hover.app-more-link {
     z-index: 1;
 }
 
-.hide-statements {
-    padding-bottom: 28px!important;
-}
+
 
 .hide-entries {
    display: none!important;
