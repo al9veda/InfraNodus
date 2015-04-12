@@ -389,6 +389,7 @@ $("#graph-link").click(function(e) {
 
 
     document.addEventListener("DOMContentLoaded", function(event) {
+
         document.querySelector('#submitform').addEventListener('submit', function(e) {
             e.preventDefault();
             socket.emit('chat message', $('#statement').val());
@@ -396,10 +397,17 @@ $("#graph-link").click(function(e) {
         });
 
 
+
     });
 
     socket.on('chat message', function(msg){
-        alert('submitting form');
+
+
+        var added_entry =  "<div class='entry'><p class='entry-text'>" + msg + "</p></div>";
+
+        $('#entries').prepend(added_entry);
+
+
         //document.forms["submitform"].submit();
     });
 
@@ -2681,7 +2689,7 @@ sigma.parsers.json(
                    if (infraExtract == null && current_context.substr(0,1) == '_') {
                         if (message_clean.length > 4) {
                             $('#statement').text(message_clean);
-                            document.forms["submitform"].submit();
+                            $('#submitbutton').trigger('click');
                         }
                     }
 
