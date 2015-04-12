@@ -49,11 +49,12 @@ var imports = require('./routes/imports');
 
 var app = express();
 
+var appio = http.createServer(app);
+var io = require('socket.io')(appio);
 
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
-
 
 
 app.use(express.bodyParser());
@@ -162,7 +163,17 @@ if (process.env.ERROR_ROUTE) {
 }
 
 
-http.createServer(app).listen(app.get('port'), function(){
+appio.listen(app.get('port'), function(){
+
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+io.on('connection', function(socket){
+    console.log('a user socket connected');
+});
+
+
+
+
+
 

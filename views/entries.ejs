@@ -205,12 +205,16 @@
 <script src="/javascripts/bundle-stemmer.js"></script>
 <script src="/javascripts/jquery.taghandler.js"></script>
 <script src="/javascripts/jquery.content-panel-switcher.js"></script>
+<script src="/javascripts/socket.io.js"></script>
 
 
 
-
-<script>
+             <script>
 ;(function(){
+
+    // Initialize Socket.IO
+    var socket = io();
+
     // Get URL variables in the form of an array
 
     function getUrlVars()
