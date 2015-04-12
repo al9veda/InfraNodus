@@ -244,12 +244,15 @@ exports.submit = function(req, res, next){
                     //next();
                 }
                 else {
-                    if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
+
+                    res.send({entry: statement});
+
+                   /* if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
                         res.redirect('/' + res.locals.user.name + '/edit');
                     }
                     else {
                         res.redirect(res.locals.user.name + '/' + default_context + '/edit');
-                    }
+                    }*/
 
                 }
             });

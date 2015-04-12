@@ -392,7 +392,24 @@ $("#graph-link").click(function(e) {
 
         document.querySelector('#submitform').addEventListener('submit', function(e) {
             e.preventDefault();
-            socket.emit('chat message', $('#statement').val());
+
+
+            $.post('/post', $("#submitform").serialize())
+                    .done(function(res) {
+                        //3. Receive the server response, no need to emit an event
+                        if (res.entry) {
+                            //4. Show the updated text
+                            socket.emit('chat message', res.entry);
+                        }
+                        else {
+                            alert(res.error);
+                        }})
+                    .fail(function(res) {
+                        alert("Server Error: " + res.status + " " + res.statusText);
+                    });
+
+
+
             return false;
         });
 
@@ -406,9 +423,8 @@ $("#graph-link").click(function(e) {
         var added_entry =  "<div class='entry'><p class='entry-text'>" + msg + "</p></div>";
 
         $('#entries').prepend(added_entry);
+        $("#statement").val('');
 
-
-        //document.forms["submitform"].submit();
     });
 
 
