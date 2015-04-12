@@ -10,6 +10,7 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel='stylesheet' href='/stylesheets/jquery.taghandler.css' />
     <link rel='stylesheet' href='/stylesheets/jquery.content-panel-switcher.css' />
+    <script src="/javascripts/jquery.content-panel-switcher.js"></script>
 
 
 
@@ -204,7 +205,6 @@
 <script src="/javascripts/jquery.highlight-4.js"></script>
 <script src="/javascripts/bundle-stemmer.js"></script>
 <script src="/javascripts/jquery.taghandler.js"></script>
-<script src="/javascripts/jquery.content-panel-switcher.js"></script>
 <script src="/javascripts/socket.io.js"></script>
 
 
@@ -388,8 +388,20 @@ $("#graph-link").click(function(e) {
 });
 
 
+    document.addEventListener("DOMContentLoaded", function(event) {
+        document.querySelector('#submitform').addEventListener('submit', function(e) {
+            e.preventDefault();
+            socket.emit('chat message', $('#statement').val());
+            return false;
+        });
 
 
+    });
+
+    socket.on('chat message', function(msg){
+        alert('submitting form');
+        //document.forms["submitform"].submit();
+    });
 
 
 // Hide / Show Statements DIV
@@ -909,7 +921,7 @@ sigma.parsers.json(
 
             $('#microphone-link').fadeIn();
 
-            if (location.protocol === 'https:') {
+            if (location.protocol === 'http:') {
 
                 $('#microphone-link').toggleClass('microphone-on');
 
@@ -976,7 +988,7 @@ sigma.parsers.json(
                     console.log("onspeechend");
                     if (voiceresult.length > 4) {
                         setTimeout(function(){
-                            document.forms["submitform"].submit();
+                            $('#submitbutton').trigger('click');
                         }, 1000);
 
                     }
@@ -991,7 +1003,7 @@ sigma.parsers.json(
                     console.log("onend");
                     if (voiceresult.length > 4) {
                         setTimeout(function(){
-                            document.forms["submitform"].submit();
+                            $('#submitbutton').trigger('click');
                         }, 2000);
 
                     }
