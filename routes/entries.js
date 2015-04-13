@@ -245,7 +245,22 @@ exports.submit = function(req, res, next){
                 }
                 else {
 
-                    res.send({entryuid: answer, entrytext: statement});
+                    var receiver = res.locals.user.uid;
+                    var perceiver = res.locals.user.uid;
+                    var showcontexts = req.query.showcontexts;
+                    var fullview = res.locals.user.fullview;
+                    var contexts = [];
+
+                    contexts.push(default_context);
+
+                    Entry.getNodes(receiver, perceiver, contexts, fullview, showcontexts, res, req, function(err, graph){
+                        if (err) return next(err);
+
+                        // Change the result we obtained into a nice json we need
+
+                        res.send({entryuid: answer, entrytext: statement, graph: graph});
+                    });
+
 
                    /* if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
                         res.redirect('/' + res.locals.user.name + '/edit');

@@ -400,7 +400,7 @@ $("#graph-link").click(function(e) {
                         //3. Receive the server response, no need to emit an event
                         if (res.entryuid) {
                             //4. Show the updated text
-                            socket.emit('chat message', {entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext});
+                            socket.emit('chat message', {entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
                         }
                         else {
                             alert(res.error);
@@ -418,15 +418,7 @@ $("#graph-link").click(function(e) {
 
     });
 
-    socket.on('chat message', function(msg){
 
-
-        var added_entry =  "<div class='entry' data-uid='" + msg.entryuid + "'><p class='entry-text'>" + msg.entrytext + "</p><p class='entry-date'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
-
-        $('#entries').prepend(added_entry);
-        $("#statement").val('');
-
-    });
 
 
 // Hide / Show Statements DIV
@@ -624,6 +616,8 @@ sigma.parsers.json(
 
                 // Creating an index of node labels to IDs for filtering
                 nodeIDs[n.label] = n.id;
+
+                //console.log(n);
 
             });
 
@@ -925,6 +919,18 @@ sigma.parsers.json(
 
             });
 
+            socket.on('chat message', function(msg){
+
+
+                var added_entry =  "<div class='entry' data-uid='" + msg.entryuid + "'><p class='entry-text'>" + msg.entrytext + "</p><p class='entry-date'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
+
+                $('#entries').prepend(added_entry);
+                $("#statement").val('');
+                console.log(msg.graph)
+                console.log(sigma.graph.nodes());
+
+            });
+
 
 
 
@@ -946,7 +952,7 @@ sigma.parsers.json(
 
             $('#microphone-link').fadeIn();
 
-            if (location.protocol === 'http:') {
+            if (location.protocol === 'https:') {
 
                 $('#microphone-link').toggleClass('microphone-on');
 
