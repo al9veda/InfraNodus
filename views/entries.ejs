@@ -949,15 +949,29 @@ sigma.parsers.json(
                             dX: 0,
                             dY: 0
                         });
+                        nodeNames.push(addednodes[i].label);
 
 
                     }
                 }
 
+                console.log(sigma.graph.edges());
 
-                for (var j = 0; j < addededges; j++) {
+                for (var j = 0; j < addededges.length; j++) {
 
+                   if ((addededges[j].statement_id == msg.entryuid)) {
 
+                        sigma.graph.addEdge({
+                            id: addededges[j].id,
+                            source: addededges[j].source,
+                            target: addededges[j].target,
+                            weight: addededges[j].weight,
+                            size: addededges[j].weight,
+                            statement_id: addededges[j].statement_id,
+                            edge_context: addededges[j].edge_context
+                        });
+
+                    }
 
                 }
 
@@ -971,11 +985,11 @@ sigma.parsers.json(
                 setTimeout(function() {
 
                     sigma.stopForceAtlas2();
-                }, 1000);
+                }, 3000);
 
                 //console.log(newnodes);
-                // console.log(msg.graph.nodes);
-                 console.log(sigma.graph.nodes());
+                // console.log(msg.graph.edges);
+                 console.log(sigma.graph.edges());
 
             });
 
