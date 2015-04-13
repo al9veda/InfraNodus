@@ -926,8 +926,56 @@ sigma.parsers.json(
 
                 $('#entries').prepend(added_entry);
                 $("#statement").val('');
-                console.log(msg.graph)
-                console.log(sigma.graph.nodes());
+
+
+                var addednodes = msg.graph.nodes;
+                var addededges = msg.graph.edges;
+
+
+
+                for (var i = 0; i < addednodes.length; i++) {
+
+                    if (nodeNames.indexOf(addednodes[i].label) == -1) {
+                        console.log(addednodes[i]);
+
+                        var angle = Math.PI * 2 * i / len;
+                        sigma.graph.addNode({
+                            id: (id = addednodes[i].id),
+                            label: addednodes[i].label,
+                            size: maxnodesize - 2,
+                            x: Math.cos(angle),
+                            y: Math.sin(angle),
+                            color: color_addcontext,
+                            dX: 0,
+                            dY: 0
+                        });
+
+
+                    }
+                }
+
+
+                for (var j = 0; j < addededges; j++) {
+
+
+
+                }
+
+
+                sigma.refresh();
+
+                sigma.startForceAtlas2();
+
+                // Don't run it forever not to overheat :)
+
+                setTimeout(function() {
+
+                    sigma.stopForceAtlas2();
+                }, 1000);
+
+                //console.log(newnodes);
+                // console.log(msg.graph.nodes);
+                 console.log(sigma.graph.nodes());
 
             });
 
