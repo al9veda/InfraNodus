@@ -400,7 +400,7 @@ $("#graph-link").click(function(e) {
                         //3. Receive the server response, no need to emit an event
                         if (res.entry) {
                             //4. Show the updated text
-                            socket.emit('chat message', JSON.stringify(res.entry));
+                            socket.emit('chat message', JSON.parse(res.entry).data);
                         }
                         else {
                             alert(res.error);

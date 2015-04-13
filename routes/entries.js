@@ -228,7 +228,7 @@ exports.submit = function(req, res, next){
 
         }
         else {
-            entry.save(function(err) {
+            entry.save(function(err, answer) {
                 if (err) {
                     if (req.internal) {
 
@@ -245,7 +245,7 @@ exports.submit = function(req, res, next){
                 }
                 else {
 
-                    res.send({entry: entry});
+                    res.send({entry: answer});
 
                    /* if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
                         res.redirect('/' + res.locals.user.name + '/edit');
