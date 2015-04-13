@@ -116,9 +116,9 @@
                     <input type='submit' name="submit" value=">" class="pure-button pure-button-primary">
              </form>
             </div>
-
+                    &nbsp;<br>
             <div id="entries">
-            &nbsp;<br>
+
 
             <% include messages %>
             <div id="messages"></div>
@@ -206,6 +206,7 @@
 <script src="/javascripts/bundle-stemmer.js"></script>
 <script src="/javascripts/jquery.taghandler.js"></script>
 <script src="/javascripts/socket.io.js"></script>
+<script src="/javascripts/moment.min.js"></script>
 
 
 
@@ -399,7 +400,7 @@ $("#graph-link").click(function(e) {
                         //3. Receive the server response, no need to emit an event
                         if (res.entry) {
                             //4. Show the updated text
-                            socket.emit('chat message', res.entry);
+                            socket.emit('chat message', JSON.stringify(res.entry));
                         }
                         else {
                             alert(res.error);
@@ -420,7 +421,7 @@ $("#graph-link").click(function(e) {
     socket.on('chat message', function(msg){
 
 
-        var added_entry =  "<div class='entry'><p class='entry-text'>" + msg + "</p></div>";
+        var added_entry =  "<div class='entry'><p class='entry-text'>" + msg + "</p><p class='entry-date'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='' class='hidden'></div></div>";
 
         $('#entries').prepend(added_entry);
         $("#statement").val('');
@@ -1446,7 +1447,7 @@ sigma.parsers.json(
 
         $(".entry-date").each(function() {
             var convertedTime = timeConverter($(this).text()) ;
-            $(this).text('saved ' + convertedTime);
+            $(this).text(convertedTime);
         });
 
 

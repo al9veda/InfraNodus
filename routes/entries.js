@@ -245,7 +245,7 @@ exports.submit = function(req, res, next){
                 }
                 else {
 
-                    res.send({entry: statement});
+                    res.send({entry: entry});
 
                    /* if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
                         res.redirect('/' + res.locals.user.name + '/edit');
