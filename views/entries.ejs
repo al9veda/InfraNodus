@@ -423,6 +423,18 @@ function submitFormProcess() {
 
         return false;
     });
+
+    $('#statement').keypress(function(e){
+
+        // Submit the form on enter
+
+        if(e.which == 13 && !e.shiftKey) {
+            e.preventDefault();
+            $('#submitbutton').trigger('click');
+        }
+
+    });
+
 }
 
 // Hide / Show Statements DIV
