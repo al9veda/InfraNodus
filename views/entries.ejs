@@ -400,9 +400,10 @@ $("#graph-link").click(function(e) {
 
 
 function submitFormProcess() {
-    document.querySelector('#submitform').addEventListener('submit', function(e) {
-        e.preventDefault();
 
+    document.querySelector('#submitform').addEventListener('submit', function(e) {
+
+        e.preventDefault();
 
         $.post('/post', $("#submitform").serialize())
                 .done(function(res) {
@@ -1346,6 +1347,7 @@ sigma.parsers.json(
 
                 $("#submitform").append('<input type="submit" name="delete" value="delete" id="deletebutton" class="pure-button"> <input type="submit" name="cancel" value="cancel" id="cancelbutton" class="pure-button">');
 
+
                 // Delete text from the form in case of Cancel, remove the buttons
 
                 $("#cancelbutton").on('click', function(e) {
@@ -1386,6 +1388,8 @@ sigma.parsers.json(
                     });
 
                     submitFormProcess();
+
+
 
 
                 });

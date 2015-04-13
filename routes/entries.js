@@ -244,9 +244,19 @@ exports.submit = function(req, res, next){
                     //next();
                 }
                 else {
+                    if (req.body.delete == 'delete' || req.body.btnSubmit == 'edit' || req.body.delete == 'delete context') {
+                         if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
+                         res.redirect('/' + res.locals.user.name + '/edit');
+                         }
+                         else {
+                         res.redirect(res.locals.user.name + '/' + default_context + '/edit');
+                         }
 
 
-                    // TODO find a better way of dealing with Edit and Delete
+                    }
+                    else {
+
+                        // TODO find a better way of dealing with Edit and Delete
 
                     var receiver = res.locals.user.uid;
                     var perceiver = res.locals.user.uid;
@@ -264,13 +274,9 @@ exports.submit = function(req, res, next){
 
                     });
 
-
-                   /* if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
-                        res.redirect('/' + res.locals.user.name + '/edit');
                     }
-                    else {
-                        res.redirect(res.locals.user.name + '/' + default_context + '/edit');
-                    }*/
+
+
 
                 }
             });
