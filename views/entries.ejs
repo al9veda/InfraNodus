@@ -933,6 +933,7 @@ sigma.parsers.json(
                 $('#entries').prepend(added_entry);
                 $("#statement").val('');
 
+                entryClick();
 
                 var addednodes = msg.graph.nodes;
                 var addededges = msg.graph.edges;
@@ -943,19 +944,17 @@ sigma.parsers.json(
 
                     if (nodeNames.indexOf(addednodes[i].label) == -1) {
 
+                       // var angle = Math.PI * 2 * i / len;
 
-                        var angle = Math.PI * 2 * i / len;
                         sigma.graph.addNode({
                             id: (id = addednodes[i].id),
                             label: addednodes[i].label,
                             originalLabel: addednodes[i].label,
                             originalColor: color_context,
                             size: maxnodesize - 2,
-                            x: Math.cos(angle),
-                            y: Math.sin(angle),
-                            color: color_context,
-                            dX: 0,
-                            dY: 0
+                            x: Math.random(),
+                            y: Math.random(),
+                            color: color_context
                         });
                         nodeNames.push(addednodes[i].label);
 
@@ -982,7 +981,27 @@ sigma.parsers.json(
                 }
 
                 sigma.graph.nodes().forEach(function(n) {
+                    if (n.id == 'dummy') {
+                        sigma.graph.dropNode('dummy');
+                    }
                     n.size = sigma.graph.degree(n.id);
+
+                });
+
+                // TODO this code duplicates from above - move into a function
+                sigma.graph.edges().forEach(function(e) {
+                    // Make an index of nodes to statement
+                    if (nodesOfStatement[e.statement_id]) {
+                        if (nodesOfStatement[e.statement_id].indexOf(e.source) < 0)
+                            nodesOfStatement[e.statement_id].push(e.source);
+                        if (nodesOfStatement[e.statement_id].indexOf(e.target) < 0)
+                            nodesOfStatement[e.statement_id].push(e.target);
+                    }
+                    else {
+                        nodesOfStatement[e.statement_id] = [];
+                        nodesOfStatement[e.statement_id].push(e.source);
+                        nodesOfStatement[e.statement_id].push(e.target);
+                    }
                 });
 
                 sigma.refresh();
@@ -994,6 +1013,7 @@ sigma.parsers.json(
                 setTimeout(function() {
 
                     sigma.stopForceAtlas2();
+
                 }, 3000);
 
                 //console.log(newnodes);
@@ -1287,107 +1307,7 @@ sigma.parsers.json(
         var filteringstarted = 0;
 
 
-
-        $(".entry").on('click', function(e) {
-            if (e.target.className == 'app-link-menu') {
-
-                if ($(this).find('.app-link-menu').text() == 'hide filtered') {
-                    $(this).find('.nonmatched-sentence').fadeOut(400);
-                    $(this).find('.app-link-menu').text('show filtered');
-                }
-                else {
-                    $(this).find('.nonmatched-sentence').fadeTo(400, '0.4');
-                    $(this).find('.app-link-menu').text('hide filtered');
-                }
-
-            }
-
-            // A parameter to check if we're taking off the flag
-
-            var alreadyClicked = null;
-
-            // Make all entries semitrasparent
-
-
-            if (pinnedNodes.length == 0) {
-
-                $(".entry").each(function() {
-                    if ($(this).css('opacity') < 1) {
-                        $(this).css('opacity', '1');
-                        alreadyClicked = 1;
-                    }
-                    else {
-                        $(this).css('opacity', '0.3');
-                    }
-                });
-
-                // The one clicked is not transparent
-
-                $(this).css('opacity','1');
-
-            }
-
-
-
-            var keepStatementID = e.currentTarget.dataset.uid;
-
-
-            console.log(keepStatementID);
-
-            // Make only those edges visible that belong to the statement selected
-
-            if (!alreadyClicked && pinnedNodes.length == 0) {
-
-                sigma.instances(0).graph.edges().forEach(function(e) {
-
-                    if (e.statement_id == keepStatementID) {
-                        e.color = e.originalColor;
-                    }
-                    else {
-                        e.color = '#ddd';
-                    }
-
-                });
-
-                // Make only those nodes visible that belong to the statement selected
-
-                sigma.instances(0).graph.nodes().forEach(function(n) {
-
-                    // Is there no contexts at all? Show the node.
-                    if (nodesOfStatement[keepStatementID].indexOf(n.id) < 0)  {
-                        n.color = '#ddd';
-                        n.label = '';
-                    }
-                    else {
-                        n.color = n.originalColor;
-                        n.label = n.originalLabel;
-                    }
-                });
-            }
-            else if (e.target.className == 'app-link-menu') {
-
-                // Do nothing
-
-            }
-            else {
-
-                if (pinnedNodes.length == 0) {
-                    sigma.instances(0).graph.edges().forEach(function(e) {
-                        e.color = e.originalColor;
-                    });
-
-                    // Make only those nodes visible that belong to the statement selected
-
-                    sigma.instances(0).graph.nodes().forEach(function(n) {
-                        n.color = n.originalColor;
-                        n.label = n.originalLabel;
-                    });
-                }
-
-            }
-
-            sigma.instances(0).refresh();
-        });
+        entryClick();
 
         $(".entry").on('doubletap', function(e) {
 
@@ -1617,6 +1537,112 @@ sigma.parsers.json(
 
     });*/
 
+
+
+    function entryClick () {
+
+        $(".entry").on('click', function(e) {
+            if (e.target.className == 'app-link-menu') {
+
+                if ($(this).find('.app-link-menu').text() == 'hide filtered') {
+                    $(this).find('.nonmatched-sentence').fadeOut(400);
+                    $(this).find('.app-link-menu').text('show filtered');
+                }
+                else {
+                    $(this).find('.nonmatched-sentence').fadeTo(400, '0.4');
+                    $(this).find('.app-link-menu').text('hide filtered');
+                }
+
+            }
+
+            // A parameter to check if we're taking off the flag
+
+            var alreadyClicked = null;
+
+            // Make all entries semitrasparent
+
+
+            if (pinnedNodes.length == 0) {
+
+                $(".entry").each(function() {
+                    if ($(this).css('opacity') < 1) {
+                        $(this).css('opacity', '1');
+                        alreadyClicked = 1;
+                    }
+                    else {
+                        $(this).css('opacity', '0.3');
+                    }
+                });
+
+                // The one clicked is not transparent
+
+                $(this).css('opacity','1');
+
+            }
+
+
+
+            var keepStatementID = e.currentTarget.dataset.uid;
+
+
+            console.log(keepStatementID);
+
+            // Make only those edges visible that belong to the statement selected
+
+            if (!alreadyClicked && pinnedNodes.length == 0) {
+
+                sigma.instances(0).graph.edges().forEach(function(e) {
+
+                    if (e.statement_id == keepStatementID) {
+                        e.color = e.originalColor;
+                    }
+                    else {
+                        e.color = '#ddd';
+                    }
+
+                });
+
+                // Make only those nodes visible that belong to the statement selected
+
+                sigma.instances(0).graph.nodes().forEach(function(n) {
+
+                    // Is there no contexts at all? Show the node.
+                    if (nodesOfStatement[keepStatementID].indexOf(n.id) < 0)  {
+                        n.color = '#ddd';
+                        n.label = '';
+                    }
+                    else {
+                        n.color = n.originalColor;
+                        n.label = n.originalLabel;
+                    }
+                });
+            }
+            else if (e.target.className == 'app-link-menu') {
+
+                // Do nothing
+
+            }
+            else {
+
+                if (pinnedNodes.length == 0) {
+                    sigma.instances(0).graph.edges().forEach(function(e) {
+                        e.color = e.originalColor;
+                    });
+
+                    // Make only those nodes visible that belong to the statement selected
+
+                    sigma.instances(0).graph.nodes().forEach(function(n) {
+                        n.color = n.originalColor;
+                        n.label = n.originalLabel;
+                    });
+                }
+
+            }
+
+            sigma.instances(0).refresh();
+        });
+
+    }
 
     // Filter out the statements that don't have any of the nodes clicked
 
