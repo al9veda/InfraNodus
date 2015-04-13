@@ -937,6 +937,7 @@ sigma.parsers.json(
                 $("#statement").val('');
 
                 entryClick();
+                entryDoubleClick();
 
                 var addednodes = msg.graph.nodes;
                 var addededges = msg.graph.edges;
@@ -1004,6 +1005,15 @@ sigma.parsers.json(
                         nodesOfStatement[e.statement_id] = [];
                         nodesOfStatement[e.statement_id].push(e.source);
                         nodesOfStatement[e.statement_id].push(e.target);
+                    }
+
+                    if (statementsOfContext[e.edge_context]) {
+                        if (statementsOfContext[e.edge_context].indexOf(e.statement_id) < 0)
+                            statementsOfContext[e.edge_context].push(e.statement_id);
+                    }
+                    else {
+                        statementsOfContext[e.edge_context] = [];
+                        statementsOfContext[e.edge_context].push(e.statement_id);
                     }
                 });
 
@@ -1313,134 +1323,7 @@ sigma.parsers.json(
 
         entryClick();
 
-        $(".entry").on('doubletap', function(e) {
-
-            e.preventDefault();
-
-            // Get the content from the form edit and copy it into the switcher panel to show to the user
-
-            var _formcontent = $('#adds-content').html();
-
-            $("#switcher-panel").html(_formcontent);
-
-            // Get the statement into the edit box at the top
-            $("#statement").val($('.entry-text', e.currentTarget).text());
-
-            // Retrieve that statement's ID into the hidden field (for edit or delete)
-            $('input[name="statementid"]').val(e.currentTarget.dataset.uid);
-
-            $('#topmenuitems').each(function() {
-                $("li", this).each(function(i) {
-
-                    $(this).removeClass('pure-menu-selected-top');
-
-                });
-            });
-
-
-
-
-            // Change / add buttons
-           $('#submitbutton').val("edit");
-
-            if (!$('#deletebutton').val()) {
-
-                $("#submitform").append('<input type="submit" name="delete" value="delete" id="deletebutton" class="pure-button"> <input type="submit" name="cancel" value="cancel" id="cancelbutton" class="pure-button">');
-
-
-                // Delete text from the form in case of Cancel, remove the buttons
-
-                $("#cancelbutton").on('click', function(e) {
-
-                    e.preventDefault();
-
-                    $("#statement").val('');
-                    $('#submitbutton').val("save");
-                    $('#deletebutton').remove();
-                    $('#cancelbutton').remove();
-
-                    // Populate contexts list next to statement add
-
-                    current_context_field = [];
-
-                    // Are we inside some context already?
-
-                    if ($("#context").val()) {
-                        current_context_field.push($("#context").val());
-                        $("#addedContexts").val($("#context").val());
-                    }
-
-                    // if not, we're making the 'private' context default
-                    else {
-                        current_context_field.push('private');
-                        $("#addedContexts").val('private');
-                    }
-
-                    $("#addToContexts").tagHandler({
-                        assignedTags: current_context_field,
-                        availableTags: contextNames,
-                        autocomplete: true,
-                        afterAdd: function(tag) {
-                            current_context_field.push(tag);
-                            $("#addedContexts").val(current_context_field.join());
-                            console.log('contexts in cancel field: ' + current_context_field.join());
-                        }
-                    });
-
-                    submitFormProcess();
-
-
-
-
-                });
-
-            }
-
-
-            current_context_field = [];
-
-            for (var key in statementsOfContext) {
-                var checkstatements = statementsOfContext[key];
-                for (var l = 0; l<checkstatements.length; l++) {
-                    if (checkstatements[l] == e.currentTarget.dataset.uid) {
-                        current_context_field.push(key);
-                    }
-                }
-
-            }
-
-            console.log('context of statement clicked: ' + current_context_field);
-
-            // Which contexts the statement should be in?
-            $("#addedContexts").val(current_context_field.join());
-
-            // Update the contexts list if anything changes in the context settings of the statement
-
-            $("#addToContexts").tagHandler({
-                assignedTags: current_context_field,
-                availableTags: contextNames,
-                autocomplete: true,
-                afterAdd: function(tag) {
-                    current_context_field.push(tag);
-                    $("#addedContexts").val(current_context_field.join());
-                    console.log('contexts in statement field: ' + current_context_field.join());
-                }
-            });
-
-
-            // Smoothly scroll up
-            $("html, body").animate({ scrollTop: 0 }, "slow");
-
-
-            // THIS WAS BEFORE WHEN YOU CLICK A STATEMENT ONCE
-
-            // Shall all statements inside Entry if clicked
-
-
-
-
-        });
-
+        entryDoubleClick();
 
 
         // Highlight statement if clicked once
@@ -1652,6 +1535,140 @@ sigma.parsers.json(
             sigma.instances(0).refresh();
         });
 
+    }
+
+
+    function entryDoubleClick() {
+
+        $(".entry").on('doubletap', function(e) {
+
+        e.preventDefault();
+
+        // Get the content from the form edit and copy it into the switcher panel to show to the user
+
+        var _formcontent = $('#adds-content').html();
+
+        $("#switcher-panel").html(_formcontent);
+
+        // Get the statement into the edit box at the top
+        $("#statement").val($('.entry-text', e.currentTarget).text());
+
+        // Retrieve that statement's ID into the hidden field (for edit or delete)
+        $('input[name="statementid"]').val(e.currentTarget.dataset.uid);
+
+        $('#topmenuitems').each(function() {
+            $("li", this).each(function(i) {
+
+                $(this).removeClass('pure-menu-selected-top');
+
+            });
+        });
+
+
+
+
+        // Change / add buttons
+        $('#submitbutton').val("edit");
+
+        if (!$('#deletebutton').val()) {
+
+            $("#submitform").append('<input type="submit" name="delete" value="delete" id="deletebutton" class="pure-button"> <input type="submit" name="cancel" value="cancel" id="cancelbutton" class="pure-button">');
+
+
+            // Delete text from the form in case of Cancel, remove the buttons
+
+            $("#cancelbutton").on('click', function(e) {
+
+                e.preventDefault();
+
+                $("#statement").val('');
+                $('#submitbutton').val("save");
+                $('#deletebutton').remove();
+                $('#cancelbutton').remove();
+
+                // Populate contexts list next to statement add
+
+                current_context_field = [];
+
+                // Are we inside some context already?
+
+                if ($("#context").val()) {
+                    current_context_field.push($("#context").val());
+                    $("#addedContexts").val($("#context").val());
+                }
+
+                // if not, we're making the 'private' context default
+                else {
+                    current_context_field.push('private');
+                    $("#addedContexts").val('private');
+                }
+
+                $("#addToContexts").tagHandler({
+                    assignedTags: current_context_field,
+                    availableTags: contextNames,
+                    autocomplete: true,
+                    afterAdd: function(tag) {
+                        current_context_field.push(tag);
+                        $("#addedContexts").val(current_context_field.join());
+                        console.log('contexts in cancel field: ' + current_context_field.join());
+                    }
+                });
+
+                // TODO a better way of dealing with delete and edit - in the logic of everything else
+
+                submitFormProcess();
+
+
+
+
+            });
+
+        }
+
+
+        current_context_field = [];
+
+        for (var key in statementsOfContext) {
+            var checkstatements = statementsOfContext[key];
+            for (var l = 0; l<checkstatements.length; l++) {
+                if (checkstatements[l] == e.currentTarget.dataset.uid) {
+                    current_context_field.push(key);
+                }
+            }
+
+        }
+
+        console.log('context of statement clicked: ' + current_context_field);
+
+        // Which contexts the statement should be in?
+        $("#addedContexts").val(current_context_field.join());
+
+        // Update the contexts list if anything changes in the context settings of the statement
+
+        $("#addToContexts").tagHandler({
+            assignedTags: current_context_field,
+            availableTags: contextNames,
+            autocomplete: true,
+            afterAdd: function(tag) {
+                current_context_field.push(tag);
+                $("#addedContexts").val(current_context_field.join());
+                console.log('contexts in statement field: ' + current_context_field.join());
+            }
+        });
+
+
+        // Smoothly scroll up
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+
+
+        // THIS WAS BEFORE WHEN YOU CLICK A STATEMENT ONCE
+
+        // Shall all statements inside Entry if clicked
+
+
+
+
+    });
     }
 
     // Filter out the statements that don't have any of the nodes clicked
