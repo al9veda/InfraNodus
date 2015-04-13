@@ -245,6 +245,9 @@ exports.submit = function(req, res, next){
                 }
                 else {
 
+
+                    // TODO find a better way of dealing with Edit and Delete
+
                     var receiver = res.locals.user.uid;
                     var perceiver = res.locals.user.uid;
                     var showcontexts = req.query.showcontexts;
@@ -257,8 +260,8 @@ exports.submit = function(req, res, next){
                         if (err) return next(err);
 
                         // Change the result we obtained into a nice json we need
-
                         res.send({entryuid: answer, entrytext: statement, graph: graph});
+
                     });
 
 

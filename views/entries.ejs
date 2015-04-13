@@ -392,35 +392,37 @@ $("#graph-link").click(function(e) {
 
     document.addEventListener("DOMContentLoaded", function(event) {
 
-        document.querySelector('#submitform').addEventListener('submit', function(e) {
-            e.preventDefault();
 
-
-            $.post('/post', $("#submitform").serialize())
-                    .done(function(res) {
-                        //3. Receive the server response, no need to emit an event
-                        if (res.entryuid) {
-                            //4. Show the updated text
-                            socket.emit('chat message', {entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
-                        }
-                        else {
-                            alert(res.error);
-                        }})
-                    .fail(function(res) {
-                        alert("Server Error: " + res.status + " " + res.statusText);
-                    });
-
-
-
-            return false;
-        });
-
+        submitFormProcess();
 
 
     });
 
 
+function submitFormProcess() {
+    document.querySelector('#submitform').addEventListener('submit', function(e) {
+        e.preventDefault();
 
+
+        $.post('/post', $("#submitform").serialize())
+                .done(function(res) {
+                    //3. Receive the server response, no need to emit an event
+                    if (res.entryuid) {
+                        //4. Show the updated text
+                        socket.emit('chat message', {entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
+                    }
+                    else {
+                        alert(res.error);
+                    }})
+                .fail(function(res) {
+                    alert("Server Error: " + res.status + " " + res.statusText);
+                });
+
+
+
+        return false;
+    });
+}
 
 // Hide / Show Statements DIV
 
@@ -1247,6 +1249,7 @@ sigma.parsers.json(
                     }
                 });
 
+                submitFormProcess();
 
 
             }
@@ -1381,6 +1384,9 @@ sigma.parsers.json(
                             console.log('contexts in cancel field: ' + current_context_field.join());
                         }
                     });
+
+                    submitFormProcess();
+
 
                 });
 
