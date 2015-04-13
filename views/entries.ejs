@@ -117,11 +117,12 @@
              </form>
             </div>
                     &nbsp;<br>
+                    <% include messages %>
+                    <div id="messages"></div>
             <div id="entries">
 
 
-            <% include messages %>
-            <div id="messages"></div>
+
 
             <% entries.forEach(function(entry) { %>
                 <div class='entry' data-uid='<%= entry.uid %>' data-hashtags='<%= entry.name %>'>
