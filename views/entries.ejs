@@ -936,16 +936,18 @@ sigma.parsers.json(
                 for (var i = 0; i < addednodes.length; i++) {
 
                     if (nodeNames.indexOf(addednodes[i].label) == -1) {
-                        console.log(addednodes[i]);
+
 
                         var angle = Math.PI * 2 * i / len;
                         sigma.graph.addNode({
                             id: (id = addednodes[i].id),
                             label: addednodes[i].label,
+                            originalLabel: addednodes[i].label,
+                            originalColor: color_context,
                             size: maxnodesize - 2,
                             x: Math.cos(angle),
                             y: Math.sin(angle),
-                            color: color_addcontext,
+                            color: color_context,
                             dX: 0,
                             dY: 0
                         });
@@ -954,8 +956,6 @@ sigma.parsers.json(
 
                     }
                 }
-
-                console.log(sigma.graph.edges());
 
                 for (var j = 0; j < addededges.length; j++) {
 
@@ -989,7 +989,7 @@ sigma.parsers.json(
 
                 //console.log(newnodes);
                 // console.log(msg.graph.edges);
-                 console.log(sigma.graph.edges());
+                // console.log(sigma.graph.edges());
 
             });
 
