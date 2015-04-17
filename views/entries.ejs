@@ -821,6 +821,7 @@ sigma.parsers.json(
                     // Was the node clicked already? No? Add it to array of clicked nodes.
                     // Highlight the clicked node in the text.
 
+
                     if (splicedNodes.length > 1) {
                          pinnedNodes = [];
                          for (var p = 0; p < splicedNodes.length; p++ ){
@@ -846,11 +847,14 @@ sigma.parsers.json(
                     }
 
                     // console.log("node clicked, now will filter for nodes " + pinnedNodes);
+                    socket.emit('node click', {pinnedNodes: pinnedNodes, splicedNodes: splicedNodes, nodeLabel: nodeLabel, pinnedIndex: pinnedIndex});
 
 
                     // Now show / hide statements that have the search field
 
                     filter_statements(pinnedNodes);
+
+
 
 
                     // If the window is wide enough to show the menu AND div with statements is not visible
@@ -1439,7 +1443,24 @@ sigma.parsers.json(
             }
         }
 
-    });
+        socket.on('node click', function(msg){
+
+              pinnedNodes = msg.pinnedNodes;
+              splicedNodes = msg.splicedNodes;
+              var pinnedIndex = msg.pinnedIndex;
+
+              // Are we clicking the node that was clicked already? Then show all divs
+              if (pinnedIndex > -1) {
+                    $('.entry').fadeIn(400);
+              }
+
+              // Filter statements and select nodes on the graph
+              filter_statements(pinnedNodes);
+
+        });
+
+
+        });
 
 
 
@@ -2485,7 +2506,6 @@ sigma.parsers.json(
 
         $("#searchform").submit(function(event) {
 
-            console.log('here we are');
             event.preventDefault();
 
             // What are we searching?

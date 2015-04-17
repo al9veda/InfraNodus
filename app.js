@@ -178,6 +178,9 @@ var chat = io.on('connection', function(socket){
         io.sockets.in(socket.room).emit('chat message', msg);
         // io.emit('chat message', msg);
     });
+    socket.on('node click', function(msg){
+        socket.broadcast.to(socket.room).emit('node click', msg);
+    });
     socket.on('login', function(data){
 
         var room = findClientsSocket(io, data.id);
