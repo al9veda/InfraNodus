@@ -168,16 +168,76 @@ appio.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
-io.on('connection', function(socket){
+var chat = io.on('connection', function(socket){
     console.log('a user socket connected');
     socket.on('disconnect', function(){
         console.log('user disconnected');
     });
     socket.on('chat message', function(msg){
         console.log('message: ' + msg);
-        io.emit('chat message', msg);
+        socket.broadcast.to(socket.room).emit('chat message', msg);
+        // io.emit('chat message', msg);
+    });
+    socket.on('login', function(data){
+
+        var room = findClientsSocket(io, data.id);
+
+        // Only two people per room are allowed
+
+        if (room.length < 2) {
+
+            // Use the socket object to store data. Each client gets
+            // their own unique socket object
+
+            socket.username = data.user;
+            socket.room = data.id;
+
+            // Add the client to the room
+            socket.join(data.id);
+
+            if (room.length == 1) {
+
+                var usernames = [];
+
+                usernames.push(room[0].username);
+                usernames.push(socket.username);
+
+                // Send the startChat event to all the people in the
+                // room, along with a list of people that are in it.
+
+                chat.in(data.id).emit('startChat', {
+                    boolean: true,
+                    id: data.id,
+                    users: usernames,
+                });
+            }
+        }
+        else {
+            socket.emit('tooMany', {boolean: true});
+        }
     });
 });
+
+function findClientsSocket(io, roomId, namespace) {
+    var ress = [],
+        ns = io.of(namespace ||"/");    // the default namespace is "/"
+
+  if (ns) {
+        for (var id in ns.connected) {
+            if(roomId) {
+                var index = ns.connected[id].rooms.indexOf(roomId) ;
+                if(index !== -1) {
+                    ress.push(ns.connected[id]);
+                }
+            }
+            else {
+                ress.push(ns.connected[id]);
+            }
+        }
+    }
+    return ress;
+}
+
 
 
 

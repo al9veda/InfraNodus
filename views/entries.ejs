@@ -214,8 +214,12 @@
              <script>
 ;(function(){
 
+    var urlPath = location.pathname;
+
     // Initialize Socket.IO
     var socket = io();
+
+
 
     // Get URL variables in the form of an array
 
@@ -374,6 +378,24 @@ var graphInteraction = null;
 
 // Loaded with graph only?
 var graphOnly = null;
+
+
+    // On connection to server get the id of the current chat "room", which is actually the folder/URL of the current user
+
+    socket.on('connect', function(){
+        console.log('connected');
+        socket.emit('login', {user: current_user, context: current_context, id: urlPath});
+    });
+
+
+    socket.on('startChat', function(data){
+        console.log('chat started');
+        if(data.boolean && data.id == urlPath) {
+            console.log('in chat room ' + data.id);
+        }
+    });
+
+
 
 
 
