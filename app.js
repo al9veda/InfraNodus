@@ -175,7 +175,7 @@ var chat = io.on('connection', function(socket){
     });
     socket.on('chat message', function(msg){
         console.log('message: ' + msg);
-        socket.broadcast.to(socket.room).emit('chat message', msg);
+        io.sockets.in(socket.room).emit('chat message', msg);
         // io.emit('chat message', msg);
     });
     socket.on('login', function(data){
