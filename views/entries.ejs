@@ -380,6 +380,10 @@ var graphInteraction = null;
 var graphOnly = null;
 
 
+// Who posted the message?
+var selfPosted = null;
+
+
     // On connection to server get the id of the current chat "room", which is actually the folder/URL of the current user
 
     socket.on('connect', function(){
@@ -432,6 +436,9 @@ function submitFormProcess() {
                     //3. Receive the server response, no need to emit an event
                     if (res.entryuid) {
                         //4. Show the updated text
+                        selfPosted = '1';
+                        console.log('self is 1 ' + selfPosted);
+
                         socket.emit('chat message', {entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
                     }
                     else {
@@ -968,6 +975,15 @@ sigma.parsers.json(
 
 
                 var added_entry =  "<div class='entry' data-uid='" + msg.entryuid + "'><p class='entry-text'>" + msg.entrytext + "</p><p class='entry-date'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
+
+                if (!selfPosted) {
+
+                        added_entry =  "<div class='entry' data-uid='" + msg.entryuid + "'><p class='entry-text gray'>" + msg.entrytext + "</p><p class='entry-date gray'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
+
+                }
+                else {
+                    selfPosted = null;
+                }
 
                 $('#entries').prepend(added_entry);
                 $("#statement").val('');

@@ -95,6 +95,11 @@ textarea:focus {
     max-width: 95%;
 }
 
+.gray {
+    opacity: 0.5;
+    padding-left: 50px;
+}
+
 .entry-date {
     float: left;
     font: 14px 'IstokWeb-Regular',sans-serif;
