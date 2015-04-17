@@ -978,18 +978,19 @@ sigma.parsers.json(
             socket.on('chat message', function(msg){
 
 
-                var added_entry =  "<div class='entry' data-uid='" + msg.entryuid + "'><p class='entry-text'>" + msg.entrytext + "</p><p class='entry-date'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
+                var added_entry =  "<div class='entry' style='display: none;' data-uid='" + msg.entryuid + "'><p class='entry-text'>" + msg.entrytext + "</p><p class='entry-date'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
 
                 if (!selfPosted) {
 
-                        added_entry =  "<div class='entry' data-uid='" + msg.entryuid + "'><p class='entry-text gray'>" + msg.entrytext + "</p><p class='entry-date gray'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
+                        added_entry =  "<div class='entry' style='display: none;' data-uid='" + msg.entryuid + "'><p class='entry-text gray'>" + msg.entrytext + "</p><p class='entry-date gray'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
 
                 }
                 else {
                     selfPosted = null;
                 }
 
-                $('#entries').prepend(added_entry);
+                $(added_entry).prependTo($('#entries')).slideDown("fast");
+                // $('#entries').prepend(added_entry);
                 $("#statement").val('');
 
                 entryClick();
