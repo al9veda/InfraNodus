@@ -432,6 +432,7 @@ function submitFormProcess() {
 
         e.preventDefault();
 
+        // is urlvars mute off? then post as usual
         if (!mute) {
         $.post('/post', $("#submitform").serialize())
                 .done(function(res) {
@@ -449,6 +450,7 @@ function submitFormProcess() {
                 });
 
         }
+        // otherwise - make a dummy post - it appears in the list but doesn't get submitted into the graph
         else {
             selfPosted = '1';
             socket.emit('chat message', {entryuid: '', entrytext: $('#statement').val(), graph: ''});
@@ -1056,7 +1058,7 @@ sigma.parsers.json(
 
                     // TODO this code duplicates from above - move into a function
                     sigma.graph.edges().forEach(function(e) {
-                        // Make an index of nodes to statement
+                        // Make and index of nodes to statement
                         if (nodesOfStatement[e.statement_id]) {
                             if (nodesOfStatement[e.statement_id].indexOf(e.source) < 0)
                                 nodesOfStatement[e.statement_id].push(e.source);
@@ -1113,121 +1115,148 @@ sigma.parsers.json(
     $(document).ready(function(){
 
         <% if (!perceivername) { %>
+
         // START Speech Recognition Module only for Chrome
 
         if ('webkitSpeechRecognition' in window) {
 
+            var recognition = new webkitSpeechRecognition();
+
             $('#microphone-link').fadeIn();
 
-            if (location.protocol === 'https:') {
-
-                $('#microphone-link').toggleClass('microphone-on');
-
-                var recognition = new webkitSpeechRecognition();
-
-                var voiceresult = '';
-
-                var previoustalk = '';
-
-                // Are we processing a short phrase or performing continuous dictation?
-                recognition.continuous = false;
-
-                // Do we require interim results in addition to the final results?
-                recognition.interimResults = true;
-
-                // We speak The Queens English here, my good man
-                recognition.lang = 'en-US'
-
-
-
-                if (language == 'en' || language == 'en-US') {
-                    localStorage.setItem('language', 'en');
-                }
-
-                else if (language == 'ru' || language == 'russian') {
-                    recognition.lang = 'ru';
-                    localStorage.setItem('language', 'ru');
-                }
-
-                if (localStorage.getItem('language') == 'ru') {
-                    recognition.lang = 'ru';
-                    localStorage.setItem('language', 'ru');
-                }
-
-                // Kick off the Speech to Text recognition process
-                recognition.start();
-
-                // Set up
-                recognition.onstart = function(event){
-                    console.log("onstart", event);
-                }
-                // Set up
-                recognition.onspeechstart = function(event){
-                     console.log("onspeechstart", event);
-                }
-
-                // Process parsed result
-                recognition.onresult = function(event){
-                    // console.log("onresult", event);
-                    voiceresult = previoustalk + event.results[0][0].transcript;
-                    $('#statement').val(voiceresult);
-                }
-
-                // Handle error
-                recognition.onerror = function(event){
-                    console.log("onerror", event);
-                     if (event.error == 'no-speech') {
-
-                    }
-                }
-
-                // Housekeeping after success or failed parsing
-                recognition.onspeechend = function(){
-                    console.log("onspeechend");
-                    if (voiceresult.length > 4) {
-                        setTimeout(function(){
-                            $('#submitbutton').trigger('click');
-                        }, 1000);
-
-                    }
-                    else {
-                        previoustalk = voiceresult + '';
-                       // recognition.start();
-                    }
-
-                }
-
-                recognition.onend = function(){
-                    console.log("onend");
-                    if (voiceresult.length > 4) {
-                        setTimeout(function(){
-                            $('#submitbutton').trigger('click');
-                        }, 2000);
-
-                    }
-                    else {
-                        previoustalk = voiceresult + '';
-                        recognition.start();
-                    }
-
-                }
-
-
+            if (localStorage.getItem('microphone') == 1) {
+                $('#microphone-link').toggleClass('microphone-on', 'add');
+                activateVoiceInput();
             }
 
             $("#microphonecontrol").click(function(e) {
+
                 e.preventDefault();
-                if (window.location.protocol == "http:") {
-                    window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+
+                if (localStorage.getItem('microphone')  == 1) {
+                    localStorage.setItem('microphone', 0);
+                    $('#microphone-link').toggleClass('microphone-on', 'remove');
+                    recognition.stop();
                 }
-                else if ((window.location.protocol == "https:")) {
-                    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
+                else {
+                    localStorage.setItem('microphone', 1);
+                    activateVoiceInput();
+                    $('#microphone-link').toggleClass('microphone-on', 'add');
                 }
+
             });
 
         }
 
-        // END Speech recognition module
+
+            function activateVoiceInput() {
+
+
+
+                    var voiceresult = '';
+
+                    var previoustalk = '';
+
+                    // Are we processing a short phrase or performing continuous dictation?
+                    recognition.continuous = false;
+
+                    // Do we require interim results in addition to the final results?
+                    recognition.interimResults = true;
+
+                    // We speak The US English here
+                    recognition.lang = 'en-US';
+
+
+                    if (language == 'en' || language == 'en-US') {
+                        localStorage.setItem('language', 'en');
+                    }
+
+                    else if (language == 'ru' || language == 'russian') {
+                        recognition.lang = 'ru';
+                        localStorage.setItem('language', 'ru');
+                    }
+
+                    if (localStorage.getItem('language') == 'ru') {
+                        recognition.lang = 'ru';
+                        localStorage.setItem('language', 'ru');
+                    }
+
+                    // Kick off the Speech to Text recognition process
+                    recognition.start();
+
+                    // Set up
+                    recognition.onstart = function(event){
+                        console.log("onstart", event);
+                    }
+                    // Set up
+                    recognition.onspeechstart = function(event){
+                        console.log("onspeechstart", event);
+                    }
+
+                    // Process parsed result
+                    recognition.onresult = function(event){
+                        // console.log("onresult", event);
+                        voiceresult = previoustalk + event.results[0][0].transcript;
+                        $('#statement').val(voiceresult);
+                        console.log(event.resultIndex);
+                        for (var i = event.resultIndex; i < event.results.length; ++i) {
+                            if (event.results[i].isFinal) {
+                                recognition.abort();
+                                if (voiceresult.length > 4) {
+                                    setTimeout(function(){
+                                        $('#submitbutton').trigger('click');
+                                    }, 1000);
+
+                                }
+                                else {
+                                    previoustalk = voiceresult + ' ';
+                                    // recognition.start();
+                                }
+                            }
+                        }
+                    }
+
+                    // Handle error
+                    recognition.onerror = function(event){
+                        console.log("onerror", event);
+                        if (event.error == 'no-speech') {
+
+                        }
+                    }
+
+                  /*  // Housekeeping after success or failed parsing
+                    recognition.onspeechend = function(){
+                        console.log("onspeechend");
+                        if (voiceresult.length > 4) {
+                            setTimeout(function(){
+                                $('#submitbutton').trigger('click');
+                            }, 1000);
+
+                        }
+                        else {
+                            previoustalk = voiceresult + '';
+                            // recognition.start();
+                        }
+
+                    }*/
+
+
+                    recognition.onend = function(){
+
+                        console.log("onend");
+
+                        recognition.start();
+
+                    }
+
+
+
+            }
+
+
+            // END Speech recognition module
+
+
          <% } %>
 
 
