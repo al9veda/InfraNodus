@@ -132,13 +132,13 @@ exports.submit = function(req, res, next){
     async.waterfall([
         function(callback){
             if (!statement) {
-                callback('please, enter a statement');
+                callback('Please, enter a statement');
             }
             else if (statement.length <= min_length) {
-                callback('a statement must have more than ' + min_length + ' characters');
+                callback('A statement must have more than ' + min_length + ' characters');
             }
             else if (statement.length > max_length) {
-                callback('try to make it less than ' + max_length + ' characters, please...');
+                callback('Try to make it less than ' + max_length + ' characters, please...');
             }
             else {
                 callback(null, statement);
@@ -164,12 +164,12 @@ exports.submit = function(req, res, next){
 
 
             if  (!hashtags && mentions.length < 1) {
-                callback('there should be at least one word, #hashtag or @mention.');
+                callback('There should be at least one word, #hashtag or @mention.');
             }
             else {
                 if (hashtags) {
                     if (hashtags.length >= maxhash) {
-                        callback('please, try to use less than ' + maxhash + ' #hashtags');
+                        callback('Please, try to use less than ' + maxhash + ' #hashtags');
                     }
                     else {
                         callback(null, statement, hashtags, mentions);
@@ -193,7 +193,7 @@ exports.submit = function(req, res, next){
                 callback(null, statement, hashtags, contexts, mentions);
             }
             else {
-                callback('please, select a context for this statement');
+                callback('Please, select a context for this statement');
             }
 
 
@@ -222,8 +222,8 @@ exports.submit = function(req, res, next){
             console.log(err);
 
             if (!req.internal) {
-                res.error(err);
-                res.redirect('back');
+                res.send({errormsg: err});
+               // res.redirect('back');
             }
 
         }

@@ -443,9 +443,13 @@ function submitFormProcess() {
                         selfPosted = '1';
                         socket.emit('chat message', {entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
                     }
+                    else if (res.errormsg) {
+                        alert(res.errormsg);
+                    }
                     else {
-                        alert(res.error);
-                    }})
+                        alert('Something went wrong, please, try again...');
+                    }
+                })
                 .fail(function(res) {
                     alert("Server Error: " + res.status + " " + res.statusText);
                 });
