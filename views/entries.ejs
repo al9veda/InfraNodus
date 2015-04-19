@@ -1476,7 +1476,7 @@ sigma.parsers.json(
             graphOnly = 1;
         <% } %>
 
-        if (localStorage.getItem('graph') == 1) {
+        if (localStorage.getItem('graph') == 1 && !graphOnly && !hide_always && !hide_when_small) {
             var isHidden__ = $("#statements").is(":hidden");
             if (!isHidden__) {
                 $('#statements').fadeOut();
