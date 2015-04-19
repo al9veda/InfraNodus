@@ -1454,13 +1454,13 @@ sigma.parsers.json(
 
         if (hide_always) {
             toggle_statements();
-            localStorage.setItem('graph', 1);
+            //localStorage.setItem('graph', 1);
         }
 
         if (hide_when_small) {
             if ($('#menuLink').is(':visible')) {
                 toggle_statements();
-                localStorage.setItem('graph', 1);
+                //localStorage.setItem('graph', 1);
             }
 
         }
@@ -1472,7 +1472,7 @@ sigma.parsers.json(
            // $('#finds').trigger('click');
 
             toggle_statements();
-            localStorage.setItem('graph', 1);
+            //localStorage.setItem('graph', 1);
             graphOnly = 1;
         <% } %>
 
@@ -1480,7 +1480,7 @@ sigma.parsers.json(
             var isHidden__ = $("#statements").is(":hidden");
             if (!isHidden__) {
                 $('#statements').fadeOut();
-                $("#chat-link").toggleClass('chat-highlight');
+                $("#chat-link").toggleClass('chat-highlight','add');
             }
         }
 
