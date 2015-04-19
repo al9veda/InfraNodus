@@ -231,19 +231,27 @@ small screens.
     display: none;
     opacity: 0.5;
     position: fixed;
-    top: 180px;
-    text-align: right;
-    right: -2px; /* "#menu width" */
+    top: 190px;
+    font-size: 8px; /* change this value to increase/decrease button size */
+    width: 2em;
+    height: auto;
+    right: 0; /* "#menu width" */
     font-size: 8px; /* change this value to increase/decrease button size */
     /* width: 2em;
      height: auto;*/
     padding: 8em 2.3em;
     z-index: 10;
+    background-image: url('../images/microphone.png');
+    background-repeat:no-repeat;
+    background-position:center;
 
 }
 
 .microphone-on {
     opacity: 1!important;
+    background-image: url('../images/microphone-blue.png')!important;
+    background-repeat:no-repeat!important;
+    background-position:center!important;
 }
 
 

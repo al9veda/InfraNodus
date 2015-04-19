@@ -178,9 +178,10 @@
                 <a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a><br><a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a>
          </div>
             <% if (!perceivername) { %>
-            <div id="microphone-link">
-                <a href="javascript:" id="microphonecontrol"><img src="/images/microphone.png" border="0"></a>
-            </div>
+                <a href="javascript:" id="microphone-link">
+                    <!-- Graph icon -->
+                    <span></span>
+                </a>
             <% } %>
       </div>
 
@@ -1129,14 +1130,14 @@ sigma.parsers.json(
                 activateVoiceInput();
             }
 
-            $("#microphonecontrol").click(function(e) {
+            $("#microphone-link").click(function(e) {
 
                 e.preventDefault();
 
                 if (localStorage.getItem('microphone')  == 1) {
                     localStorage.setItem('microphone', 0);
                     $('#microphone-link').toggleClass('microphone-on', 'remove');
-                    recognition.stop();
+                    recognition.abort();
                 }
                 else {
                     localStorage.setItem('microphone', 1);
@@ -1244,8 +1245,9 @@ sigma.parsers.json(
                     recognition.onend = function(){
 
                         console.log("onend");
-
-                        recognition.start();
+                        if (localStorage.getItem('microphone') == 1) {
+                            recognition.start();
+                        }
 
                     }
 
