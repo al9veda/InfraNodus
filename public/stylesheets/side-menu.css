@@ -231,15 +231,15 @@ small screens.
     display: none;
     opacity: 0.5;
     position: fixed;
-    top: 190px;
+    top: 240px;
     font-size: 8px; /* change this value to increase/decrease button size */
     width: 2em;
-    height: auto;
+    height: 25px;
     right: 0; /* "#menu width" */
     font-size: 8px; /* change this value to increase/decrease button size */
     /* width: 2em;
      height: auto;*/
-    padding: 8em 2.3em;
+    padding: 0em 2.3em;
     z-index: 10;
     background-image: url('../images/microphone.png');
     background-repeat:no-repeat;
@@ -258,15 +258,16 @@ small screens.
 #graph-tools {
     position: fixed;
     display: none;
-    top: 110px;
+    top: 168px;
     text-align: right;
     right: -2px; /* "#menu width" */
+    height: 80px;
     font-size: 8px; /* change this value to increase/decrease button size */
    /* width: 2em;
     height: auto;*/
-    padding-top: 7em;
+    padding-top: 0;
     padding-right: 2.3em;
-    z-index: 9;
+    z-index: 10;
 }
 
 #graph-reload {

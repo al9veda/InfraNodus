@@ -165,7 +165,7 @@
 
 
                 <a href="javascript:" id="chat-link">
-                    <!-- Graph icon -->
+                    <!-- Chat icon -->
                     <span></span>
                 </a>
         <div id="controls">
@@ -174,12 +174,12 @@
 
         </div>
 
-            <div id="graph-tools">
+        <div id="graph-tools">
                 <a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a><br><a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a>
          </div>
             <% if (!perceivername) { %>
                 <a href="javascript:" id="microphone-link">
-                    <!-- Graph icon -->
+                    <!-- Microphone icon -->
                     <span></span>
                 </a>
             <% } %>
@@ -1166,7 +1166,6 @@ sigma.parsers.json(
 
                     // We speak The US English here
                     recognition.lang = 'en-US';
-
 
                     if (language == 'en' || language == 'en-US') {
                         localStorage.setItem('language', 'en');
