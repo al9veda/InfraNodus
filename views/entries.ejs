@@ -1825,11 +1825,42 @@ sigma.parsers.json(
                     $("#addedContexts").val($("#context").val());
                 }
 
-                // if not, we're making the 'private' context default
                 else {
-                    current_context_field.push('private');
-                    $("#addedContexts").val('private');
+
+                    if (document.getElementById('context').value) {
+                        current_context_field.push(document.getElementById('context').value);
+                        $("#addedContexts").val(document.getElementById('context').value);
+                    }
+
+                    // if not, we're making the 'private' context default
+                    else {
+                        var lastcontexts = [];
+                        var laststatement = $(".entry:first").attr('data-uid');
+                        console.log(laststatement);
+                        for (var key in statementsOfContext) {
+                            var reiteratestatements = statementsOfContext[key];
+                            for (var i = 0; i< reiteratestatements.length; i++) {
+                                if (laststatement == reiteratestatements[i]) {
+                                    lastcontexts.push(key);
+                                    console.log(key);
+                                }
+                            }
+
+                        }
+                        if (lastcontexts[0] == 'help') {
+                            current_context_field = ['private'];
+                            $("#addedContexts").val('private');
+                        }
+                        else {
+                            current_context_field = lastcontexts;
+                            $("#addedContexts").val(current_context_field.join());
+                        }
+                    }
+
+
                 }
+
+
 
                 $("#addToContexts").tagHandler({
                     assignedTags: current_context_field,
