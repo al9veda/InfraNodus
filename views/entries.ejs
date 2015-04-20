@@ -94,7 +94,7 @@
                         <input type="hidden" id="addedContexts" name="addedContexts">
                         <input type="hidden" id="context" name="context" value="<%= context %>">
                         <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
-                        <input type="hidden" name="statementid" value="">
+                        <input type="hidden" id="statementid" name="statementid" value="">
                         <input type="hidden" name="timestamp" value="">
                         &nbsp;<br>
                         <input type='submit' id="submitbutton" name="btnSubmit" value="save" class="pure-button pure-button-primary">
@@ -452,6 +452,8 @@ function submitFormProcess() {
                         socket.emit('chat message', {entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
                     }
                     else if (res.errormsg) {
+                        $('#statement').removeClass('loading');
+                        $('#submitbutton').removeAttr('disabled');
                         alert(res.errormsg);
                     }
                     else {
@@ -1757,11 +1759,11 @@ sigma.parsers.json(
 
 
         // Change / add buttons
-        $('#submitbutton').val("edit");
+        $('#submitbutton').hide();
 
         if (!$('#deletebutton').val()) {
 
-            $("#submitform").append('<input type="submit" name="delete" value="delete" id="deletebutton" class="pure-button"> <input type="submit" name="cancel" value="cancel" id="cancelbutton" class="pure-button">');
+            $("#submitform").append('<input type="submit" name="edit" value="edit" id="editbutton" class="pure-button"> <input type="submit" name="delete" value="delete" id="deletebutton" class="pure-button"> <input type="submit" name="cancel" value="cancel" id="cancelbutton" class="pure-button">');
 
 
             // Delete text from the form in case of Cancel, remove the buttons
@@ -1771,9 +1773,12 @@ sigma.parsers.json(
                 e.preventDefault();
 
                 $("#statement").val('');
-                $('#submitbutton').val("save");
+                $('#editbutton').remove();
                 $('#deletebutton').remove();
                 $('#cancelbutton').remove();
+                $('#submitbutton').show();
+
+                $('input[name="timestamp"]').val('');
 
                 // Populate contexts list next to statement add
 
@@ -1890,6 +1895,44 @@ sigma.parsers.json(
 
             });
 
+            $("#editbutton").on('click', function(e) {
+                e.preventDefault();
+
+                $('#statement').addClass('loading');
+
+                $('#editbutton').attr('disabled', 'disabled');
+
+                var statementToHide = $('#statementid').val();
+
+                $('[data-uid="' + statementToHide + '"]').slideUp();
+
+                var formSubmit = $("#submitform").serialize() + '&edit=edit';
+
+                $.post('/post', formSubmit)
+                        .done(function(res) {
+                            //3. Receive the server response, no need to emit an event
+                            if (res.entryuid) {
+                                //4. Show the updated text
+                                selfPosted = '1';
+                                $('#statement').removeClass('loading');
+                                $('#editbutton').removeAttr('disabled');
+                                $('#cancelbutton').trigger('click');
+                                socket.emit('chat message', {entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
+                            }
+                            else if (res.errormsg) {
+                                alert(res.errormsg);
+                            }
+                            else {
+                                alert('Something went wrong, please, try again...');
+                            }
+                        })
+                        .fail(function(res) {
+                            alert("Server Error: " + res.status + " " + res.statusText);
+                        });
+
+
+
+            });
 
 
 
