@@ -127,6 +127,12 @@ exports.submit = function(req, res, next){
     var min_length = options.settings.min_text_length;
     var maxhash = options.settings.max_hashtags;
 
+    // Generate new timestamp and multiply it by 10000 to be able to track the sequence the nodes were created in
+    var timestamp = new Date().getTime() * 10000;
+
+    if (req.body.timestamp) {
+        timestamp = req.body.timestamp;
+    }
 
     // A series of checks before the statement is submitted
     async.waterfall([
@@ -210,7 +216,8 @@ exports.submit = function(req, res, next){
                 "hashtags": hashtags,
                 "mentions": mentions,
                 "text": statement,
-                "fullscan": res.locals.user.fullscan
+                "fullscan": res.locals.user.fullscan,
+                "timestamp": timestamp
 
             });
             callback(null, entry);
@@ -245,11 +252,12 @@ exports.submit = function(req, res, next){
                 }
                 else {
                     if (req.body.delete == 'delete' || req.body.btnSubmit == 'edit' || req.body.delete == 'delete context') {
-                         if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
+                        if (default_context == 'undefined' || typeof default_context === 'undefined' || default_context == '') {
                          res.redirect('/' + res.locals.user.name + '/edit');
                          }
                          else {
                          res.redirect(res.locals.user.name + '/' + default_context + '/edit');
+
                          }
 
 

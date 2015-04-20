@@ -95,6 +95,7 @@
                         <input type="hidden" id="context" name="context" value="<%= context %>">
                         <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
                         <input type="hidden" name="statementid" value="">
+                        <input type="hidden" name="timestamp" value="">
                         &nbsp;<br>
                         <input type='submit' id="submitbutton" name="btnSubmit" value="save" class="pure-button pure-button-primary">
 
@@ -125,13 +126,12 @@
 
 
             <% entries.forEach(function(entry) { %>
-                <div class='entry' data-uid='<%= entry.uid %>' data-hashtags='<%= entry.name %>'>
+                <div class='entry' data-uid='<%= entry.uid %>' data-timestamp='<%= entry.timestamp %>' data-hashtags='<%= entry.name %>'>
                     <p class='entry-text'><%- entry.text %></p>
                     <p class='entry-date'><%= entry.timestamp %></p>
                     <p class='entry-menu'>&nbsp;&nbsp;&nbsp;<a class="app-link-menu" href="#">show filtered</a></p>
                     <div class='separator'>&nbsp;</div>
                     <div id='<%= entry.uid %>' class='hidden'></div>
-                    <div id='original' class='hidden'><%= entry.text %></div>
                 </div>
             <% }) %>
 
@@ -1149,7 +1149,6 @@ sigma.parsers.json(
 
 
 
-
                 sigma.graph.nodes().forEach(function(n) {
                     if (nodesToKeep.indexOf(n.id) < 0) {
                         sigma.graph.dropNode(n.id);
@@ -1743,6 +1742,9 @@ sigma.parsers.json(
         // Retrieve that statement's ID into the hidden field (for edit or delete)
         $('input[name="statementid"]').val(e.currentTarget.dataset.uid);
 
+        // Retrieve the date of the statement
+        $('input[name="timestamp"]').val(e.currentTarget.dataset.timestamp);
+
         $('#topmenuitems').each(function() {
             $("li", this).each(function(i) {
 
@@ -1848,6 +1850,9 @@ sigma.parsers.json(
 
                 $('#deletebutton').attr('disabled', 'disabled');
 
+                $('input[name="timestamp"]').val('');
+
+
                 var formSubmit = $("#submitform").serialize() + '&delete=delete';
 
                 $.post('/post', formSubmit)
@@ -1884,6 +1889,9 @@ sigma.parsers.json(
 
 
             });
+
+
+
 
         }
 
