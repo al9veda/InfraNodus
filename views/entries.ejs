@@ -433,6 +433,11 @@ function submitFormProcess() {
 
         e.preventDefault();
 
+
+        $('#statement').addClass('loading');
+
+        $('#submitbutton').attr('disabled', 'disabled');
+
         // is urlvars mute off? then post as usual
         if (!mute) {
         $.post('/post', $("#submitform").serialize())
@@ -441,6 +446,8 @@ function submitFormProcess() {
                     if (res.entryuid) {
                         //4. Show the updated text
                         selfPosted = '1';
+                        $('#statement').removeClass('loading');
+                        $('#submitbutton').removeAttr('disabled');
                         socket.emit('chat message', {entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
                     }
                     else if (res.errormsg) {

@@ -63,6 +63,13 @@ textarea:focus {
     border-color: #129FEA;
 }
 
+.loading {
+    background-image: url('../images/loading.gif')!important;
+    background-repeat:no-repeat!important;
+    background-position:center!important;
+    opacity: 0.5!important;
+}
+
 #search {
     position: relative;
     z-index: 100;
