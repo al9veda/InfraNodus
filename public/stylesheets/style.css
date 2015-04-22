@@ -37,7 +37,8 @@ a {
 textarea {
     font: 16px 'IstokWeb-Bold',sans-serif;
     position: relative;
-   /* resize: vertical;*/
+    resize: vertical;
+    width: 92%;
     overflow: auto; /* 1 */
     vertical-align: top; /* 2 */
     padding: 0.5em 0.6em;
@@ -409,6 +410,9 @@ a:hover.app-more-link {
     z-index: -1;
     padding-left: 40px;
     padding-right: 40px;
+    background-color: #ffffff;
+
+
 }
 
 

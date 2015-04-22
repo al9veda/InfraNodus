@@ -163,14 +163,14 @@ small screens.
 #graph-link {
     position: absolute;
     display: inline; /* show this only on small screens */
-    top: 20px;
+    top: 0;
     right: 0; /* "#menu width" */
     background: none;
     font-size: 8px; /* change this value to increase/decrease button size */
     width: 2em;
     height: auto;
     float: right;
-    padding: 2.1em 1.6em;
+    padding: 3.3em 1.6em;
     z-index: 10;
     background-image: url('../images/close.png');
     background-repeat:no-repeat;
