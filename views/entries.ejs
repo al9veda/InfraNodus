@@ -45,9 +45,56 @@
    </div>
      <div id='content'>
              <div id='statements'>
-             <a href="javascript:" id="graph-link">
-                <span></span>
-            </a>
+
+                 <div id="entries">
+
+
+                     <% if ((context && entries.length > 2) && (!perceivername)) { %>
+                     <form action='/post' name='deletecontext' id="deletecontext" method='post' class='pure-form' onsubmit="return confirm('Deleting the context will delete all the statements inside. Are you sure?');">
+
+                         <input type="hidden" name="context" value="<%= context %>">
+                         <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
+                         <input type="hidden" name="statementid" value="">
+                         &nbsp;<br>
+                         <input type='submit' name="delete" value="delete context" class="pure-button pure-button-primary">
+
+                     </form>
+                     <% } %>
+                     <form action='/context' name='privacycontext' id="privacycontext" method='post' class='pure-form' onsubmit="return confirm('You sure you want to change the privacy setting of this context?');">
+
+                         <input type="hidden" name="context" value="<%= context %>">
+                         &nbsp;<br>
+                         <% if (contextpublic && context && !perceivername && entries.length > 0) { %>
+                         <input type='submit' name="privacy" value="make private" class="pure-button pure-button-primary">
+                         <% } else if (!perceivername && context && entries.length > 0) { %>
+                         <input type='submit' name="privacy" value="make public" class="pure-button pure-button-primary">
+                         <% }  %>
+
+                     </form>
+
+
+
+
+                     <% entries.forEach(function(entry) { %>
+                     <div class='entry' data-uid='<%= entry.uid %>' data-timestamp='<%= entry.timestamp %>' data-hashtags='<%= entry.name %>'>
+                         <p class='entry-text'><%- entry.text %></p>
+                         <p class='entry-date'><%= entry.timestamp %></p>
+                         <p class='entry-menu'>&nbsp;&nbsp;&nbsp;<a class="app-link-menu" href="#">show filtered</a></p>
+                         <div class='separator'>&nbsp;</div>
+                         <div id='<%= entry.uid %>' class='hidden'></div>
+                     </div>
+                     <% }) %>
+
+                     <% include messages %><div id="warnings"></div>
+                     <div id="messages"></div>
+
+
+
+                 </div>
+
+
+              <div id="entryform">
+
 
 
        <% if (!perceivername) { %>
@@ -75,6 +122,10 @@
 
 
             <% }  %>
+
+                  <a href="javascript:" id="graph-link">
+                      <span></span>
+                  </a>
 
             <!-- the panel to show content -->
 
@@ -117,48 +168,7 @@
                     <input type='submit' name="submit" value=">" class="pure-button pure-button-primary">
              </form>
             </div>
-                    &nbsp;<br>
-                    <% include messages %><div id="warnings"></div>
-                    <div id="messages"></div>
-            <div id="entries">
-
-
-
-
-            <% entries.forEach(function(entry) { %>
-                <div class='entry' data-uid='<%= entry.uid %>' data-timestamp='<%= entry.timestamp %>' data-hashtags='<%= entry.name %>'>
-                    <p class='entry-text'><%- entry.text %></p>
-                    <p class='entry-date'><%= entry.timestamp %></p>
-                    <p class='entry-menu'>&nbsp;&nbsp;&nbsp;<a class="app-link-menu" href="#">show filtered</a></p>
-                    <div class='separator'>&nbsp;</div>
-                    <div id='<%= entry.uid %>' class='hidden'></div>
-                </div>
-            <% }) %>
-
-            <% if ((context && entries.length > 2) && (!perceivername)) { %>
-                <form action='/post' name='deletecontext' id="deletecontext" method='post' class='pure-form' onsubmit="return confirm('Deleting the context will delete all the statements inside. Are you sure?');">
-
-                <input type="hidden" name="context" value="<%= context %>">
-                <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
-                <input type="hidden" name="statementid" value="">
-                &nbsp;<br>
-                <input type='submit' name="delete" value="delete context" class="pure-button pure-button-primary">
-
-            </form>
-            <% } %>
-                <form action='/context' name='privacycontext' id="privacycontext" method='post' class='pure-form' onsubmit="return confirm('You sure you want to change the privacy setting of this context?');">
-
-                    <input type="hidden" name="context" value="<%= context %>">
-                    &nbsp;<br>
-                    <% if (contextpublic && context && !perceivername && entries.length > 0) { %>
-                        <input type='submit' name="privacy" value="make private" class="pure-button pure-button-primary">
-                    <% } else if (!perceivername && context && entries.length > 0) { %>
-                        <input type='submit' name="privacy" value="make public" class="pure-button pure-button-primary">
-                    <% }  %>
-
-                </form>
-
-            </div>
+          </div>
         </div>
 
         <div id="graph-container"></div>
@@ -1193,6 +1203,12 @@ sigma.parsers.json(
 
 
 
+        console.log($("#statements").height());
+        console.log($("#entries").height());
+        console.log($(window).height());
+        console.log($(document).height());
+        $("#entries").animate({ scrollTop: $("#entries").height() },1000);
+
         <% if (!perceivername) { %>
 
         // START Speech Recognition Module only for Chrome
@@ -1367,6 +1383,15 @@ sigma.parsers.json(
 
         // Activate content switcher Set1 and set delay time for fade
         jcps.fader(0, '#switcher-panel', '.set1');
+/*
+        $('#entries').css({height:'60%'});
+*/
+
+
+        console.log($("#statements").height());
+        console.log($("#entries").height());
+        console.log($(window).height());
+        console.log($(document).height());
 
         $('#switcher-selector').on('click', 'li', function() {
 

@@ -37,7 +37,7 @@ a {
 textarea {
     font: 16px 'IstokWeb-Bold',sans-serif;
     position: relative;
-    resize: vertical;
+   /* resize: vertical;*/
     overflow: auto; /* 1 */
     vertical-align: top; /* 2 */
     padding: 0.5em 0.6em;
@@ -96,7 +96,7 @@ textarea:focus {
 .entry {
     font: 17px 'IstokWeb-Bold',sans-serif;
     color: #000;
-    max-width: 95%;
+    max-width: 85%;
     text-align:left;
     float: left;
     display: inline-block;
@@ -104,9 +104,10 @@ textarea:focus {
     padding: 0px 10px;
     min-width: 160px;
     min-height: 10px;
+    margin-left: 2px;
     background-color: #FFF;
-    border-radius: 3px;
-    box-shadow: 0px 3px 3px #E3E4E6;
+    border-radius: 5px;
+    box-shadow: 0px 1px 1px 2px #f3f4f6;
     word-wrap: break-word;
     pointer-events: auto!important;
 }
@@ -336,17 +337,19 @@ a:hover.app-more-link {
     margin: 0 0 0 0;
     line-height: 1.6em;
     z-index: 1;
+    height: 100%;
 }
 
 #statements {
     position: relative;
+    top: 0;
+    bottom: 0;
+    height: 100vh;
     background-color: rgba(255, 255, 255, 0.4);
     max-width: 340px;
-    margin-top: -5px;
     padding-left: 50px;
-    padding-bottom: 50px;
     z-index: 1;
-    pointer-events: none;
+/*    pointer-events: none;*/
 }
 
 
@@ -357,6 +360,22 @@ a:hover.app-more-link {
 
 .hide-menu {
     display: none!important;
+}
+
+#entries {
+    position: relative;
+    height: 60%;
+    max-width: inherit;
+    overflow: scroll;
+}
+
+#entryform {
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 340px;
+    padding-top: 10px;
+    padding-bottom: 20px;
 }
 
 
@@ -489,18 +508,25 @@ a:hover.app-more-link {
 
 #switcher-selector {
     pointer-events: auto!important;
+    position: relative!important;
+    float: left;
 }
 
 
 #switcher-panel {
     pointer-events: auto!important;
+    position: relative!important;
+    clear: both;
 }
 
 #adds-content {
     pointer-events: auto!important;
+    position: relative!important;
+
 }
 #finds-content {
     pointer-events: auto!important;
+    position: relative!important;
 }
 
 
@@ -510,6 +536,7 @@ a:hover.app-more-link {
 
 body {
     background-color: #ffffff;
+    height:100%; padding:0; margin:0;
 }
 
 .highlight { background-color: yellow }
