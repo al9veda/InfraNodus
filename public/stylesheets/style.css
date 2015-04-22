@@ -97,6 +97,18 @@ textarea:focus {
     font: 17px 'IstokWeb-Bold',sans-serif;
     color: #000;
     max-width: 95%;
+    text-align:left;
+    float: left;
+    display: inline-block;
+    margin-bottom:25px;
+    padding: 0px 10px;
+    min-width: 160px;
+    min-height: 10px;
+    background-color: #FFF;
+    border-radius: 3px;
+    box-shadow: 0px 3px 3px #E3E4E6;
+    word-wrap: break-word;
+    pointer-events: auto!important;
 }
 
 
@@ -328,12 +340,13 @@ a:hover.app-more-link {
 
 #statements {
     position: relative;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.4);
     max-width: 340px;
     margin-top: -5px;
     padding-left: 50px;
     padding-bottom: 50px;
     z-index: 1;
+    pointer-events: none;
 }
 
 
@@ -472,6 +485,22 @@ a:hover.app-more-link {
     z-index:99;
     margin: -20px 0px 0px 30px !important;
 
+}
+
+#switcher-selector {
+    pointer-events: auto!important;
+}
+
+
+#switcher-panel {
+    pointer-events: auto!important;
+}
+
+#adds-content {
+    pointer-events: auto!important;
+}
+#finds-content {
+    pointer-events: auto!important;
 }
 
 
