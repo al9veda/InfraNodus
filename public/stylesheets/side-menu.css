@@ -185,6 +185,24 @@ small screens.
     background-position:center;
 }
 
+#windowdown-link {
+    position: absolute;
+    display: none; /* show this only on small screens */
+    top: 0;
+    right: 0; /* "#menu width" */
+    background: none;
+    font-size: 8px; /* change this value to increase/decrease button size */
+    width: 2em;
+    height: auto;
+    float: right;
+    padding: 3.3em 1.6em;
+    z-index: 10;
+    background-image: url('../images/closewindow.png');
+    background-repeat:no-repeat;
+    background-position:center;
+    pointer-events: auto!important;
+}
+
 #chat-link {
 
 
@@ -370,6 +388,17 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         display:none;
     }
 
+    #windowdown-link {
+        display: inline;
+    }
+
+    #entryform {
+        max-width: 262px;
+    }
+
+    textarea {
+        max-height: 300px;
+    }
 
 
 

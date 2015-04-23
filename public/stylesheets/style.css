@@ -39,6 +39,7 @@ textarea {
     position: relative;
     resize: vertical;
     width: 92%;
+    max-height: 100%;
     overflow: auto; /* 1 */
     vertical-align: top; /* 2 */
     padding: 0.5em 0.6em;
@@ -371,7 +372,7 @@ a:hover.app-more-link {
 }
 
 #entryform {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     background-color: rgba(250, 250, 250, 0.9);
     width: 340px;
@@ -380,6 +381,7 @@ a:hover.app-more-link {
     padding-bottom: 20px;
     padding-left: 10px;
     margin-left: -10px;
+    max-height: 80%;
 }
 
 
@@ -413,7 +415,7 @@ a:hover.app-more-link {
     z-index: -1;
     padding-left: 40px;
     padding-right: 40px;
-    background-color: #e9e9e9;
+    background-color: #e9e9e6;
 
 
 }
