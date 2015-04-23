@@ -432,11 +432,15 @@ $("#graph-link").click(function(e) {
             $('#entryform').css({top: 'auto', 'margin-top': '0px'});
             $('#entries').css({height:  $(window).height() - $('#entryform').height() - 75});
             $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
+            $('#deletecontext').show();
+            $('#privacycontext').show();
             localStorage.setItem('folded', 0);
         }
         else {
             $('#entryform').css({top:  $(window).height(), 'margin-top': '-50px'});
             $('#entries').css({height:  $(window).height() - 80});
+            $('#deletecontext').hide();
+            $('#privacycontext').hide();
             localStorage.setItem('folded', 1);
         }
 
