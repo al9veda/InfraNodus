@@ -129,7 +129,7 @@
                       <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
                       <input type="hidden" name="statementid" value="">
                       &nbsp;<br>
-                      <input type='submit' id="deletebutton" name="delete" value="delete context">
+                      <input type='submit' id="deletecontextbutton" name="delete" value="delete context">
 
                   </form>
                   <% } %>
@@ -1814,8 +1814,9 @@ sigma.parsers.json(
 
         if (!$('#deletebutton').val()) {
 
-            $("#submitform").append('<input type="submit" name="edit" value="edit" id="editbutton" class="pure-button"> <input type="submit" name="delete" value="delete" id="deletebutton" class="pure-button"> <input type="submit" name="cancel" value="cancel" id="cancelbutton" class="pure-button">');
+            $("#submitform").append('<input type="submit" name="edit" value="edit" id="editbutton" class="pure-button"> <input type="submit" style="margin: 0px 8px;" name="delete" value="delete" id="deletebutton" > <input type="submit" name="cancel" value="cancel" id="cancelbutton" class="pure-button">');
 
+            $('#deletecontextbutton').hide();
 
             // Delete text from the form in case of Cancel, remove the buttons
 
@@ -1828,6 +1829,8 @@ sigma.parsers.json(
                 $('#deletebutton').remove();
                 $('#cancelbutton').remove();
                 $('#submitbutton').show();
+                $('#deletecontextbutton').show();
+                $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
 
                 $('input[name="timestamp"]').val('');
 
@@ -2238,7 +2241,6 @@ sigma.parsers.json(
             $(".entry").highlight(pinnedNodes[i]);
 
         }
-
 
         // Show only the clicked nodes and their neighbors in the graph
 
@@ -3025,6 +3027,9 @@ sigma.parsers.json(
                    e.color = e.originalColor;
 
                 });
+
+                $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
+
 
             }
 

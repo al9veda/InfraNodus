@@ -93,6 +93,7 @@ textarea:focus {
 
 #warnings {
     display: none;
+    clear:both;
 }
 
 .entry {
@@ -247,6 +248,7 @@ a:hover.app-more-link {
     font: 17px 'IstokWeb-Bold',sans-serif;
     color: #4b9dff;
     margin-right: 20px;
+    clear: both;
 }
 
 

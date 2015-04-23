@@ -189,7 +189,7 @@ small screens.
     position: absolute;
     display: inline; /* show this only on small screens */
     top: 0;
-    right: 30px; /* "#menu width" */
+    right: 35px; /* "#menu width" */
     background: none;
     font-size: 8px; /* change this value to increase/decrease button size */
     width: 2em;
@@ -217,6 +217,20 @@ small screens.
 }
 
 #deletebutton {
+    background: url('../images/trash.png');
+    background-repeat:no-repeat;
+    background-position:center;
+    border: 0;
+    display: inline-block;
+    height: 23px;
+    width: 23px;
+    text-indent:-9999px;
+    line-height: 0px;
+    font-size: 0px;
+    position: relative;
+    top: -5px;
+}
+#deletecontextbutton {
     background: url('../images/trash.png');
     background-repeat:no-repeat;
     background-position:center;
