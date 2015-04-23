@@ -48,22 +48,6 @@
 
                  <div id="entries">
 
-                     <div id="contextcontrol">
-
-                         <form action='/context' name='privacycontext' id="privacycontext" method='post' class='pure-form' onsubmit="return confirm('You sure you want to change the privacy setting of this context?');">
-
-                             <input type="hidden" name="context" value="<%= context %>">
-                             &nbsp;<br>
-                             <% if (contextpublic && context && !perceivername && entries.length > 0) { %>
-                             <input type='submit' name="privacy" value="make private" class="pure-button pure-button-primary">
-                             <% } else if (!perceivername && context && entries.length > 0) { %>
-                             <input type='submit' name="privacy" value="make public" class="pure-button pure-button-primary">
-                             <% }  %>
-
-                         </form>
-                     </div>
-
-
                      <% entries.forEach(function(entry) { %>
                      <div class='entry' data-uid='<%= entry.uid %>' data-timestamp='<%= entry.timestamp %>' data-hashtags='<%= entry.name %>'>
                          <p class='entry-text'><%- entry.text %></p>
@@ -75,14 +59,10 @@
                      <% }) %>
 
 
-                     <% include messages %><div id="warnings"></div>
+                     <% include messages %>
+                     <div id="warnings"></div>
                      <div id="messages"></div>
-
-
-
-
-
-                 </div>
+             </div>
 
 
               <div id="entryform">
@@ -133,6 +113,18 @@
 
                   </form>
                   <% } %>
+
+                  <form action='/context' name='privacycontext' id="privacycontext" method='post' class='pure-form' onsubmit="return confirm('You sure you want to change the privacy setting of this context?');">
+
+                      <input type="hidden" name="context" value="<%= context %>">
+                      &nbsp;<br>
+                      <% if (contextpublic && context && !perceivername && entries.length > 0) { %>
+                      <input type='submit' id="privacybutton" name="privacy" value="make private" class="privacy-public">
+                      <% } else if (!perceivername && context && entries.length > 0) { %>
+                      <input type='submit' id="privacybutton" name="privacy" value="make public">
+                      <% }  %>
+
+                  </form>
 
             <!-- the panel to show content -->
 
@@ -3028,6 +3020,8 @@ sigma.parsers.json(
 
                 });
 
+
+                // We show the whole graph above so scroll down to all the statements
                 $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
 
 

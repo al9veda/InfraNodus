@@ -89,6 +89,7 @@ textarea:focus {
 
 .warning {
     color: #4b9dff;
+    clear: both;
 }
 
 #warnings {
