@@ -196,7 +196,7 @@ small screens.
     height: auto;
     float: right;
     padding: 3.3em 1.6em;
-    z-index: 120!important;
+    z-index: 10;
     background-image: url('../images/closewindow.png');
     background-repeat:no-repeat;
     background-position:center;
@@ -213,7 +213,7 @@ small screens.
     height: auto;
     float: right;
     padding: 3.3em 1.6em;
-    z-index: 120!important;
+    z-index: 9;
 }
 
 #privacycontext {
@@ -226,7 +226,7 @@ small screens.
     height: auto;
     float: right;
     padding: 3.3em 1.6em;
-    z-index: 120!important;
+    z-index: 9;
 }
 
 #deletebutton {
