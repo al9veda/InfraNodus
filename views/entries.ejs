@@ -1047,7 +1047,9 @@ sigma.parsers.json(
                 $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
                 //$('#entries').append(added_entry).slideUp("fast");
                 $("#statement").val('');
-                document.activeElement.blur();
+                if ($(window).height() < 600) {
+                    document.activeElement.blur();
+                }
 
 
                     entryClick();
