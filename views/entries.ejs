@@ -49,17 +49,7 @@
                  <div id="entries">
 
                      <div id="contextcontrol">
-                         <% if ((context && entries.length > 2) && (!perceivername)) { %>
-                         <form action='/post' name='deletecontext' id="deletecontext" method='post' class='pure-form' onsubmit="return confirm('Deleting the context will delete all the statements inside. Are you sure?');">
 
-                             <input type="hidden" name="context" value="<%= context %>">
-                             <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
-                             <input type="hidden" name="statementid" value="">
-                             &nbsp;<br>
-                             <input type='submit' name="delete" value="delete context" class="pure-button pure-button-primary">
-
-                         </form>
-                         <% } %>
                          <form action='/context' name='privacycontext' id="privacycontext" method='post' class='pure-form' onsubmit="return confirm('You sure you want to change the privacy setting of this context?');">
 
                              <input type="hidden" name="context" value="<%= context %>">
@@ -131,6 +121,18 @@
                   <a href="javascript:" id="windowdown-link">
                       <span></span>
                   </a>
+
+                  <% if ((context && entries.length > 2) && (!perceivername)) { %>
+                  <form action='/post' name='deletecontext' id="deletecontext" method='post' class='pure-form' onsubmit="return confirm('Deleting the context will delete all the statements inside. Are you sure?');">
+
+                      <input type="hidden" name="context" value="<%= context %>">
+                      <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
+                      <input type="hidden" name="statementid" value="">
+                      &nbsp;<br>
+                      <input type='submit' id="deletebutton" name="delete" value="delete context">
+
+                  </form>
+                  <% } %>
 
             <!-- the panel to show content -->
 
