@@ -48,31 +48,30 @@
 
                  <div id="entries">
 
+                     <div id="contextcontrol">
+                         <% if ((context && entries.length > 2) && (!perceivername)) { %>
+                         <form action='/post' name='deletecontext' id="deletecontext" method='post' class='pure-form' onsubmit="return confirm('Deleting the context will delete all the statements inside. Are you sure?');">
 
-                     <% if ((context && entries.length > 2) && (!perceivername)) { %>
-                     <form action='/post' name='deletecontext' id="deletecontext" method='post' class='pure-form' onsubmit="return confirm('Deleting the context will delete all the statements inside. Are you sure?');">
+                             <input type="hidden" name="context" value="<%= context %>">
+                             <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
+                             <input type="hidden" name="statementid" value="">
+                             &nbsp;<br>
+                             <input type='submit' name="delete" value="delete context" class="pure-button pure-button-primary">
 
-                         <input type="hidden" name="context" value="<%= context %>">
-                         <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
-                         <input type="hidden" name="statementid" value="">
-                         &nbsp;<br>
-                         <input type='submit' name="delete" value="delete context" class="pure-button pure-button-primary">
+                         </form>
+                         <% } %>
+                         <form action='/context' name='privacycontext' id="privacycontext" method='post' class='pure-form' onsubmit="return confirm('You sure you want to change the privacy setting of this context?');">
 
-                     </form>
-                     <% } %>
-                     <form action='/context' name='privacycontext' id="privacycontext" method='post' class='pure-form' onsubmit="return confirm('You sure you want to change the privacy setting of this context?');">
+                             <input type="hidden" name="context" value="<%= context %>">
+                             &nbsp;<br>
+                             <% if (contextpublic && context && !perceivername && entries.length > 0) { %>
+                             <input type='submit' name="privacy" value="make private" class="pure-button pure-button-primary">
+                             <% } else if (!perceivername && context && entries.length > 0) { %>
+                             <input type='submit' name="privacy" value="make public" class="pure-button pure-button-primary">
+                             <% }  %>
 
-                         <input type="hidden" name="context" value="<%= context %>">
-                         &nbsp;<br>
-                         <% if (contextpublic && context && !perceivername && entries.length > 0) { %>
-                         <input type='submit' name="privacy" value="make private" class="pure-button pure-button-primary">
-                         <% } else if (!perceivername && context && entries.length > 0) { %>
-                         <input type='submit' name="privacy" value="make public" class="pure-button pure-button-primary">
-                         <% }  %>
-
-                     </form>
-
-
+                         </form>
+                     </div>
 
 
                      <% entries.forEach(function(entry) { %>
@@ -85,8 +84,11 @@
                      </div>
                      <% }) %>
 
+
                      <% include messages %><div id="warnings"></div>
                      <div id="messages"></div>
+
+
 
 
 
@@ -1205,13 +1207,6 @@ sigma.parsers.json(
     $(document).ready(function(){
 
 
-
-        console.log($("#statements").height());
-        console.log($("#entries").height());
-        console.log($(window).height());
-        console.log($(document).height());
-        $("#entries").animate({ scrollTop: $("#entries").height() },1000);
-
         <% if (!perceivername) { %>
 
         // START Speech Recognition Module only for Chrome
@@ -1386,15 +1381,15 @@ sigma.parsers.json(
 
         // Activate content switcher Set1 and set delay time for fade
         jcps.fader(0, '#switcher-panel', '.set1');
-/*
-        $('#entries').css({height:'60%'});
-*/
 
 
-        console.log($("#statements").height());
-        console.log($("#entries").height());
-        console.log($(window).height());
-        console.log($(document).height());
+
+        $('#entries').css({height:  $(window).height() - $('#entryform').height() - 100});
+
+        $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
+
+
+
 
         $('#switcher-selector').on('click', 'li', function() {
 

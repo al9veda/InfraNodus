@@ -366,8 +366,10 @@ a:hover.app-more-link {
 
 #entries {
     position: relative;
-    height: 60%;
+    padding-top: 20px;
+    height: 100%;
     max-width: inherit;
+    -webkit-overflow-scrolling: touch;
     overflow: scroll;
 }
 
@@ -381,7 +383,11 @@ a:hover.app-more-link {
     padding-bottom: 20px;
     padding-left: 10px;
     margin-left: -10px;
-    max-height: 80%;
+
+}
+
+#contextcontrol {
+    clear: both;
 }
 
 

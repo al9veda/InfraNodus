@@ -393,7 +393,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     }
 
     #entryform {
-        max-width: 262px;
+        max-width: 261px;
     }
 
     textarea {
@@ -403,3 +403,4 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 
 
 }
+
