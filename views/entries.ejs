@@ -144,7 +144,7 @@
             <% } %>
                 <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
-                        <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='enter a note here to visualize the words and their connections, you can also use #hashtags'><% if (url) { %><%= urltitle %> <%= url %><% } %></textarea>
+                        <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='type in some words or #hashtags to see how they connect'><% if (url) { %><%= urltitle %> <%= url %><% } %></textarea>
                         <div id="addToContextsLabel">graphs:</div>
                         <ul id="addToContexts"></ul>
                         <input type="hidden" id="addedContexts" name="addedContexts">
@@ -1036,16 +1036,18 @@ sigma.parsers.json(
 
                 if (!selfPosted) {
 
-                        added_entry =  "<div class='entry' style='display: none;' data-uid='" + msg.entryuid + "'><p class='entry-text gray'>" + msg.entrytext + "</p><p class='entry-date gray'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
+                        added_entry =  "<div class='entry' style='display: none; margin-left: 50px' data-uid='" + msg.entryuid + "'><p class='entry-text gray'>" + msg.entrytext + "</p><p class='entry-date gray'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
 
                 }
                 else {
                     selfPosted = null;
                 }
 
-                $(added_entry).prependTo($('#entries')).slideDown("fast");
-                // $('#entries').prepend(added_entry);
+                $(added_entry).appendTo($('#entries')).slideDown("fast");
+                $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
+                //$('#entries').append(added_entry).slideUp("fast");
                 $("#statement").val('');
+                document.activeElement.blur();
 
 
                     entryClick();
@@ -1402,6 +1404,11 @@ sigma.parsers.json(
 
 
         $('#entries').css({height:  $(window).height() - $('#entryform').height() - 100});
+
+        $(window).resize(function() {
+            $('#entries').css({height:  $(window).height() - $('#entryform').height() - 100});
+            $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
+        });
 
         $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
 

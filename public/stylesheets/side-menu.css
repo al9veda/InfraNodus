@@ -399,7 +399,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     }
 
     textarea {
-        max-height: 300px;
+        max-height: 80px!important;
     }
 
 
