@@ -1395,7 +1395,7 @@ sigma.parsers.json(
         });
 
 
-        collaborate_message = 'For real-time graph chat share the link below:<br>';
+        collaborate_message = '<a href="mailto:chat@infranodus.com?subject=Chat%20Now&body=http://' + hostsite + '/' + current_user + '/' + current_context + '/edit?collaborate=' + collaborate_id + '">Invite us</a> or other people for a real-time graph conversation – just share the link below:<br>';
 
         collaborate_html = '<span><form class="pure-form">' + collaborate_message + '<input type="text" id="collaburl" size="22" maxlength="80" class="pure-input" value="http://' + hostsite + '/' + current_user + '/' + current_context + '/edit?collaborate=' + collaborate_id + '"></form></span>';
 
