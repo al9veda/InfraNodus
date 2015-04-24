@@ -216,18 +216,6 @@ small screens.
     z-index: 9;
 }
 
-#privacycontext {
-    position: absolute;
-    display: inline; /* show this only on small screens */
-    bottom: 0;
-    right: 35px; /* "#menu width" */
-    font-size: 8px; /* change this value to increase/decrease button size */
-    width: 2em;
-    height: auto;
-    float: right;
-    padding: 3.3em 1.6em;
-    z-index: 9;
-}
 
 #deletebutton {
     background: url('../images/trash.png');
@@ -256,21 +244,26 @@ small screens.
     font-size: 0px;
 }
 
-#privacybutton {
-    background: url('../images/group.png');
+
+#privacy-link {
+    background: url('../images/share.png');
     background-repeat:no-repeat;
     background-position:center;
     border: 0;
-    display: block;
-    height: 23px;
-    width: 23px;
-    text-indent:-9999px;
-    line-height: 0px;
-    font-size: 0px;
+    position: absolute;
+    display: inline; /* show this only on small screens */
+    bottom: 10px;
+    right: 35px; /* "#menu width" */
+    font-size: 8px; /* change this value to increase/decrease button size */
+    width: 2em;
+    height: auto;
+    float: right;
+    padding: 3.3em 1.6em;
+    z-index: 10;
 }
 
-.privacy-public {
-    background: url('../images/group-green.png')!important;
+.is-public {
+    background: url('../images/share-green.png')!important;
     background-repeat:no-repeat!important;
     background-position:center!important;
 }

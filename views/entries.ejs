@@ -11,6 +11,8 @@
     <link rel='stylesheet' href='/stylesheets/jquery.taghandler.css' />
     <link rel='stylesheet' href='/stylesheets/jquery.content-panel-switcher.css' />
     <script src="/javascripts/jquery.content-panel-switcher.js"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/tooltipster.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/tooltipster-noir.css" />
 
 
 
@@ -114,19 +116,22 @@
                   </form>
                   <% } %>
 
-                  <form action='/context' name='privacycontext' id="privacycontext" method='post' class='pure-form' onsubmit="return confirm('You sure you want to change the privacy setting of this context?');">
+                  <% if (contextpublic && context && !perceivername && entries.length > 0) { %>
+                  <a href="javascript:" id="privacy-link" class="is-public">
+                      <!-- Chat icon -->
+                      <span></span>
+                  </a>
+                  <% } else if (!perceivername && context && entries.length > 0) { %>
+                  <a href="javascript:" id="privacy-link">
+                      <!-- Chat icon -->
+                      <span></span>
+                  </a>
+                  <% } %>
 
-                      <input type="hidden" name="context" value="<%= context %>">
-                      &nbsp;<br>
-                      <% if (contextpublic && context && !perceivername && entries.length > 0) { %>
-                      <input type='submit' id="privacybutton" name="privacy" value="make private" class="privacy-public">
-                      <% } else if (!perceivername && context && entries.length > 0) { %>
-                      <input type='submit' id="privacybutton" name="privacy" value="make public">
-                      <% }  %>
 
-                  </form>
 
-            <!-- the panel to show content -->
+
+                  <!-- the panel to show content -->
 
             <div id="switcher-panel"></div>
 
@@ -173,21 +178,21 @@
         <div id="graph-container"></div>
 
 
-                <a href="javascript:" id="chat-link">
+                <a href="javascript:" id="chat-link" class="tooltip" title="show / hide the text">
                     <!-- Chat icon -->
                     <span></span>
                 </a>
         <div id="controls">
                 <div id="graph-reload">
-                <a href="javascript:" id="go_next"><img src="/images/eyezoom.png" vspace="0" border="0"></a><br><a href="javascript:location.reload();"><img src="/images/reload.png" vspace="6" border="0"></a><br><a href="javascript:" id="improve-layout"><img src="/images/diamond.png" vspace="3" border="0"></a>
+                <a href="javascript:" id="go_next"><img src="/images/eyezoom.png"  class="tooltip" title="choose a few nodes from the graph and click this button to find out more" vspace="0" border="0"></a><br><a href="javascript:location.reload();"><img src="/images/reload.png" class="tooltip" title="clear and reload graph" vspace="6" border="0"></a><br><a href="javascript:" id="improve-layout"><img src="/images/diamond.png" class="tooltip" title="improve graph layout" vspace="3" border="0"></a>
 
         </div>
 
         <div id="graph-tools">
-                <a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a><br><a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a>
+                <a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" class="tooltip" title="zoom in" border="0"></a><br><a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" class="tooltip" title="zoom out" border="0"></a>
          </div>
             <% if (!perceivername) { %>
-                <a href="javascript:" id="microphone-link">
+                <a href="javascript:" id="microphone-link" class="tooltip" title="voice to text on/off">
                     <!-- Microphone icon -->
                     <span></span>
                 </a>
@@ -218,6 +223,8 @@
 <script src="/javascripts/jquery.taghandler.js"></script>
 <script src="/javascripts/socket.io.js"></script>
 <script src="/javascripts/moment.min.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.tooltipster.min.js"></script>
+
 
 
 
@@ -371,6 +378,7 @@ var addcontext = '';
 var path = window.location.pathname;
 var current_context = '<%= context %>';
 var current_user = path.replace(/^\/([^\/]*).*$/, '$1');
+var hostsite = window.location.host;
 
 
 // These are the nodes clicked in the graph
@@ -433,14 +441,14 @@ $("#graph-link").click(function(e) {
             $('#entries').css({height:  $(window).height() - $('#entryform').height() - 75});
             $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
             $('#deletecontext').show();
-            $('#privacycontext').show();
+            $('#privacy-link').show();
             localStorage.setItem('folded', 0);
         }
         else {
             $('#entryform').css({top:  $(window).height(), 'margin-top': '-50px'});
             $('#entries').css({height:  $(window).height() - 80});
             $('#deletecontext').hide();
-            $('#privacycontext').hide();
+            $('#privacy-link').hide();
             localStorage.setItem('folded', 1);
         }
 
@@ -1225,6 +1233,40 @@ sigma.parsers.json(
 
     $(document).ready(function(){
 
+        $('.tooltip').tooltipster({
+            theme: 'tooltipster-noir',
+            position: 'left',
+            maxWidth: 200
+
+        });
+
+        var privacyform = ''
+        var privacy_iframe = "<iframe width='100%' height='500' style='height: 500px' src='https://" + hostsite + '/' + current_user + "/" + current_context + "?hide_always=1&link_hashtags=1' frameborder='0' allowfullscreen></iframe>";
+
+        <% if (contextpublic && context && !perceivername && entries.length > 0) { %>
+            privacyform = $('<span><form action="/context" name="privacycontext" method="post" class="pure-form"><input type="hidden" name="context" value="<%= context %>">This graph can be viewed on:<br><input type="text" id="embedurl" size="25" maxlength="80" class="pure-input" value="https://' + hostsite + '/' + current_user + '/' + current_context + '"><br><br>Embed code for websites:<br><input type="text" id="embedcode" size="25" maxlength="100" class="pure-input" value="' + privacy_iframe + '"><br><br><input type="submit" id="privacybutton" name="privacy" value="make private"></form></span>')
+
+        <% } else if (!perceivername && context && entries.length > 0) { %>
+            privacyform = $('<span><form action="/context" name="privacycontext" method="post" class="pure-form"><input type="hidden" name="context" value="<%= context %>">This graph is currently private and cannot be seen by the public.<br><br><input type="submit" id="privacybutton" name="privacy" value="make public"></form></span>')
+        <% }  %>
+
+        $('#privacy-link').tooltipster({
+            theme: 'tooltipster-noir',
+            position: 'top-right',
+            maxWidth: 220,
+            interactive: true,
+            content: privacyform,
+            functionReady: function() {
+                $('#embedurl').focus(function(event) {
+                    setTimeout(function() {$('#embedurl').select();}, 0);
+                });
+                $('#embedcode').focus(function(event) {
+                    setTimeout(function() {$('#embedcode').select();}, 0);
+                });
+            }
+        });
+
+        // <iframe width='100%' height='500' style='height: 500px' src='https://infranodus.com/infranodus/presentation?hide_always=1&link_hashtags=1' frameborder='0' allowfullscreen></iframe>
 
         <% if (!perceivername) { %>
 
