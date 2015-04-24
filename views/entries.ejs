@@ -318,6 +318,8 @@
         forwardTo = 'http://twitter.com/search?q=';
     }
 
+    // For collaboration - Socket.IO chat
+    var collaborate_invite = getUrlVars()["collaborate"];
 
 
 
@@ -409,18 +411,29 @@ var graphOnly = null;
 // Who posted the message?
 var selfPosted = null;
 
+var collaborate_id = Math.round((Math.random() * 1000000));
+
+var collaborate_room = urlPath + '/';
+
+    if (collaborate_invite) {
+        collaborate_room = collaborate_room + collaborate_invite;
+    }
+    else {
+        collaborate_room = collaborate_room + collaborate_id;
+    }
+
 
     // On connection to server get the id of the current chat "room", which is actually the folder/URL of the current user
 
     socket.on('connect', function(){
         console.log('connected');
-        socket.emit('login', {user: current_user, context: current_context, id: urlPath});
+        socket.emit('login', {user: current_user, context: current_context, id: collaborate_room});
     });
 
 
     socket.on('startChat', function(data){
         console.log('chat started');
-        if(data.boolean && data.id == urlPath) {
+        if(data.boolean && data.id == collaborate_room) {
             console.log('in chat room ' + data.id);
         }
     });
@@ -1271,6 +1284,21 @@ sigma.parsers.json(
                 });
                 $('#embedcode').focus(function(event) {
                     setTimeout(function() {$('#embedcode').select();}, 0);
+                });
+            }
+        });
+
+        var collaborate_content = $('<span><form class="pure-form">Give this link to somebody to collaborate on this graph:<br><input type="text" id="collaburl" size="25" maxlength="80" class="pure-input" value="https://' + hostsite + '/' + current_user + '/' + current_context + '?collaborate=' + collaborate_id + '"></form></span>');
+
+        $('#collaborate-link').tooltipster({
+            theme: 'tooltipster-noir',
+            position: 'top-right',
+            maxWidth: 220,
+            interactive: true,
+            content: collaborate_content,
+            functionReady: function() {
+                $('#collaburl').focus(function(event) {
+                    setTimeout(function() {$('#collaburl').select();}, 0);
                 });
             }
         });
