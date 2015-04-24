@@ -185,18 +185,18 @@
         <div id="graph-container"></div>
 
 
-                <a href="javascript:" id="chat-link" class="tooltip" title="show / hide the text">
+                <a href="javascript:" id="chat-link" title="show / hide the text">
                     <!-- Chat icon -->
                     <span></span>
                 </a>
         <div id="controls">
                 <div id="graph-reload">
-                <a href="javascript:" id="go_next"><img src="/images/eyezoom.png"  class="tooltip" title="choose a few nodes from the graph and click this button to find out more" vspace="0" border="0"></a><br><a href="javascript:location.reload();"><img src="/images/reload.png" class="tooltip" title="clear and reload graph" vspace="6" border="0"></a><br><a href="javascript:" id="improve-layout"><img src="/images/diamond.png" class="tooltip" title="improve graph layout" vspace="3" border="0"></a>
+                <a href="javascript:" id="go_next"><img src="/images/eyezoom.png"  title="choose a few nodes from the graph and click this button to find out more" vspace="0" border="0"></a><br><a href="javascript:location.reload();"><img src="/images/reload.png" title="clear and reload graph" vspace="6" border="0"></a><br><a href="javascript:" id="improve-layout"><img src="/images/diamond.png" title="improve graph layout" vspace="3" border="0"></a>
 
         </div>
 
         <div id="graph-tools">
-                <a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" class="tooltip" title="zoom in" border="0"></a><br><a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" class="tooltip" title="zoom out" border="0"></a>
+                <a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a><br><a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a>
          </div>
             <% if (!perceivername) { %>
                 <a href="javascript:" id="microphone-link" class="tooltip" title="voice to text on/off">
@@ -422,6 +422,10 @@ var collaborate_room = urlPath + '/';
 
 var collaborate_id = '';
 
+var collaborate_content = '';
+
+var collaborate_message = '';
+
 var collaborate_storage = JSON.parse(localStorage.getItem("collaborate"));
 
 // If the user opened a URL with collaborate=xxxxxx then they join the room that's the "url_path/xxxxxx"
@@ -466,6 +470,15 @@ if (!collaborate_invite) {
             console.log('in chat room ' + data.id);
             $('#collaborate-link').addClass('is-collab');
         }
+    });
+
+    socket.on('leave', function(msg){
+        console.log('partner left');
+        $('#collaborate-link').removeClass('is-collab');
+        $('#collaborate-link').tooltipster('show');
+        $(window).keypress(function() {
+            $('#collaborate-link').tooltipster('hide');
+        });
     });
 
 
@@ -1288,7 +1301,8 @@ sigma.parsers.json(
         $('.tooltip').tooltipster({
             theme: 'tooltipster-noir',
             position: 'left',
-            maxWidth: 200
+            maxWidth: 200,
+            delay: 1000
 
         });
 
@@ -1319,10 +1333,9 @@ sigma.parsers.json(
         });
 
 
-        var collaborate_message = 'Give this link to somebody to collaborate on this graph:<br>';
+        collaborate_message = 'For real-time collaboration share the link below:<br>';
 
-        var collaborate_content = $('<span><form class="pure-form">' + collaborate_message + '<input type="text" id="collaburl" size="25" maxlength="80" class="pure-input" value="http://' + hostsite + '/' + current_user + '/' + current_context + '/edit?collaborate=' + collaborate_id + '"></form></span>');
-
+        collaborate_content = $('<span><form class="pure-form">' + collaborate_message + '<input type="text" id="collaburl" size="25" maxlength="80" class="pure-input" value="http://' + hostsite + '/' + current_user + '/' + current_context + '/edit?collaborate=' + collaborate_id + '"></form></span>');
 
         $('#collaborate-link').tooltipster({
             theme: 'tooltipster-noir',
@@ -1332,9 +1345,8 @@ sigma.parsers.json(
             content: collaborate_content,
             functionReady: function() {
                 $('#collaburl').focus(function(event) {
-                    setTimeout(function() {$('#collaburl').select();}, 0);
+                    this.setSelectionRange(0, 9999);
                 });
-
             }
         });
 

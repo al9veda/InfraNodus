@@ -172,6 +172,13 @@ var chat = io.on('connection', function(socket){
     console.log('a user socket connected');
     socket.on('disconnect', function(){
         console.log('user disconnected');
+
+        // Notify the other person in the chat room
+        // that his partner has left
+        socket.broadcast.to(socket.room).emit('leave', {
+            boolean: true
+        });
+
     });
     socket.on('chat message', function(msg){
         console.log('message: ' + msg);
