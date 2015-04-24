@@ -104,6 +104,23 @@
                       <span></span>
                   </a>
 
+                  <a href="javascript:" id="collaborate-link">
+                      <!-- Collaborate icon -->
+                      <span></span>
+                  </a>
+
+                  <% if (contextpublic && context && !perceivername && entries.length > 0) { %>
+                  <a href="javascript:" id="privacy-link" class="is-public">
+                      <!-- Share icon -->
+                      <span></span>
+                  </a>
+                  <% } else if (!perceivername && context && entries.length > 0) { %>
+                  <a href="javascript:" id="privacy-link">
+                      <!-- Share icon -->
+                      <span></span>
+                  </a>
+                  <% } %>
+
                   <% if ((context && entries.length > 2) && (!perceivername)) { %>
                   <form action='/post' name='deletecontext' id="deletecontext" method='post' class='pure-form' onsubmit="return confirm('Deleting the context will delete all the statements inside. Are you sure?');">
 
@@ -116,17 +133,7 @@
                   </form>
                   <% } %>
 
-                  <% if (contextpublic && context && !perceivername && entries.length > 0) { %>
-                  <a href="javascript:" id="privacy-link" class="is-public">
-                      <!-- Chat icon -->
-                      <span></span>
-                  </a>
-                  <% } else if (!perceivername && context && entries.length > 0) { %>
-                  <a href="javascript:" id="privacy-link">
-                      <!-- Chat icon -->
-                      <span></span>
-                  </a>
-                  <% } %>
+
 
 
 
@@ -442,6 +449,7 @@ $("#graph-link").click(function(e) {
             $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
             $('#deletecontext').show();
             $('#privacy-link').show();
+            $('#collaborate-link').show();
             localStorage.setItem('folded', 0);
         }
         else {
@@ -449,6 +457,7 @@ $("#graph-link").click(function(e) {
             $('#entries').css({height:  $(window).height() - 80});
             $('#deletecontext').hide();
             $('#privacy-link').hide();
+            $('#collaborate-link').hide();
             localStorage.setItem('folded', 1);
         }
 
@@ -1855,6 +1864,9 @@ sigma.parsers.json(
             $("#submitform").append('<input type="submit" name="edit" value="edit" id="editbutton" class="pure-button"> <input type="submit" style="margin: 0px 8px;" name="delete" value="delete" id="deletebutton" > <input type="submit" name="cancel" value="cancel" id="cancelbutton" class="pure-button">');
 
             $('#deletecontextbutton').hide();
+            $('#privacy-link').hide();
+            $('#collaborate-link').hide();
+
 
             // Delete text from the form in case of Cancel, remove the buttons
 
@@ -1868,6 +1880,9 @@ sigma.parsers.json(
                 $('#cancelbutton').remove();
                 $('#submitbutton').show();
                 $('#deletecontextbutton').show();
+                $('#privacy-link').show();
+                $('#collaborate-link').show();
+
                 $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
 
                 $('input[name="timestamp"]').val('');
