@@ -426,6 +426,8 @@ var collaborate_content = '';
 
 var collaborate_message = '';
 
+var collaborate_html = '';
+
 var collaborate_storage = JSON.parse(localStorage.getItem("collaborate"));
 
 // If the user opened a URL with collaborate=xxxxxx then they join the room that's the "url_path/xxxxxx"
@@ -468,17 +470,32 @@ if (!collaborate_invite) {
         console.log('chat started');
         if(data.boolean && data.id == collaborate_matrix[collaborate_room]) {
             console.log('in chat room ' + data.id);
+            var collab_content = $('#collaborate-link').tooltipster('content');
+            $('#collaborate-link').tooltipster('content', 'Collaboration is ON');
             $('#collaborate-link').addClass('is-collab');
+            $('#collaborate-link').tooltipster('show');
+            setTimeout(function() {
+                $('#collaborate-link').tooltipster('hide');
+                setTimeout(function() {
+                    $('#collaborate-link').tooltipster('content', collab_content);
+                }, 1000);
+
+            }, 2000);
         }
     });
 
     socket.on('leave', function(msg){
         console.log('partner left');
         $('#collaborate-link').removeClass('is-collab');
+        var collab_content = $('#collaborate-link').tooltipster('content');
+        $('#collaborate-link').tooltipster('content', 'Collaboration is OFF');
         $('#collaborate-link').tooltipster('show');
-        $(window).keypress(function() {
+        setTimeout(function() {
             $('#collaborate-link').tooltipster('hide');
-        });
+            setTimeout(function() {
+                $('#collaborate-link').tooltipster('content', collab_content);
+            }, 1000);
+        }, 2000);
     });
 
 
@@ -542,6 +559,14 @@ function submitFormProcess() {
 
         $('#submitbutton').attr('disabled', 'disabled');
 
+        // We will set a user for posting. If the posting user does not equal the user who's watching the graph, we force-add the statement into theirs (provided they collaborate)
+        var postedby = '';
+
+        <% if (user.name) { %>
+           postedby = '<%= user.name %>';
+        <% } %>
+        // TODO make it possible that those statements get submitted in both graphs
+
         // is urlvars mute off? then post as usual
         if (!mute) {
         $.post('/post', $("#submitform").serialize())
@@ -552,7 +577,7 @@ function submitFormProcess() {
                         selfPosted = '1';
                         $('#statement').removeClass('loading');
                         $('#submitbutton').removeAttr('disabled');
-                        socket.emit('chat message', {entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
+                        socket.emit('chat message', {postedby: postedby, entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
                     }
                     else if (res.errormsg) {
                         $('#statement').removeClass('loading');
@@ -571,7 +596,9 @@ function submitFormProcess() {
         // otherwise - make a dummy post - it appears in the list but doesn't get submitted into the graph
         else {
             selfPosted = '1';
-            socket.emit('chat message', {entryuid: '', entrytext: $('#statement').val(), graph: ''});
+            $('#statement').removeClass('loading');
+            $('#submitbutton').removeAttr('disabled');
+            socket.emit('chat message', {mute: 1, postedby: postedby, entryuid: '', entrytext: $('#statement').val(), graph: ''});
         }
 
         return false;
@@ -1107,7 +1134,42 @@ sigma.parsers.json(
 
                 if (!selfPosted) {
 
-                        added_entry =  "<div class='entry' style='display: none; margin-left: 50px' data-uid='" + msg.entryuid + "'><p class='entry-text gray'>" + msg.entrytext + "</p><p class='entry-date gray'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
+                    added_entry =  "<div class='entry' style='display: none; margin-left: 50px' data-uid='" + msg.entryuid + "'><p class='entry-text gray'>" + msg.entrytext + "</p><p class='entry-date gray'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
+
+                    // We will set a user for receiving. If the posting user does not equal the user who's watching the graph, we force-add the statement into theirs (provided they collaborate)
+                    var receivedby = '';
+
+                     <% if (user.name) { %>
+                        receivedby = '<%= user.name %>';
+                    <% } %>
+                    // TODO make it possible that those statements get submitted in both graphs
+
+                    // So the user who posted is not the same who's receiving? then submit the form. If the sender didnt have the mute option
+                    if ((receivedby != msg.postedby) && !msg.mute) {
+                        var temporary_statement = $('#statement').val();
+                        $('#statement').val(msg.entrytext);
+                        console.log($("#submitform").serialize());
+                        $.post('/post', $("#submitform").serialize())
+                                .done(function(res) {
+                                    $('#statement').val(temporary_statement);
+                                    //3. Receive the server response, no need to emit an event
+                                    if (res.entryuid) {
+                                        //4. Show the updated text
+                                        console.log('submitted externally');
+                                    }
+                                    else if (res.errormsg) {
+                                        alert(res.errormsg);
+                                    }
+                                    else {
+                                        alert('Something went wrong, please, try again...');
+                                    }
+                                })
+                                .fail(function(res) {
+                                    alert("Server Error: " + res.status + " " + res.statusText);
+                                });
+
+                    }
+
 
                 }
                 else {
@@ -1335,7 +1397,9 @@ sigma.parsers.json(
 
         collaborate_message = 'For real-time collaboration share the link below:<br>';
 
-        collaborate_content = $('<span><form class="pure-form">' + collaborate_message + '<input type="text" id="collaburl" size="25" maxlength="80" class="pure-input" value="http://' + hostsite + '/' + current_user + '/' + current_context + '/edit?collaborate=' + collaborate_id + '"></form></span>');
+        collaborate_html = '<span><form class="pure-form">' + collaborate_message + '<input type="text" id="collaburl" size="25" maxlength="80" class="pure-input" value="http://' + hostsite + '/' + current_user + '/' + current_context + '/edit?collaborate=' + collaborate_id + '"></form></span>';
+
+        collaborate_content = $(collaborate_html);
 
         $('#collaborate-link').tooltipster({
             theme: 'tooltipster-noir',
@@ -1350,7 +1414,6 @@ sigma.parsers.json(
             }
         });
 
-        // <iframe width='100%' height='500' style='height: 500px' src='https://infranodus.com/infranodus/presentation?hide_always=1&link_hashtags=1' frameborder='0' allowfullscreen></iframe>
 
         <% if (!perceivername) { %>
 
