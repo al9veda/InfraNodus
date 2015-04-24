@@ -411,30 +411,60 @@ var graphOnly = null;
 // Who posted the message?
 var selfPosted = null;
 
-var collaborate_id = Math.round((Math.random() * 1000000));
+
+// Socket.IO chat collaborate
+
+// This matrix relates each URL path to each unique chat that can happen within that room
+
+var collaborate_matrix = {};
 
 var collaborate_room = urlPath + '/';
 
-    if (collaborate_invite) {
-        collaborate_room = collaborate_room + collaborate_invite;
+var collaborate_id = '';
+
+var collaborate_storage = JSON.parse(localStorage.getItem("collaborate"));
+
+// If the user opened a URL with collaborate=xxxxxx then they join the room that's the "url_path/xxxxxx"
+if (collaborate_invite) {
+    collaborate_id = collaborate_invite;
+}
+// Otherwise they join a room which is "url_path/randomnumber"
+else {
+    collaborate_id = Math.round((Math.random() * 1000000));
+}
+
+collaborate_matrix[collaborate_room] = collaborate_room + collaborate_id;
+
+
+if (!collaborate_invite) {
+    if (collaborate_storage) {
+
+        if (collaborate_storage[collaborate_room]) {
+            if (collaborate_storage[collaborate_room].length > 0) {
+                collaborate_matrix[collaborate_room] = collaborate_storage[collaborate_room];
+                collaborate_id = collaborate_matrix[collaborate_room].split("/").pop();
+            }
+        }
     }
-    else {
-        collaborate_room = collaborate_room + collaborate_id;
-    }
+
+    // Now in case the original user reloads the page by error, they'll get the new collaborate ID, so we avoid that by storing their data
+    localStorage.setItem("collaborate", JSON.stringify(collaborate_matrix));
+}
 
 
     // On connection to server get the id of the current chat "room", which is actually the folder/URL of the current user
 
     socket.on('connect', function(){
         console.log('connected');
-        socket.emit('login', {user: current_user, context: current_context, id: collaborate_room});
+        socket.emit('login', {user: current_user, context: current_context, id: collaborate_matrix[collaborate_room]});
     });
 
 
     socket.on('startChat', function(data){
         console.log('chat started');
-        if(data.boolean && data.id == collaborate_room) {
+        if(data.boolean && data.id == collaborate_matrix[collaborate_room]) {
             console.log('in chat room ' + data.id);
+            $('#collaborate-link').addClass('is-collab');
         }
     });
 
@@ -1288,7 +1318,11 @@ sigma.parsers.json(
             }
         });
 
-        var collaborate_content = $('<span><form class="pure-form">Give this link to somebody to collaborate on this graph:<br><input type="text" id="collaburl" size="25" maxlength="80" class="pure-input" value="https://' + hostsite + '/' + current_user + '/' + current_context + '?collaborate=' + collaborate_id + '"></form></span>');
+
+        var collaborate_message = 'Give this link to somebody to collaborate on this graph:<br>';
+
+        var collaborate_content = $('<span><form class="pure-form">' + collaborate_message + '<input type="text" id="collaburl" size="25" maxlength="80" class="pure-input" value="http://' + hostsite + '/' + current_user + '/' + current_context + '/edit?collaborate=' + collaborate_id + '"></form></span>');
+
 
         $('#collaborate-link').tooltipster({
             theme: 'tooltipster-noir',
@@ -1300,6 +1334,7 @@ sigma.parsers.json(
                 $('#collaburl').focus(function(event) {
                     setTimeout(function() {$('#collaburl').select();}, 0);
                 });
+
             }
         });
 
