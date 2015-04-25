@@ -103,11 +103,12 @@
                   <a href="javascript:" id="windowdown-link">
                       <span></span>
                   </a>
-
+                  <% if (!perceivername) { %>
                   <a href="javascript:" id="collaborate-link">
                       <!-- Collaborate icon -->
                       <span></span>
                   </a>
+                  <% } %>
 
                   <% if (contextpublic && context && !perceivername && entries.length > 0) { %>
                   <a href="javascript:" id="privacy-link" class="is-public">
@@ -1441,7 +1442,41 @@ sigma.parsers.json(
         });
 
 
+
+
+
+
+
         <% if (!perceivername) { %>
+
+            // Advertise graph collaboration module
+            if (!collaborate_invite) {
+                var collab_content = $('#collaborate-link').tooltipster('content');
+                var collab_invite = '<a href="mailto:chat@infranodus.com?subject=Chat%20Now&body=http://' + hostsite + '/' + current_user + '/' + current_context + '/edit?collaborate=' + collaborate_id + '">Graph Chat Now!</a><br>';
+
+                var times_seen = localStorage.getItem('TooltipSeen');
+
+                if (times_seen >= 1) {
+                    localStorage.setItem('TooltipSeen', parseInt(times_seen) + 1);
+                }
+                else {
+                    localStorage.setItem('TooltipSeen', 1);
+                }
+
+                if (times_seen < 4) {
+                    $('#collaborate-link').tooltipster('content', $(collab_invite));
+                    $('#collaborate-link').tooltipster('show');
+                    setTimeout(function() {
+                        $('#collaborate-link').tooltipster('hide');
+                        setTimeout(function() {
+                            $('#collaborate-link').tooltipster('content', collab_content);
+                        }, 1000);
+                    }, 2000);
+                }
+                else if (times_seen > 15) {
+                    localStorage.setItem('TooltipSeen', 1);
+                }
+            }
 
         // START Speech Recognition Module only for Chrome
 
@@ -1756,7 +1791,10 @@ sigma.parsers.json(
 
         entryClick();
 
+        // If it's NOT some other user watching the graph, then statements can be edited. Otherwise - no.
+        <% if (!perceivername) { %>
         entryDoubleClick();
+        <% } %>
 
 
         // Highlight statement if clicked once
