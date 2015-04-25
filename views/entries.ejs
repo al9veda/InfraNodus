@@ -575,6 +575,7 @@ function submitFormProcess() {
                     if (res.entryuid) {
                         //4. Show the updated text
                         selfPosted = '1';
+                        $("#statement").val('');
                         $('#statement').removeClass('loading');
                         $('#submitbutton').removeAttr('disabled');
                         socket.emit('chat message', {postedby: postedby, entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
@@ -598,6 +599,7 @@ function submitFormProcess() {
             selfPosted = '1';
             $('#statement').removeClass('loading');
             $('#submitbutton').removeAttr('disabled');
+            $("#statement").val('');
             socket.emit('chat message', {mute: 1, postedby: postedby, entryuid: '', entrytext: $('#statement').val(), graph: ''});
         }
 
@@ -1146,12 +1148,25 @@ sigma.parsers.json(
 
                     // So the user who posted is not the same who's receiving? then submit the form. If the sender didnt have the mute option
                     if ((receivedby != msg.postedby) && !msg.mute) {
-                        var temporary_statement = $('#statement').val();
+
+
+                        /*var temporary_statement = $('#statement').val();
                         $('#statement').val(msg.entrytext);
-                        console.log($("#submitform").serialize());
-                        $.post('/post', $("#submitform").serialize())
+                        console.log($("#submitform").serialize());*/
+
+                        var to_submit = $('#submitform').serializeArray();
+
+                        for (key in to_submit) {
+                            if (to_submit[key].name == 'entry[body]') {
+                                to_submit[key].value = msg.entrytext;
+                            }
+                        }
+
+                        $.post('/post', $.param(to_submit))
                                 .done(function(res) {
-                                    $('#statement').val(temporary_statement);
+
+                          /*          $('#statement').val(temporary_statement);*/
+
                                     //3. Receive the server response, no need to emit an event
                                     if (res.entryuid) {
                                         //4. Show the updated text
@@ -1171,6 +1186,7 @@ sigma.parsers.json(
                     }
 
 
+
                 }
                 else {
                     selfPosted = null;
@@ -1178,8 +1194,9 @@ sigma.parsers.json(
 
                 $(added_entry).appendTo($('#entries')).slideDown("fast");
                 $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
+
                 //$('#entries').append(added_entry).slideUp("fast");
-                $("#statement").val('');
+
                 if ($(window).height() < 600) {
                     document.activeElement.blur();
                 }
