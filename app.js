@@ -170,13 +170,14 @@ appio.listen(app.get('port'), function(){
 
 var chat = io.on('connection', function(socket){
     console.log('a user socket connected');
-    socket.on('disconnect', function(){
+    socket.on('disconnect', function(data){
         console.log('user disconnected');
-
+        var room = findClientsSocket(io, data.id);
         // Notify the other person in the chat room
         // that his partner has left
         socket.broadcast.to(socket.room).emit('leave', {
-            boolean: true
+            boolean: true,
+            people: room.length
         });
 
     });
@@ -228,7 +229,7 @@ var chat = io.on('connection', function(socket){
             }
         }
         else {
-            socket.emit('tooMany', {boolean: true});
+            socket.emit('tooMany', {boolean: true, username: data.user});
         }
     });
 });

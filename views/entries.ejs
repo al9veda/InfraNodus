@@ -486,6 +486,7 @@ if (!collaborate_invite) {
 
     socket.on('leave', function(msg){
         console.log('partner left');
+        console.log(msg.people);
         $('#collaborate-link').removeClass('is-collab');
         var collab_content = $('#collaborate-link').tooltipster('content');
         $('#collaborate-link').tooltipster('content', 'Collaboration is OFF');
@@ -496,6 +497,14 @@ if (!collaborate_invite) {
                 $('#collaborate-link').tooltipster('content', collab_content);
             }, 1000);
         }, 2000);
+    });
+
+    socket.on('tooMany', function(data){
+
+        console.log('one too many');
+        alert('There are already 2 users working on this graph and this is our max so far. If you think it is a mistake, please, check if any of your extra browser tabs are opened.');
+        window.location.href = 'http://' + hostsite + '/' + 'home' + '/edit';
+
     });
 
 
