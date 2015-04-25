@@ -571,8 +571,8 @@ function submitFormProcess() {
         // We will set a user for posting. If the posting user does not equal the user who's watching the graph, we force-add the statement into theirs (provided they collaborate)
         var postedby = '';
 
-        <% if (user.name) { %>
-           postedby = '<%= user.name %>';
+        <% if (receivername) { %>
+           postedby = '<%= receivername %>';
         <% } %>
         // TODO make it possible that those statements get submitted in both graphs
 
@@ -1150,8 +1150,8 @@ sigma.parsers.json(
                     // We will set a user for receiving. If the posting user does not equal the user who's watching the graph, we force-add the statement into theirs (provided they collaborate)
                     var receivedby = '';
 
-                     <% if (user.name) { %>
-                        receivedby = '<%= user.name %>';
+                     <% if (perceivername) { %>
+                        receivedby = '<%= perceivername %>';
                     <% } %>
                     // TODO make it possible that those statements get submitted in both graphs
 
