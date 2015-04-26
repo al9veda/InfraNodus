@@ -56,10 +56,11 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#fullpage').fullpage({
-                sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff'],
-                anchors: ['home', 'features', 'usecases', 'about', 'lastPage'],
+                sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE', '#e9e9e6', '#ccddff'],
+                anchors: ['home', 'features', 'usecases', 'graphs', 'about'],
                 menu: '#menu',
-                scrollingSpeed: 1000
+                scrollingSpeed: 1000,
+                responsive: 900
             });
 
         });
@@ -68,11 +69,12 @@
 </head>
 <body>
 
-
+<div class="wrap">
 <ul id="menu">
     <li data-menuanchor="home"><a href="#home">InfraNodus</a></li>
-    <li data-menuanchor="features"><a href="#features">Benefits</a></li>
+    <li data-menuanchor="features"><a href="#features">Effects</a></li>
     <li data-menuanchor="usecases"><a href="#usecases">Use Cases</a></li>
+    <li data-menuanchor="graphs"><a href="#graphs">Graphs</a></li>
     <li data-menuanchor="about"><a href="#about">Origins</a></li>
 </ul>
 
@@ -90,71 +92,141 @@
     <div class="section" id="section1">
         <div class="slide">
             <div class="intro">
-                <h1>Self-Observation</h1>
+                <h1>Network Perspective</h1>
                 <p>Visualize connections between your thoughts, ideas and notes to identify common patterns and trends.</p>
                 <br>&nbsp;
-                <iframe src="//coub.com/embed/5uv90?muted=false&autostart=false&originalSize=false&hideTopBar=true&startWithHD=false" allowfullscreen="true" frameborder="0" width="640" height="442"></iframe>
+                <!--<iframe src="//coub.com/embed/5uv90?muted=false&autostart=false&originalSize=false&hideTopBar=true&startWithHD=false" allowfullscreen="true" frameborder="0" width="100%" height="100%"></iframe>-->
             </div>
 
         </div>
         <div class="slide">
             <div class="intro">
-                <h1>Augmented Perception</h1>
-                <p>Use this non-linear network reading device to quickly find the fragments you need and see them in context.</p>
+                <h1>Meaningful Interactions</h1>
+                <p>Visualize your conversations as a graph to collaborate, brainstorm, or for mutual inspiration.</p>
                 <br>&nbsp;
-                <iframe src="//coub.com/embed/5r0tt?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="640" height="440"></iframe>
+                <!--<iframe src="//coub.com/embed/5r18a?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="100%" height="100%"></iframe>-->
             </div>
         </div>
         <div class="slide">
             <div class="intro">
-                <h1>Cognitive Enrichment</h1>
-                <p>Use the visual metaphor of a network to get different perspectives and discover new ideas.</p>
+                <!--<h1>Augmented Perception</h1>-->
+                <h1>Nonlinear Reading</h1>
+                <p>Quickly find the fragments you need and see them in context.</p>
                 <br>&nbsp;
-                <iframe src="//coub.com/embed/5r18a?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="640" height="440"></iframe>
+                <!--<iframe src="//coub.com/embed/5r0tt?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="100%" height="100%"></iframe>-->
             </div>
         </div>
+        <div class="slide">
+            <div class="intro">
+                <!--<h1>Cognitive Enrichment</h1>-->
+                <h1>Divinatory Intelligence</h1>
+                <p>Use the visual metaphor of a network to get divinatory perspective on any complex phenomena.</p>
+                <br>&nbsp;
+                <!--<iframe src="//coub.com/embed/5r18a?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="100%" height="100%"></iframe>-->
+            </div>
+        </div>
+
         <div class="slide">
             <div class="intro">
                 <h1>Memory Enhancement</h1>
-                <p>Use associations to store and retrieve important excerpts, concepts and statements.</p>
+                <p>Use associative thinking to store and retrieve important excerpts, concepts and statements.</p>
                 <br>&nbsp;
-                <iframe src="//coub.com/embed/5qza8?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="640" height="440"></iframe>
+              <!--  <iframe src="//coub.com/embed/5qza8?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="100%" height="100%"></iframe>-->
             </div>
         </div>
     </div>
     <div class="section" id="section2">
         <div class="slide">
             <div class="intro">
-                <h1>Create Sliders</h1>
-                <p>Not only vertical scrolling but also horizontal scrolling. With fullPage.js you will be able to add horizontal sliders in the most simple way ever.</p>
-                <img src="imgs/slider.png" alt="slider" />
+                <h1>InfraNodus for Writing</h1>
+                <p>Visualize connections between your ideas and notes to create coherent texts with strong narratives.</p>
+                <br>&nbsp;
+                <ul id="menu" class="profile">
+                    <li><a href="http://noduslabs.com/cases/how-to-write-essay-inspiration-text-network-visualization/" target="_blank">Learn More</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <h1>InfraNodus for Research</h1>
+                <p>Save important excerpts and notes into the network graph to get a better idea about the commonalities and differences between them. </p>
+                <!--<p>Discover patterns in your ideas, excerpts and notes, gaining a better understanding of your research field.</p>-->
+                <br>&nbsp;
+                <ul id="menu" class="profile">
+                    <li><a href="http://noduslabs.com/cases/connect-ideas-research-notes-graph/" target="_blank">Learn More</a></li>
+                </ul>
             </div>
 
         </div>
+
         <div class="slide">
             <div class="intro">
-                <img src="imgs/1.png" alt="simple" />
-                <h1>Simple</h1>
-                <p>Easy to use. Configurable and customizable.</p>
+                <h1>InfraNodus for SEO</h1>
+                <p>Discover the clusters of keyword topics that relate to your target search queries, improve your SEO rankings.</p>
+                <br>&nbsp;
+                <ul id="menu" class="profile">
+                    <li><a href="http://noduslabs.com/cases/seo-tutorial-keyword-visualization-search-engine-optimization/" target="_blank">Learn More</a></li>
+                </ul>
             </div>
         </div>
         <div class="slide">
             <div class="intro">
-                <img src="imgs/2.png" alt="Cool" />
-                <h1>Cool</h1>
-                <p>It just looks cool. Impress everybody with a simple and modern web design!</p>
+                <h1>InfraNodus for Psychotherapy</h1>
+                <p>Text network visualization will help map the conversation and reveal the new choices.</p>
+                <br>&nbsp;
+                <ul id="menu" class="profile">
+                    <li><a href="http://noduslabs.com/cases/text-network-visualization-psychotherapy/" target="_blank">Learn More</a></li>
+                </ul>
             </div>
         </div>
         <div class="slide">
             <div class="intro">
-                <img src="imgs/3.png" alt="Compatible" />
-                <h1>Compatible</h1>
-                <p>Working in modern and old browsers too! IE 8 users don't have the fault of using that horrible browser! Lets give them a chance to see your site in a proper way!</p>
+                <h1>InfraNodus for Discourse Analysis</h1>
+                <p>Analyze any discourse: from Twitter timeline to political speeches to identify main topics and relations between them.</p>
+                <br>&nbsp;
+                <ul id="menu" class="profile">
+                    <li><a href="http://noduslabs.com/cases/twitter-xray-text-network-analysis/" target="_blank">Learn More</a></li>
+                </ul>
             </div>
         </div>
     </div>
-
     <div class="section" id="section3">
+        <div class="intro">
+           <!-- <div class="slide">
+                <div class="inside">
+                    <iframe width="100%" height="100%" class="embed" src="https://infranodus.com/infragraph/philosophy?go_next_site=wikipedia&hide_always=1&link_hashtags=1&go_next_override=1&maxnodes=40" frameborder="0" allowfullscreen></iframe>
+                    <div class="overlay">
+                        <div class="intro">
+                            <h2>Philosophers Graph</h2>
+                            <p class="caption">The relations show which philosophers people search for together more often.</p>
+                            <ul id="menu" class="profile">
+                                <li><a href="https://infranodus.com/infragraph/philosophy?go_next_site=wikipedia&hide_always=1&link_hashtags=1&go_next_override=1" target="_blank">Explore</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <div class="slide">
+                <div class="intro">
+                    <h1>Explore Topics</h1>
+                    <p>Use the graphs to explore and share various topics.</p>
+                    <br>&nbsp;
+
+                </div>
+            </div>
+            <div class="slide">
+                <div class="intro">
+                    <h1>Explore</h1>
+                    <p>Explore more graphs with explanation.</p>
+                    <br>&nbsp;
+                    <ul id="menu" class="profile">
+                        <li><a href="http://noduslabs.com/network-graphs/" target="_blank">Learn More</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section" id="section4">
         <div class="intro">
             <h1>Working On Tablets</h1>
             <p>
@@ -164,6 +236,7 @@
         </div>
         <img src="imgs/tablets.png" alt="tablets" />
     </div>
+</div>
 </div>
 
 </body>

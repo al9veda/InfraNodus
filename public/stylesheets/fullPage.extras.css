@@ -72,23 +72,33 @@ body{
     font: 16px 'IstokWeb-Bold',sans-serif;
 	color: #333;
 	color: rgba(0,0,0,0.5);
+
 }
 .wrap{
 	margin-left: auto;
 	margin-right: auto;
-	width: 960px;
+	min-width: 600px;
 	position: relative;
 }
 h1{
 	font-size: 3em;
 }
+h2{
+    font-size: 2em;
+}
 p{
 	font-size: 1.5em;
 }
+
+.caption {
+    font-size: 1.2em!important;
+}
+
 .intro p{
-	width: 50%;
+	width: 50vw;
 	margin: 0 auto;
 	font-size: 1.5em;
+    z-index: 10;
 }
 .section{
 	text-align:center;
@@ -131,7 +141,7 @@ p{
 	left:0;
 	height: 40px;
 	z-index: 70;
-	width: 100%;
+	width: 100vw;
 	padding: 0;
 	margin:0;
 }
@@ -267,4 +277,67 @@ p{
 	right:10px;
 	z-index: 999;
  }
+
+
+ /* From InfraNodus */
+
+
+.graphshowcase{
+    width: 240px;
+    height: 290px;
+    display: inline-block;
+    background-color: white;
+    margin: 20px 20px 10px 0px;
+}
+
+.graphwindow {
+    width: 240px;
+    height: 260px;
+    border: solid 1px #d9d9de;
+    background-color: white;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -o-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border-radius: 10px;
+    text-align: center;
+
+}
+
+.graphwindow img {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: middle;
+}
+
+/*handles the vertical centering*/
+.Centerer
+{
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.embed {
+    position: absolute; top:10%; left:0; width: 100vw; height: 60%;
+}
+
+.overlay {
+  background-color: #e9e9e6;
+  z-index: 10;
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
+  padding-top: 20px;
+  height: 25%;
+  padding-bottom: 20px;
+  margin-left:auto!important;
+  margin-right: auto!important;
+  display: block!important;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
 
