@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>fullPage.js One Page Scroll Sites</title>
+    <meta name="author" content="Alvaro Trigo Lopez" />
+    <meta name="description" content="fullPage plugin by Alvaro Trigo. Create fullscreen pages fast and simple. One page scroll like iPhone website." />
+    <meta name="keywords"  content="fullpage,jquery,alvaro,trigo,plugin,fullscren,screen,full,iphone5,apple" />
+    <meta name="Resource-type" content="Document" />
+
+
+    <link rel="stylesheet" type="text/css" href="/stylesheets/jquery.fullPage.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/fullPage.extras.css" />
+
+
+    <style>
+
+            /* Sections
+             * --------------------------------------- */
+        #section0 img,
+        #section1 img{
+            margin: 20px 0 0 0;
+        }
+        #section2 img{
+            margin: 20px 0 0 52px;
+        }
+        #section3 img{
+            bottom: 0px;
+            position: absolute;
+            margin-left: -420px;
+        }
+        .intro p{
+            width: 50%;
+            margin: 0 auto;
+            font-size: 1.5em;
+        }
+        .twitter-share-button{
+            position: absolute;
+            z-index: 99;
+            right: 149px;
+            top: 9px;
+        }
+
+    </style>
+    <!--[if IE]>
+    <script type="text/javascript">
+        var console = { log: function() {} };
+    </script>
+    <![endif]-->
+
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/jquery-ui.min.js"></script>
+
+    <script type="text/javascript" src="/javascripts/jquery.fullPage.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#fullpage').fullpage({
+                sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff'],
+                anchors: ['home', 'features', 'usecases', 'about', 'lastPage'],
+                menu: '#menu',
+                scrollingSpeed: 1000
+            });
+
+        });
+    </script>
+
+</head>
+<body>
+
+
+<ul id="menu">
+    <li data-menuanchor="home"><a href="#home">Home</a></li>
+    <li data-menuanchor="features"><a href="#features">Features</a></li>
+    <li data-menuanchor="usecases"><a href="#usecases">Use Cases</a></li>
+    <li data-menuanchor="about"><a href="#about">About</a></li>
+</ul>
+
+
+<div id="fullpage">
+    <div class="section " id="section0">
+        <h1>InfraNodus</h1>
+        <p>See how it all connects.</p>
+
+        <ul id="menu" class="profile">
+            <li><a href="/login">Enter</a></li>
+            <li><a href="/signup">Join</a></li>
+        </ul>
+    </div>
+    <div class="section" id="section1">
+        <div class="slide">
+            <div class="intro">
+                <h1>Connect Your Ideas</h1>
+                <p>Text to network graph conversion will show how your ideas connect and reveal the new constellations.</p>
+                <iframe src="//coub.com/embed/5uv90?muted=false&autostart=true&originalSize=false&hideTopBar=true&startWithHD=true" allowfullscreen="true" frameborder="0" width="640" height="442"></iframe>
+            </div>
+
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <img src="imgs/1.png" alt="simple" />
+                <h1>Simple</h1>
+                <p>Easy to use. Configurable and customizable.</p>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <img src="imgs/2.png" alt="Cool" />
+                <h1>Cool</h1>
+                <p>It just looks cool. Impress everybody with a simple and modern web design!</p>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <img src="imgs/3.png" alt="Compatible" />
+                <h1>Compatible</h1>
+                <p>Working in modern and old browsers too! IE 8 users don't have the fault of using that horrible browser! Lets give them a chance to see your site in a proper way!</p>
+            </div>
+        </div>
+    </div>
+    <div class="section" id="section2">
+        <div class="slide">
+            <div class="intro">
+                <h1>Create Sliders</h1>
+                <p>Not only vertical scrolling but also horizontal scrolling. With fullPage.js you will be able to add horizontal sliders in the most simple way ever.</p>
+                <img src="imgs/slider.png" alt="slider" />
+            </div>
+
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <img src="imgs/1.png" alt="simple" />
+                <h1>Simple</h1>
+                <p>Easy to use. Configurable and customizable.</p>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <img src="imgs/2.png" alt="Cool" />
+                <h1>Cool</h1>
+                <p>It just looks cool. Impress everybody with a simple and modern web design!</p>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <img src="imgs/3.png" alt="Compatible" />
+                <h1>Compatible</h1>
+                <p>Working in modern and old browsers too! IE 8 users don't have the fault of using that horrible browser! Lets give them a chance to see your site in a proper way!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="section3">
+        <div class="intro">
+            <h1>Working On Tablets</h1>
+            <p>
+                Designed to fit to different screen sizes as well as tablet and mobile devices.
+                <br /><br /><br /><br /><br /><br />
+            </p>
+        </div>
+        <img src="imgs/tablets.png" alt="tablets" />
+    </div>
+</div>
+
+</body>
+</html>
