@@ -35,6 +35,7 @@
             width: 50%;
             margin: 0 auto;
             font-size: 1.5em;
+            z-index:10;
         }
         .twitter-share-button{
             position: absolute;
@@ -42,6 +43,29 @@
             right: 149px;
             top: 9px;
         }
+
+        #section2{
+            background: -webkit-gradient(linear, top left, bottom left, from(#7baabe), to(#969ac6));
+            background: -webkit-linear-gradient(#7BAABE, #969AC6);
+            background: linear-gradient(#7BAABE,#969AC6);
+        }
+        #section1{
+            background: -webkit-gradient(linear, top left, bottom left, from(#969ac6), to(#636F8F));
+            background: -webkit-linear-gradient(#969AC6, #636F8F);
+            background: linear-gradient(#969AC6,#636F8F);
+        }
+        #section0{
+            background: linear-gradient(#efe9e9,#e0e3e3);
+        }
+        #demo-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
 
     </style>
     <!--[if IE]>
@@ -52,17 +76,206 @@
 
     <script src="/javascripts/jquery.min.js"></script>
     <script src="/javascripts/jquery-ui.min.js"></script>
+    <script src="/javascripts/TweenLite.min.js"></script>
+    <script src="/javascripts/EasePack.min.js"></script>
 
     <script type="text/javascript" src="/javascripts/jquery.fullPage.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('#fullpage').fullpage({
-                sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE', '#e9e9e6', '#ccddff'],
                 anchors: ['home', 'features', 'usecases', 'graphs', 'about'],
                 menu: '#menu',
                 scrollingSpeed: 1000,
                 responsive: 900
             });
+
+           /* $('#content-box').animate({scrollLeft: 100}, 800);*/
+
+            $(".menuhit").click(function(){
+                var moveby = $(this).offset().left;
+                $('#content-box').animate({scrollLeft: moveby}, 800);
+                return true;
+            });
+
+            var width, height, canvas, ctx, points, target, animateHeader = true;
+
+            // Main
+            initHeader();
+            initAnimation();
+            addListeners();
+
+            function initHeader() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                target = {x: width/2, y: height/2};
+
+                //console.log("test",document.getElementById('large-header'));
+
+                canvas = document.getElementById('demo-canvas');
+                canvas.width = width;
+                canvas.height = height;
+                ctx = canvas.getContext('2d');
+
+                // create points
+                points = [];
+                for(var x = 0; x < width; x = x + width/20) {
+                    for(var y = 0; y < height; y = y + height/20) {
+                        var px = x + Math.random()*width/20;
+                        var py = y + Math.random()*height/20;
+                        var p = {x: px, originX: px, y: py, originY: py };
+                        points.push(p);
+                    }
+                }
+
+                // for each point find the 5 closest points
+                for(var i = 0; i < points.length; i++) {
+                    var closest = [];
+                    var p1 = points[i];
+                    for(var j = 0; j < points.length; j++) {
+                        var p2 = points[j]
+                        if(!(p1 == p2)) {
+                            var placed = false;
+                            for(var k = 0; k < 6; k++) {
+                                if(!placed) {
+                                    if(closest[k] == undefined) {
+                                        closest[k] = p2;
+                                        placed = true;
+                                    }
+                                }
+                            }
+
+                            for(var k = 0; k < 6; k++) {
+                                if(!placed) {
+                                    if(getDistance(p1, p2) < getDistance(p1, closest[k])) {
+                                        closest[k] = p2;
+                                        placed = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    p1.closest = closest;
+                }
+
+                // assign a circle to each point
+                for(var i in points) {
+                    var c = new Circle(points[i], 2+Math.random()*10, 'rgba(255,255,255,0.3)');
+                    points[i].circle = c;
+                }
+            }
+
+            // Event handling
+            function addListeners() {
+                if(!('ontouchstart' in window)) {
+                    window.addEventListener('mousemove', mouseMove);
+                }
+                window.addEventListener('scroll', scrollCheck);
+                window.addEventListener('resize', resize);
+            }
+
+            function mouseMove(e) {
+                var posx = posy = 0;
+                if (e.pageX || e.pageY) {
+                    posx = e.pageX;
+                    posy = e.pageY;
+                }
+                else if (e.clientX || e.clientY)    {
+                    posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+                    posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+                }
+                target.x = posx;
+                target.y = posy;
+            }
+
+            function scrollCheck() {
+                if(document.body.scrollTop > height) animateHeader = false;
+                else animateHeader = true;
+            }
+
+            function resize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+
+            // animation
+            function initAnimation() {
+                animate();
+                for(var i in points) {
+                    shiftPoint(points[i]);
+                }
+            }
+
+            function animate() {
+                if(animateHeader) {
+                    ctx.clearRect(0,0,width,height);
+                    for(var i in points) {
+                        // detect points in range
+                        if(Math.abs(getDistance(target, points[i])) < 4000) {
+                            points[i].active = 0.3;
+                            points[i].circle.active = 0.8;
+                        } else if(Math.abs(getDistance(target, points[i])) < 20000) {
+                            points[i].active = 0.1;
+                            points[i].circle.active = 0.5;
+                        } else if(Math.abs(getDistance(target, points[i])) < 40000) {
+                            points[i].active = 0.02;
+                            points[i].circle.active = 0.3;
+                        } else {
+                            points[i].active = 0;
+                            points[i].circle.active = 0;
+                        }
+
+                        drawLines(points[i]);
+                        points[i].circle.draw();
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+
+            function shiftPoint(p) {
+                TweenLite.to(p, 1+1*Math.random(), {x:p.originX-50+Math.random()*100,
+                    y: p.originY-50+Math.random()*100, ease:Circ.easeInOut,
+                    onComplete: function() {
+                        shiftPoint(p);
+                    }});
+            }
+
+            // Canvas manipulation
+            function drawLines(p) {
+                if(!p.active) return;
+                for(var i in p.closest) {
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p.closest[i].x, p.closest[i].y);
+                    ctx.strokeStyle = 'rgba(156,217,249,'+ p.active+')';
+                    ctx.stroke();
+                }
+            }
+
+            function Circle(pos,rad,color) {
+                var _this = this;
+
+                // constructor
+                (function() {
+                    _this.pos = pos || null;
+                    _this.radius = rad || null;
+                    _this.color = color || null;
+                })();
+
+                this.draw = function() {
+                    if(!_this.active) return;
+                    ctx.beginPath();
+                    ctx.arc(_this.pos.x, _this.pos.y, _this.radius, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = 'rgba(156,217,249,'+ _this.active+')';
+                    ctx.fill();
+                };
+            }
+
+            // Util
+            function getDistance(p1, p2) {
+                return Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);
+            }
 
         });
     </script>
@@ -70,31 +283,34 @@
 </head>
 <body>
 
-
+<div id="content-box">
 <ul id="menu">
-    <li data-menuanchor="home"><a href="#home">InfraNodus</a></li>
-    <li data-menuanchor="features"><a href="#features">Effects</a></li>
-    <li data-menuanchor="usecases"><a href="#usecases">Use Cases</a></li>
-    <li data-menuanchor="graphs"><a href="#graphs">Graphs</a></li>
-    <li data-menuanchor="about"><a href="#about">Origins</a></li>
+    <li data-menuanchor="home"><a href="#home" class="menuhit">InfraNodus</a></li>
+    <li data-menuanchor="features"><a href="#features" class="menuhit">Features</a></li>
+    <li data-menuanchor="usecases"><a href="#usecases" class="menuhit">Solutions</a></li>
+    <li data-menuanchor="graphs"><a href="#graphs" class="menuhit">Graphs</a></li>
+    <li data-menuanchor="about"><a href="#about" class="menuhit">Origins</a></li>
 </ul>
+</div>
 
 
 <div id="fullpage">
     <div class="section " id="section0">
-        <h1>InfraNodus</h1>
+        <canvas id="demo-canvas" height="100%" width="100vh"></canvas>
+        <div class="intro"> <h1>InfraNodus</h1>
         <p>See how it all connects.</p>
 
         <ul id="menu" class="profile">
             <li><a href="/login">Enter</a></li>
             <li><a href="/signup">Join</a></li>
         </ul>
+            </div>
     </div>
     <div class="section" id="section1">
         <div class="slide">
             <div class="intro">
-                <h1>Network Perspective</h1>
-                <p>Visualize connections between your thoughts, ideas and notes to identify common patterns and trends.</p>
+                <h1>Speech to Network</h1>
+                <p>Reveal patterns in text, identify main topics, generate ideas.</p>
                 <br>&nbsp;
                 <!--<iframe src="//coub.com/embed/5uv90?muted=false&autostart=false&originalSize=false&hideTopBar=true&startWithHD=false" allowfullscreen="true" frameborder="0" width="100%" height="100%"></iframe>-->
             </div>
@@ -102,8 +318,8 @@
         </div>
         <div class="slide">
             <div class="intro">
-                <h1>Meaningful Interactions</h1>
-                <p>Visualize your conversations as a graph to collaborate, brainstorm, or for mutual inspiration.</p>
+                <h1>Memory Graph</h1>
+                <p>Connect new ideas to each other to keep track of them better.</p>
                 <br>&nbsp;
                 <!--<iframe src="//coub.com/embed/5r18a?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="100%" height="100%"></iframe>-->
             </div>
@@ -112,7 +328,7 @@
             <div class="intro">
                 <!--<h1>Augmented Perception</h1>-->
                 <h1>Nonlinear Reading</h1>
-                <p>Quickly find the fragments you need and see them in context.</p>
+                <p>Quickly find the fragments in context, weave your own narratives.</p>
                 <br>&nbsp;
                 <!--<iframe src="//coub.com/embed/5r0tt?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="100%" height="100%"></iframe>-->
             </div>
@@ -120,8 +336,8 @@
         <div class="slide">
             <div class="intro">
                 <!--<h1>Cognitive Enrichment</h1>-->
-                <h1>Divinatory Intelligence</h1>
-                <p>Use the visual metaphor of a network to get divinatory perspective on any complex phenomena.</p>
+                <h1>Graph Talk</h1>
+                <p>Visual feedback on conversations to never lose track of ideas.</p>
                 <br>&nbsp;
                 <!--<iframe src="//coub.com/embed/5r18a?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="100%" height="100%"></iframe>-->
             </div>
@@ -139,54 +355,58 @@
     <div class="section" id="section2">
         <div class="slide">
             <div class="intro">
-                <h1>InfraNodus for Writing</h1>
-                <p>Visualize connections between your ideas and notes to create coherent texts with strong narratives.</p>
-                <br>&nbsp;
+                <h1>Thinking</h1>
+                <p>Visualize connections between your thoughts to make sense of them.</p>
                 <ul id="menu" class="profile">
-                    <li><a href="http://noduslabs.com/cases/how-to-write-essay-inspiration-text-network-visualization/" target="_blank">Learn More</a></li>
+                    <li><a href="http://noduslabs.com/cases/how-to-write-essay-inspiration-text-network-visualization/" target="_blank">Tutorial</a></li>
                 </ul>
             </div>
         </div>
         <div class="slide">
             <div class="intro">
-                <h1>InfraNodus for Research</h1>
-                <p>Save important excerpts and notes into the network graph to get a better idea about the commonalities and differences between them. </p>
+                <h1>Writing</h1>
+                <p>Organize and store disjointed bits and pieces of information.</p>
                 <!--<p>Discover patterns in your ideas, excerpts and notes, gaining a better understanding of your research field.</p>-->
-                <br>&nbsp;
                 <ul id="menu" class="profile">
-                    <li><a href="http://noduslabs.com/cases/connect-ideas-research-notes-graph/" target="_blank">Learn More</a></li>
+                    <li><a href="http://noduslabs.com/cases/connect-ideas-research-notes-graph/" target="_blank">Tutorial</a></li>
                 </ul>
             </div>
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <h1>Research</h1>
+                <p>Identify gaps in your knowledge to ask the right questions. .</p>
+                <!--<p>Discover patterns in your ideas, excerpts and notes, gaining a better understanding of your research field.</p>-->
+                <ul id="menu" class="profile">
+                    <li><a href="http://noduslabs.com/cases/connect-ideas-research-notes-graph/" target="_blank">Tutorial</a></li>
+                </ul>
+            </div>
+        </div>
 
-        </div>
-
         <div class="slide">
             <div class="intro">
-                <h1>InfraNodus for SEO</h1>
-                <p>Discover the clusters of keyword topics that relate to your target search queries, improve your SEO rankings.</p>
-                <br>&nbsp;
+                <h1>SEO</h1>
+                <p>Find the right combinations of keywords to boost SEO levels.</p>
                 <ul id="menu" class="profile">
-                    <li><a href="http://noduslabs.com/cases/seo-tutorial-keyword-visualization-search-engine-optimization/" target="_blank">Learn More</a></li>
+                    <li><a href="http://noduslabs.com/cases/seo-tutorial-keyword-visualization-search-engine-optimization/" target="_blank">Tutorial</a></li>
                 </ul>
             </div>
         </div>
         <div class="slide">
             <div class="intro">
-                <h1>InfraNodus for Psychotherapy</h1>
-                <p>Text network visualization will help map the conversation and reveal the new choices.</p>
-                <br>&nbsp;
+                <h1>Dialogue</h1>
+                <p>Using visual feedback to bring in more choices into a conversation.</p>
                 <ul id="menu" class="profile">
-                    <li><a href="http://noduslabs.com/cases/text-network-visualization-psychotherapy/" target="_blank">Learn More</a></li>
+                    <li><a href="http://noduslabs.com/cases/text-network-visualization-psychotherapy/" target="_blank">Tutorial</a></li>
                 </ul>
             </div>
         </div>
         <div class="slide">
             <div class="intro">
-                <h1>InfraNodus for Discourse Analysis</h1>
-                <p>Analyze any discourse: from Twitter timeline to political speeches to identify main topics and relations between them.</p>
-                <br>&nbsp;
+                <h1>SMM</h1>
+                <p>Quick visual summary of online discourse.</p>
                 <ul id="menu" class="profile">
-                    <li><a href="http://noduslabs.com/cases/twitter-xray-text-network-analysis/" target="_blank">Learn More</a></li>
+                    <li><a href="http://noduslabs.com/cases/twitter-xray-text-network-analysis/" target="_blank">Tutorial</a></li>
                 </ul>
             </div>
         </div>
