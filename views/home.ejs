@@ -21,18 +21,7 @@
 
             /* Sections
              * --------------------------------------- */
-        #section0 img,
-        #section1 img{
-            margin: 20px 0 0 0;
-        }
-        #section2 img{
-            margin: 20px 0 0 52px;
-        }
-        #section3 img{
-            bottom: 0px;
-            position: absolute;
-            margin-left: -420px;
-        }
+
         .intro p{
             width: 50%;
             margin: 0 auto;
@@ -104,7 +93,7 @@
             $('#fullpage').fullpage({
                 anchors: ['home', 'features', 'usecases', 'graphs', 'about'],
                 menu: '#menu',
-                scrollingSpeed: 1000,
+                scrollOverflow: true,
                 responsive: 800
             });
 
@@ -115,6 +104,8 @@
                 $('#content-box').animate({scrollLeft: moveby-10}, 800);
                 return true;
             });
+
+
 
             var width, height, canvas, ctx, points, target, animateHeader = true;
 
@@ -333,11 +324,28 @@
                 <div class="video">
                     <div class="videoclick">
                         <ul class="submenu">
-                            <li><a href="https://vimeo.com/126090432" class="demo" data-featherlight="#video" target="_blank">Demo</a></li>
+                            <li><a href="https://vimeo.com/126090432" class="demo" data-featherlight="#video1" target="_blank">Demo</a></li>
                         </ul>
                     </div>
-                    <div class="videoframe" id="video">
+                    <div class="videoframe" id="video1">
                         <iframe src="https://player.vimeo.com/video/126090432?title=0&byline=0&portrait=0" width="270" height="420" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="slide">
+            <div class="intro">
+                <h1>Import</h1>
+                <p>Evernote notes and Twitter posts visualized as a graph.</p>
+                <div class="video">
+                    <div class="videoclick">
+                        <ul class="submenu">
+                            <li><a href="https://vimeo.com/126149696" class="demo" data-featherlight="#video2" target="_blank">Demo</a></li>
+                        </ul>
+                    </div>
+                    <div class="videoframe" id="video2">
+                        <iframe src="https://player.vimeo.com/video/126149696?title=0&byline=0&portrait=0" width="300" height="464" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -347,8 +355,16 @@
             <div class="intro">
                 <h1>Memory Graph</h1>
                 <p>Connect new ideas to each other to keep track of them better.</p>
-                <br>&nbsp;
-                <!--<iframe src="//coub.com/embed/5r18a?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="100%" height="100%"></iframe>-->
+                <div class="video">
+                    <div class="videoclick">
+                        <ul class="submenu">
+                            <li><a href="https://vimeo.com/126170773" class="demo" data-featherlight="#video3" target="_blank">Demo</a></li>
+                        </ul>
+                    </div>
+                    <div class="videoframe" id="video3">
+                        <iframe src="https://player.vimeo.com/video/126170773?title=0&byline=0&portrait=0" width="270" height="420" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="slide">
@@ -356,8 +372,16 @@
                 <!--<h1>Augmented Perception</h1>-->
                 <h1>Nonlinear Reading</h1>
                 <p>Quickly find the fragments in context, weave your own narratives.</p>
-                <br>&nbsp;
-                <!--<iframe src="//coub.com/embed/5r0tt?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="100%" height="100%"></iframe>-->
+                <div class="video">
+                    <div class="videoclick">
+                        <ul class="submenu">
+                            <li><a href="https://vimeo.com/126167185" class="demo" data-featherlight="#video4" target="_blank">Demo</a></li>
+                        </ul>
+                    </div>
+                    <div class="videoframe" id="video4">
+                        <iframe src="https://player.vimeo.com/video/126167185?title=0&byline=0&portrait=0" width="270" height="420" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="slide">
@@ -368,10 +392,10 @@
                 <div class="video">
                     <div class="videoclick">
                         <ul class="submenu">
-                            <li><a href="https://vimeo.com/126086402" class="demo" data-featherlight="#video" target="_blank">Demo</a></li>
+                            <li><a href="https://vimeo.com/126086402" class="demo" data-featherlight="#video5" target="_blank">Demo</a></li>
                         </ul>
                     </div>
-                    <div class="videoframe" id="video">
+                    <div class="videoframe" id="video5">
                         <iframe src="https://player.vimeo.com/video/126086402?autoplay=0&title=0&byline=0&portrait=0" width="270" height="420" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
                     </div>
                 </div>
@@ -383,10 +407,23 @@
     <div class="section" id="section2">
         <div class="slide">
             <div class="intro">
+                <h1>Learning</h1>
+                <p>Find the gaps in your knowledge to know what questions to ask.</p>
+                <ul class="submenu">
+                    <li><a href="http://noduslabs.com/cases/connect-ideas-research-notes-graph/">Tutorial</a></li>
+                    <li><a href="https://vimeo.com/126172472" class="demo" data-featherlight="#video6" target="_blank">Demo</a></li>
+                </ul>
+                <div class="videoframe" id="video6">
+                    <iframe src="https://player.vimeo.com/video/126172472?autoplay=0&title=0&byline=0&portrait=0" width="270" height="420" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="intro">
                 <h1>Thinking</h1>
                 <p>Visualize connections between your thoughts to make sense of them.</p>
                 <ul class="submenu">
-                    <li><a href="http://noduslabs.com/cases/how-to-write-essay-inspiration-text-network-visualization/" target="_blank">Tutorial</a></li>
+                    <li><a href="http://noduslabs.com/cases/how-to-write-essay-inspiration-text-network-visualization/">Tutorial</a></li>
                 </ul>
             </div>
         </div>
@@ -396,7 +433,7 @@
                 <p>Organize and store disjointed bits and pieces of information.</p>
                 <!--<p>Discover patterns in your ideas, excerpts and notes, gaining a better understanding of your research field.</p>-->
                 <ul class="submenu">
-                    <li><a href="http://noduslabs.com/cases/connect-ideas-research-notes-graph/" target="_blank">Tutorial</a></li>
+                    <li><a href="http://noduslabs.com/cases/connect-ideas-research-notes-graph/">Tutorial</a></li>
                 </ul>
             </div>
         </div>
@@ -406,7 +443,7 @@
                 <p>Identify gaps in your knowledge to ask the right questions.</p>
                 <!--<p>Discover patterns in your ideas, excerpts and notes, gaining a better understanding of your research field.</p>-->
                 <ul class="submenu">
-                    <li><a href="http://noduslabs.com/cases/connect-ideas-research-notes-graph/" target="_blank">Tutorial</a></li>
+                    <li><a href="http://noduslabs.com/cases/connect-ideas-research-notes-graph/">Tutorial</a></li>
                 </ul>
             </div>
         </div>
@@ -416,7 +453,7 @@
                 <h1>SEO</h1>
                 <p>Find the right combinations of keywords to boost SEO levels.</p>
                 <ul class="submenu">
-                    <li><a href="http://noduslabs.com/cases/seo-tutorial-keyword-visualization-search-engine-optimization/" target="_blank">Tutorial</a></li>
+                    <li><a href="http://noduslabs.com/cases/seo-tutorial-keyword-visualization-search-engine-optimization/">Tutorial</a></li>
                 </ul>
             </div>
         </div>
@@ -425,7 +462,7 @@
                 <h1>Dialogue</h1>
                 <p>Using visual feedback to bring in more choices into a conversation.</p>
                 <ul class="submenu">
-                    <li><a href="http://noduslabs.com/cases/text-network-visualization-psychotherapy/" target="_blank">Tutorial</a></li>
+                    <li><a href="http://noduslabs.com/cases/text-network-visualization-psychotherapy/">Tutorial</a></li>
                 </ul>
             </div>
         </div>
@@ -434,56 +471,96 @@
                 <h1>SMM</h1>
                 <p>Quick visual summary of online discourse.</p>
                 <ul class="submenu">
-                    <li><a href="http://noduslabs.com/cases/twitter-xray-text-network-analysis/" target="_blank">Tutorial</a></li>
+                    <li><a href="http://noduslabs.com/cases/twitter-xray-text-network-analysis/">Tutorial</a></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="section" id="section3">
         <div class="intro">
-           <!-- <div class="slide">
-                <div class="inside">
-                    <iframe width="100%" height="100%" class="embed" src="https://infranodus.com/infragraph/philosophy?go_next_site=wikipedia&hide_always=1&link_hashtags=1&go_next_override=1&maxnodes=40" frameborder="0" allowfullscreen></iframe>
+
+                    <div class="embed">
+
+                            <div class="graphshowcase">
+                                <div class="intrograph"><a href="/login">+ add yours</a></div>
+                                <div class="graphwindow"><span class="Centerer"></span><a href="/login"><img src="/images/sample-graph-add.png" border="0" width="220" height="220"></a></div>
+                            </div>
+                            <div class="graphshowcase">
+                                <div class="intrograph"><a href="/infragraph/hitech?hide_when_small=1">hitech companies</a></div>
+                                <div class="graphwindow"><span class="Centerer"></span><a href="/infragraph/hitech?hide_when_small=1"><img src="/images/sample-graph-infragraph-hitech.png" border="0"></a></div>
+                            </div>
+                            <div class="graphshowcase">
+                                <div class="intrograph"> <a href="/travel/berlin?hide_when_small=1">best places in berlin</a>       </div>
+                                <div class="graphwindow"><span class="Centerer"></span><a href="/travel/berlin?hide_when_small=1"><img src="/images/sample-graph-travel-berlin.png" border="0"></a></div>
+                            </div>
+                            <div class="graphshowcase">
+                                <div class="intrograph"> <a href="/admin/research?hide_when_small=1">research notes</a>   </div>
+                                <div class="graphwindow"><span class="Centerer"></span><a href="/admin/research?hide_when_small=1"><img src="/images/sample-graph-admin-research.png" border="0"></a></div>
+                            </div>
+                            <div class="graphshowcase">
+                                <div class="intrograph"> <a href="/amazon/deepSurvival?hide_when_small=1">kindle book highlights</a></div>
+                                <div class="graphwindow"><span class="Centerer"></span><a href="/amazon/deepSurvival?hide_when_small=1"><img src="/images/sample-graph-amazon-deepSurvival.png" border="0"></a></div>
+                            </div>
+                            <div class="graphshowcase">
+                                <div class="intrograph"> <a href="/evernote/polysingularity?hide_when_small=1">public evernote notes</a></div>
+                                <div class="graphwindow"><span class="Centerer"></span><a href="/evernote/polysingularity?hide_when_small=1"><img src="/images/sample-graph-evernote-polysingularity.png" border="0"></a></div>
+                            </div>
+                            <div class="graphshowcase">
+                                <div class="intrograph"> <a href="/evernote/polysingularity?hide_always=1&go_next_url=http://polysingularity.com/?s=">excerpts from a website</a></div>
+                                <div class="graphwindow"><span class="Centerer"></span><a href="/evernote/polysingularity?hide_always=1&go_next_url=http://polysingularity.com/?s="><img src="/images/sample-graph-evernote-polysingularity.png" border="0"></a></div>
+                            </div>
+                            <div class="graphshowcase">
+                                <div class="intrograph"> <a href="/musicgraph/labels?go_next_site=soundcloud&link_hashtags=1&hide_always=1&go_next_override=1">electronic music labels</a>   </div>
+                                <div class="graphwindow"><span class="Centerer"></span><a href="/musicgraph/labels?go_next_site=soundcloud&link_hashtags=1&hide_always=1&go_next_override=1"><img src="/images/sample-graph-musicgraph-labels.png" border="0"></a></div>
+                            </div>
+                            <div class="graphshowcase">
+                                <div class="intrograph"> <a href="/waytorussia/writers?go_next_site=wikipedia&hide_always=1&link_hashtags=1&go_next_override=1">russian writers</a> </div>
+                                <div class="graphwindow"><span class="Centerer"></span><a href="/waytorussia/writers?go_next_site=wikipedia&hide_always=1&link_hashtags=1&go_next_override=1"><img src="/images/sample-graph-waytorussia-writers.png" border="0"></a></div>
+                            </div>
+                            <div class="graphshowcase">
+                                <div class="intrograph"> <a href="/twittergraph/datavizgraph?go_next_site=twitter&hide_when_small=1">tweets with #dataviz</a>    </div>
+                                <div class="graphwindow"><span class="Centerer"></span><a href="/twittergraph/datavizgraph?go_next_site=twitter&hide_when_small=1"><img src="/images/sample-graph-twittergraph-datavizgraph.png" border="0"></a></div>
+                            </div>
+                            <div class="graphshowcase">
+                                <div class="intrograph"> <a href="/infragraph/philosophy?go_next_site=wikipedia&hide_always=1&link_hashtags=1&go_next_override=1">philosophers</a>    </div>
+                                <div class="graphwindow"><span class="Centerer"></span><a href="/infragraph/philosophy?go_next_site=wikipedia&hide_always=1&link_hashtags=1&go_next_override=1"><img src="/images/sample-graph-infragraph-philosophy.png" border="0"></a></div>
+                            </div>
+                            <div class="graphshowcase">
+                                <div class="intrograph"> <a href="/tarot?hide_when_small=1">tarot cards connections</a>   </div>
+                                <div class="graphwindow"><span class="Centerer"></span><a href="/tarot?hide_when_small=1"><img src="/images/sample-graph-tarot.png" border="0"></a></div>
+                            </div>
+                            <div class="graphshowcase">
+                                <div class="intrograph"> <a href="http://noduslabs.com/network-graphs/" target="_blank">see more graphs</a>   </div>
+                                <div class="graphwindow"><span class="Centerer"></span><a href="http://noduslabs.com/network-graphs/"><img src="/images/sample-graph-question.png" border="0"></a></div>
+                            </div>
+
+                    </div>
                     <div class="overlay">
                         <div class="intro">
-                            <h2>Philosophers Graph</h2>
-                            <p class="caption">The relations show which philosophers people search for together more often.</p>
+                            <h2>Network Graphs</h2>
+                            <p class="caption">Share your data as a network graph to emphasize the connections.</p>
                             <ul class="submenu">
-                                <li><a href="https://infranodus.com/infragraph/philosophy?go_next_site=wikipedia&hide_always=1&link_hashtags=1&go_next_override=1" target="_blank">Explore</a></li>
+                                <li><a href="http://noduslabs.com/network-graphs/">Gallery</a></li>
                             </ul>
                         </div>
                     </div>
-                </div>
-            </div>-->
-            <div class="slide">
-                <div class="intro">
-                    <h1>Explore Topics</h1>
-                    <p>Use the graphs to explore and share various topics.</p>
-                    <br>&nbsp;
 
-                </div>
-            </div>
-            <div class="slide">
-                <div class="intro">
-                    <h1>Explore</h1>
-                    <p>Explore more graphs with explanation.</p>
-                    <br>&nbsp;
-                    <ul class="submenu">
-                        <li><a href="http://noduslabs.com/network-graphs/" target="_blank">Learn More</a></li>
-                    </ul>
-                </div>
-            </div>
+
         </div>
     </div>
     <div class="section" id="section4">
         <div class="intro">
-            <h1>Working On Tablets</h1>
-            <p>
-                Designed to fit to different screen sizes as well as tablet and mobile devices.
-                <br /><br /><br /><br /><br /><br />
-            </p>
+            <h1>About</h1>
+            <p class="caption">InfraNodus is a free open-source cognitive reconfiguration tool made by <a href="http://www.noduslabs.com" target="_blank">Nodus Labs</a>.
+            <br><br>Contact us (@noduslabs) to get an <a href="http://noduslabs.com/features/invite/" target="_blank">invitation code</a> to use this online version or install it on your computer from <a href="http://github.com/noduslabs/infranodus" target="_blank">GitHub</a>.<br>
+                <br>InfraNodus runs on <a href="http://www.neo4j.org" target="_blank" rel="nofollow">Neo4J</a> graph database,
+                <br><a href="http://www.sigmajs.org" target="_blank" rel="nofollow">Sigma.Js</a> graph visualization library,
+                <br>Node.Js and uses
+                <br><a href="http://www.textexture.com" target="_blank">Textexture text network analysis algorithm</a>.
+            <br><br>
+            Save interesting text excerpts into a graph: drag this bookmarklet into your browser's toolbar: <a style="cursor: move;" href="javascript:var a=window,b=document,c=encodeURIComponent,s='';s=document.getSelection().toString();if(s!=''){d=a.open('https://infranodus.com/bookmarks/edit?url='+c(b.location)+'&urltitle='+c(s),'bkmk_popup','left='+((a.screenX||a.screenLeft)+10)+',top='+((a.screenY||a.screenTop)+10)+',height=420px,width=550px,resizable=1,alwaysRaised=1');}else{d=a.open('https://infranodus.com/bookmarks/edit?url='+c(b.location)+'&urltitle='+c(b.title),'bkmk_popup','left='+((a.screenX||a.screenLeft)+10)+',top='+((a.screenY||a.screenTop)+10)+',height=420px,width=550px,resizable=1,alwaysRaised=1');}a.setTimeout(function(){d.focus()},300);">GraphMark</a></p>
+
         </div>
-        <img src="imgs/tablets.png" alt="tablets" />
     </div>
 </div>
 

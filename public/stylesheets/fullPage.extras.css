@@ -385,6 +385,29 @@ p{
 
  /* From InfraNodus */
 
+.intrograph {
+    font: 20px 'IstokWeb-Bold',sans-serif;
+    color: #000;
+    max-width: 95%;
+
+}
+
+.intrograph a {
+    font: 18px 'IstokWeb-Bold',sans-serif;
+    color: #000;
+    max-width: 95%;
+    text-decoration: none;
+
+}
+
+
+.intrograph a:hover {
+    font: 18px 'IstokWeb-Bold',sans-serif;
+    color: #0089E0;
+    max-width: 95%;
+    text-decoration: underline;
+}
+
 
 .graphshowcase{
     width: 240px;
@@ -425,7 +448,7 @@ p{
 }
 
 .embed {
-    position: absolute; top:10%; left:0; width: 100vw; height: 60%;
+    position: absolute; top:10%; left:0; width: 100vw; height: 60%; overflow: scroll;
 }
 
 .overlay {
