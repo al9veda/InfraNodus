@@ -40,6 +40,7 @@ exports.settings = {
 
 }
 
+/*
 exports.defaultstatements = {
     f: 'every note can be saved in several contexts or lists. these notes are in the "help" context - click the context name in the left sidebar and then scroll down to delete the context with all the notes.',
     e: 'to get started, import your tweets, evernote and gmail / iphone notes using the import function in the left sidebar.',
@@ -48,6 +49,7 @@ exports.defaultstatements = {
     b: 'this is a note. click it once to see it in the graph. double-click it to edit or to delete.',
     a: 'welcome! using infranodus you can discover how your different notes and ideas connect using a graph.'
 }
+*/
 
 
 // Config file exists?
