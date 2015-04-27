@@ -98,18 +98,44 @@ p{
         font-size:1.3em!important;
     }
 
+    .videoframe {
+        display: none;
+    }
+    .videoclick {
+        display: block!important;
+    }
 
+    .intro {
+
+        padding-bottom:10%;
+
+    }
+
+}
+
+.videoclick {
+    display: none;
+}
+
+.videoframe {
+    margin-top: 20px;
 }
 
 .caption {
     font-size: 1.2em!important;
 }
 
+
+
+
+
+
 .intro p{
 	width: 50%;
 	margin: 0 auto;
 	font-size: 1.5em;
 }
+
 
 .ontop {
     z-index:100!important;
@@ -118,6 +144,10 @@ p{
     top: 30%;
     left: 0;
     position:absolute!important;
+}
+
+.video {
+   position: relative;
 }
 
 .section{
@@ -181,11 +211,49 @@ p{
 
 }
 
-.profile {
+.submenu {
     position: relative!important;
     margin-top: 20px!important;
     width: 100%!important;
+    top:0;
+    left:0;
+    height: 40px;
+    z-index: 70;
 }
+
+.submenu li {
+    display:inline-block;
+    margin: 10px;
+    color: #000;
+    background:#fff;
+    background: rgba(255,255,255, 0.5);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+.submenu li.active{
+    background:#666;
+    background: rgba(0,0,0, 0.5);
+    color: #fff;
+}
+.submenu li a{
+    text-decoration:none;
+    color: #000;
+}
+.submenu li.active a:hover{
+    color: #000;
+}
+.submenu li:hover{
+    background: rgba(255,255,255, 0.8);
+}
+.submenu li a,
+.submenu li.active a{
+    padding: 9px 18px;
+    display:block;
+}
+.submenu li.active a{
+    color: #fff;
+}
+
 .twitter-share-button{
 	position: fixed;
 	z-index: 99;

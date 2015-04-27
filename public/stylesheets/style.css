@@ -424,8 +424,11 @@ a:hover.app-more-link {
     z-index: -1;
     padding-left: 40px;
     padding-right: 40px;
+/*
     background-color: #e9e9e6;
+*/
 
+    background-color: #f0ecec;
 
 }
 

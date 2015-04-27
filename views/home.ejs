@@ -13,6 +13,8 @@
 
     <link rel="stylesheet" type="text/css" href="/stylesheets/jquery.fullPage.css" />
     <link rel="stylesheet" type="text/css" href="/stylesheets/fullPage.extras.css" />
+    <link type="text/css" rel="stylesheet" href="/stylesheets/featherlight.css" title="Featherlight Styles" />
+
 
 
     <style>
@@ -75,6 +77,11 @@
             background: -webkit-linear-gradient(#92a1ca, #76c2bd);
             background: linear-gradient(#7BAABE,#969AC6);
         }
+        #slide5{
+            background: -webkit-gradient(linear, top left, bottom left, from(#92a1ca), to(#76c2bd));
+            background: -webkit-linear-gradient(#92a1ca, #76c2bd);
+            background: linear-gradient(#a0c6f5,#f9dfeb);
+        }
 
 
     </style>
@@ -87,6 +94,8 @@
     <script src="/javascripts/jquery.min.js"></script>
     <script src="/javascripts/jquery-ui.min.js"></script>
     <script src="/javascripts/TweenLite.min.js"></script>
+    <script src="/javascripts/featherlight.js"></script>
+
     <script src="/javascripts/EasePack.min.js"></script>
 
     <script type="text/javascript" src="/javascripts/jquery.fullPage.js"></script>
@@ -310,7 +319,7 @@
         <div class="ontop">
             <h1>InfraNodus</h1>
             <p>See how it all connects.</p>
-            <ul id="menu" class="profile">
+            <ul class="submenu">
             <li><a href="/login">Enter</a></li>
             <li><a href="/signup">Join</a></li>
             </ul>
@@ -321,8 +330,16 @@
             <div class="intro">
                 <h1>Speech to Network</h1>
                 <p>Reveal patterns in text, identify main topics, generate ideas.</p>
-                <br>&nbsp;
-                <!--<iframe src="//coub.com/embed/5uv90?muted=false&autostart=false&originalSize=false&hideTopBar=true&startWithHD=false" allowfullscreen="true" frameborder="0" width="100%" height="100%"></iframe>-->
+                <div class="video">
+                    <div class="videoclick">
+                        <ul class="submenu">
+                            <li><a href="https://vimeo.com/126090432" class="demo" data-featherlight="#video" target="_blank">Demo</a></li>
+                        </ul>
+                    </div>
+                    <div class="videoframe" id="video">
+                        <iframe src="https://player.vimeo.com/video/126090432?title=0&byline=0&portrait=0" width="270" height="420" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -348,8 +365,16 @@
                 <!--<h1>Cognitive Enrichment</h1>-->
                 <h1>Graph Talk</h1>
                 <p>Visual feedback on conversations to never lose track of ideas.</p>
-                <br>&nbsp;
-                <!--<iframe src="//coub.com/embed/5r18a?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="100%" height="100%"></iframe>-->
+                <div class="video">
+                    <div class="videoclick">
+                        <ul class="submenu">
+                            <li><a href="https://vimeo.com/126086402" class="demo" data-featherlight="#video" target="_blank">Demo</a></li>
+                        </ul>
+                    </div>
+                    <div class="videoframe" id="video">
+                        <iframe src="https://player.vimeo.com/video/126086402?autoplay=0&title=0&byline=0&portrait=0" width="270" height="420" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -360,7 +385,7 @@
             <div class="intro">
                 <h1>Thinking</h1>
                 <p>Visualize connections between your thoughts to make sense of them.</p>
-                <ul id="menu" class="profile">
+                <ul class="submenu">
                     <li><a href="http://noduslabs.com/cases/how-to-write-essay-inspiration-text-network-visualization/" target="_blank">Tutorial</a></li>
                 </ul>
             </div>
@@ -370,7 +395,7 @@
                 <h1>Writing</h1>
                 <p>Organize and store disjointed bits and pieces of information.</p>
                 <!--<p>Discover patterns in your ideas, excerpts and notes, gaining a better understanding of your research field.</p>-->
-                <ul id="menu" class="profile">
+                <ul class="submenu">
                     <li><a href="http://noduslabs.com/cases/connect-ideas-research-notes-graph/" target="_blank">Tutorial</a></li>
                 </ul>
             </div>
@@ -380,7 +405,7 @@
                 <h1>Research</h1>
                 <p>Identify gaps in your knowledge to ask the right questions.</p>
                 <!--<p>Discover patterns in your ideas, excerpts and notes, gaining a better understanding of your research field.</p>-->
-                <ul id="menu" class="profile">
+                <ul class="submenu">
                     <li><a href="http://noduslabs.com/cases/connect-ideas-research-notes-graph/" target="_blank">Tutorial</a></li>
                 </ul>
             </div>
@@ -390,16 +415,16 @@
             <div class="intro">
                 <h1>SEO</h1>
                 <p>Find the right combinations of keywords to boost SEO levels.</p>
-                <ul id="menu" class="profile">
+                <ul class="submenu">
                     <li><a href="http://noduslabs.com/cases/seo-tutorial-keyword-visualization-search-engine-optimization/" target="_blank">Tutorial</a></li>
                 </ul>
             </div>
         </div>
-        <div class="slide">
+        <div class="slide" id="slide5">
             <div class="intro">
                 <h1>Dialogue</h1>
                 <p>Using visual feedback to bring in more choices into a conversation.</p>
-                <ul id="menu" class="profile">
+                <ul class="submenu">
                     <li><a href="http://noduslabs.com/cases/text-network-visualization-psychotherapy/" target="_blank">Tutorial</a></li>
                 </ul>
             </div>
@@ -408,7 +433,7 @@
             <div class="intro">
                 <h1>SMM</h1>
                 <p>Quick visual summary of online discourse.</p>
-                <ul id="menu" class="profile">
+                <ul class="submenu">
                     <li><a href="http://noduslabs.com/cases/twitter-xray-text-network-analysis/" target="_blank">Tutorial</a></li>
                 </ul>
             </div>
@@ -423,7 +448,7 @@
                         <div class="intro">
                             <h2>Philosophers Graph</h2>
                             <p class="caption">The relations show which philosophers people search for together more often.</p>
-                            <ul id="menu" class="profile">
+                            <ul class="submenu">
                                 <li><a href="https://infranodus.com/infragraph/philosophy?go_next_site=wikipedia&hide_always=1&link_hashtags=1&go_next_override=1" target="_blank">Explore</a></li>
                             </ul>
                         </div>
@@ -443,7 +468,7 @@
                     <h1>Explore</h1>
                     <p>Explore more graphs with explanation.</p>
                     <br>&nbsp;
-                    <ul id="menu" class="profile">
+                    <ul class="submenu">
                         <li><a href="http://noduslabs.com/network-graphs/" target="_blank">Learn More</a></li>
                     </ul>
                 </div>
