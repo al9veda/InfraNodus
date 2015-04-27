@@ -36,13 +36,13 @@
                     <p>Please, log in below or <a href="/signup">sign up</a>.</p>
                     <% include messages %>
                     <form action='/login' method='post' class="pure-form pure-form-stacked">
-
                             <p>
                             <input type='text' name='username' placeholder='username' />
                             </p>
                             <p>
                             <input type='password' name='password' placeholder='password' />
                             </p>
+                            <input type='hidden' name='redirect' id="redirect" value=""/>
                             <p>
                             <button type='submit' class="pure-button pure-button-primary">log in</button>
                             </p>
@@ -172,13 +172,34 @@
     );
 
 
+    $(document).ready(function(){
+    function getUrlVars()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+
+    var redirect = getUrlVars()["redirect"];
+
+    $('#redirect').val(redirect);
 
 
+    });
 
 
 
 
 })();
+
+
+
 </script>
 
 <script src="/javascripts/ui.js"></script>

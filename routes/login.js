@@ -26,7 +26,6 @@ exports.form = function(req, res){
 
 // when user accesses /login page with POST, authenticate the user
 exports.submit = function(req, res, next){
-
     passport.authenticate('local', function(err, user, info) {
         if (err) { return next(err) }
         if (!user) {
@@ -39,7 +38,15 @@ exports.submit = function(req, res, next){
         }
         req.logIn(user, function(err) {
             if (err) { return next(err); }
-            return res.redirect('/' + user.name +'/edit');
+
+            var _redirect = req.body.redirect;
+
+            if (_redirect) {
+                return res.redirect(_redirect);
+            }
+            else {
+                return res.redirect('/' + user.name +'/edit');
+            }
         });
     })(req, res, next);
 
