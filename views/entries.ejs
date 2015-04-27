@@ -589,6 +589,8 @@ function submitFormProcess() {
                         $('#statement').removeClass('loading');
                         $('#submitbutton').removeAttr('disabled');
                         socket.emit('chat message', {postedby: postedby, entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
+                        // This function will see what it has to say
+                        infraTalk(5000);
                     }
                     else if (res.errormsg) {
                         $('#statement').removeClass('loading');
@@ -1146,7 +1148,7 @@ sigma.parsers.json(
 
                 if (!selfPosted) {
 
-                    added_entry =  "<div class='entry' style='display: none; margin-left: 50px' data-uid='" + msg.entryuid + "'><p class='entry-text gray'>" + msg.entrytext + "</p><p class='entry-date gray'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
+                    added_entry =  "<div class='entry alien' style='display: none; margin-left: 50px' data-uid='" + msg.entryuid + "'><p class='entry-text gray'>" + msg.entrytext + "</p><p class='entry-date gray'>" + moment().format('DD/MM/YYYY, h:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
 
                     // We will set a user for receiving. If the posting user does not equal the user who's watching the graph, we force-add the statement into theirs (provided they collaborate)
                     var receivedby = '';
@@ -1794,6 +1796,7 @@ sigma.parsers.json(
         // If it's NOT some other user watching the graph, then statements can be edited. Otherwise - no.
         <% if (!perceivername) { %>
         entryDoubleClick();
+        infraTalk();
         <% } %>
 
 
@@ -2292,6 +2295,35 @@ sigma.parsers.json(
 
     });
     }
+
+    // Initial conversation with the user - HELP of a sorts
+
+    function infraTalk (timer) {
+        if (!timer) {
+            var timer = 3000;
+        }
+        var utterance = '';
+        var vocabulary = [
+            "Let's start from a clear page... What are you interested in thinking about?",
+            "Can you say something else about it?"
+        ];
+
+        var visibleentries_current = $(".entry:visible").length;
+        var alienentries_current = $(".entry.alien:visible").length;
+        if (!visibleentries_current || visibleentries_current == null) {
+            visibleentries_current = 0;
+        }
+        var pose = visibleentries_current;
+        console.log(pose);
+        utterance = vocabulary[pose];
+        if (utterance) {
+            setTimeout(function() {
+                socket.emit('chat message', {mute: 1, postedby: 'infratalk', entryuid: '', entrytext: utterance, graph: ''});
+            }, timer);
+        }
+
+    }
+
 
     // Filter out the statements that don't have any of the nodes clicked
 
