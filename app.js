@@ -89,7 +89,7 @@ if ('development' == app.get('env')) {
 
 app.get('/signup', register.form);
 app.post('/signup', register.submit);
-app.get('/login', login.form);
+app.get('/login', pass.checkLogin, login.form);
 
 // POST /login
 //   This is an alternative implementation that uses a custom callback to
