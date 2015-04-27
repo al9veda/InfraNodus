@@ -39,7 +39,7 @@ exports.submit = function(req, res, next){
         req.logIn(user, function(err) {
             if (err) { return next(err); }
 
-            var _redirect = req.body.redirect;
+            var _redirect = decodeURIComponent(req.body.redirect);
 
             if (_redirect) {
                 return res.redirect(_redirect);
