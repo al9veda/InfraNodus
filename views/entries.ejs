@@ -908,7 +908,7 @@ sigma.parsers.json(
             // if not, we're making the 'private' context default
             else {
                 var lastcontexts = [];
-                var laststatement = $(".entry:first").attr('data-uid');
+                var laststatement = $(".entry:last").attr('data-uid');
                 console.log(laststatement);
                 for (var key in statementsOfContext) {
                     var reiteratestatements = statementsOfContext[key];
@@ -1716,7 +1716,7 @@ sigma.parsers.json(
                 // if not, we're making the 'private' context default
                 else {
                     var lastcontexts = [];
-                    var laststatement = $(".entry:first").attr('data-uid');
+                    var laststatement = $(".entry:last").attr('data-uid');
                     console.log(laststatement);
                     for (var key in statementsOfContext) {
                         var reiteratestatements = statementsOfContext[key];
@@ -2130,7 +2130,7 @@ sigma.parsers.json(
                     // if not, we're making the 'private' context default
                     else {
                         var lastcontexts = [];
-                        var laststatement = $(".entry:first").attr('data-uid');
+                        var laststatement = $(".entry:last").attr('data-uid');
                         console.log(laststatement);
                         for (var key in statementsOfContext) {
                             var reiteratestatements = statementsOfContext[key];
