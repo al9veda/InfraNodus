@@ -77,13 +77,10 @@
                 <ul id="topmenuitems">
 
                     <li>
-                        <a id="finds" class="switcher set1">find</a>
+                        <a id="finds" class="switcher set1">search</a>
                     </li>
                     <li class="pure-menu-selected-top">
-                        <a id="adds" class="switcher set1">add</a>
-                    </li>
-                    <li>
-                        <a id="imports" href="/import?context=<%= context %>">import</a>
+                        <a id="adds" class="switcher set1">chat</a>
                     </li>
 
 
@@ -152,7 +149,7 @@
                 <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
                         <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='type in some words or #hashtags to see how they connect'><% if (url) { %><%= urltitle %> <%= url %><% } %></textarea>
-                        <div id="addToContextsLabel">sets:</div>
+                        <div id="addToContextsLabel">systems:</div>
                         <ul id="addToContexts"></ul>
                         <input type="hidden" id="addedContexts" name="addedContexts">
                         <input type="hidden" id="context" name="context" value="<%= context %>">
@@ -160,7 +157,7 @@
                         <input type="hidden" id="statementid" name="statementid" value="">
                         <input type="hidden" name="timestamp" value="">
                         &nbsp;<br>
-                        <input type='submit' id="submitbutton" name="btnSubmit" value="save" class="pure-button pure-button-primary">
+                        <input type='submit' id="submitbutton" name="btnSubmit" value="send" class="pure-button pure-button-primary">
 
                 </form>
 

@@ -35,7 +35,7 @@ appears on the left side of the page.
     top: 0;
     left: 0;
     bottom: 0;
-    background: #191818;
+    background: #111111;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     z-index: 5;
@@ -116,8 +116,7 @@ small screens.
     display: block; /* show this only on small screens */
     top: 0;
     left: 0; /* "#menu width" */
-    background: #000;
-    background: rgba(0,0,0,0.7);
+    background: rgba(80,80,80,0.5);
     font-size: 8px; /* change this value to increase/decrease button size */
     width: 2em;
     height: auto;
@@ -127,7 +126,7 @@ small screens.
 
     .menu-link:hover,
     .menu-link:focus {
-        background: #000;
+        background: rgba(80,80,80,0.5);
     }
 
     .menu-link span {

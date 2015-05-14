@@ -27,7 +27,8 @@
 
 
 body {
-    font: 16px 'IstokWeb-Bold',sans-serif;
+    font: 16px 'Helvetica',sans-serif;
+    color: #bbbbbb;
 }
 
 a {
@@ -98,7 +99,7 @@ textarea:focus {
 }
 
 .entry {
-    font: 17px 'IstokWeb-Bold',sans-serif;
+    font: 17px 'Helvetica',sans-serif;
     color: #000;
     width: 85%;
     text-align:left;
@@ -109,17 +110,17 @@ textarea:focus {
     min-width: 160px;
     min-height: 10px;
     margin-left: 2px;
-    background-color: rgba(250, 250, 250, 0.9);
+    background-color: rgba(250, 250, 250, 0.1);
     border-radius: 5px;
-    box-shadow: 0px 1px 1px 2px #f3f4f6;
+/*    box-shadow: 0px 1px 1px 2px #f3f4f6;*/
     word-wrap: break-word;
     pointer-events: auto!important;
 }
 
 
 .entry-text {
-    font: 17px 'IstokWeb-Bold',sans-serif;
-    color: #000;
+    font: 17px 'Helvetica',sans-serif;
+    color: #cccccc;
     max-width: 95%;
 }
 
@@ -130,7 +131,7 @@ textarea:focus {
 
 .entry-date {
     float: left;
-    font: 14px 'IstokWeb-Regular',sans-serif;
+    font: 14px 'Helvetica',sans-serif;
     color: #444;
     margin-top: -1em;
     margin-bottom: 2em;
@@ -138,7 +139,7 @@ textarea:focus {
 }
 .entry-menu {
     float: left;
-    font: 14px 'IstokWeb-Regular',sans-serif;
+    font: 14px 'helvetica',sans-serif;
     color: #444;
     margin-top: -1em;
     margin-bottom: 2em;
@@ -182,7 +183,7 @@ a:hover.app-concept-link {
 a.app-context-link {
     text-decoration: none;
     color: #999;
-    font: 'IstokWeb-Regular',sans-serif;
+    font: 'Helvetica',sans-serif;
 
 }
 a:hover.app-context-link {
@@ -217,7 +218,7 @@ a:hover.app-more-link {
 }
 
 .contexts {
-    font: 17px 'IstokWeb-Bold',sans-serif;
+    font: 17px 'Helvetica',sans-serif;
     color: #666;
 }
 
@@ -231,7 +232,7 @@ a:hover.app-more-link {
 }
 
 #concepts {
-    font: 17px 'IstokWeb-Bold',sans-serif;
+    font: 17px 'Helvetica',sans-serif;
     color: #666;
 }
 
@@ -246,7 +247,7 @@ a:hover.app-more-link {
 
 
 #messages {
-    font: 17px 'IstokWeb-Bold',sans-serif;
+    font: 17px 'Helvetica',sans-serif;
     color: #4b9dff;
     margin-right: 20px;
     clear: both;
@@ -379,7 +380,7 @@ a:hover.app-more-link {
 #entryform {
     position: fixed;
     bottom: 0;
-    background-color: rgba(250, 250, 250, 0.9);
+    background-color: rgba(250, 250, 250, 0.2);
     width: 340px;
     border-radius: 8px;
     padding-top: 10px;
@@ -566,7 +567,7 @@ body {
 .pure-button {
     /* Structure */
     display: inline-block;
-    font: 16px 'IstokWeb-Bold',sans-serif;
+    font: 16px 'Helvetica',sans-serif;
     *display: inline; /*IE 6/7*/
     zoom: 1;
     line-height: normal;
@@ -597,12 +598,12 @@ body {
     *font-size: 90%; /*IE 6/7 - To reduce IE's oversized button text*/
     *overflow: visible; /*IE 6/7 - Because of IE's overly large left/right padding on buttons */
     padding: 0.36em 1.5em 0.36em;
-    color: #373434; /* rgba not supported (IE 8) */
+    color: #cccccc; /* rgba not supported (IE 8) */
     /* color: rgba(0, 0, 0, 0.80); rgba supported */
     /* *color: #444; IE 6 & 7 */
     border: 1px solid #d7d5d5; /*IE 6/7/8*/
     border: none rgba(0, 0, 0, 0); /*IE9 + everything else*/
-    background-color: #e6e5e5;
+    background-color: #888888;
     text-decoration: none;
     border-radius: 3px;
     -webkit-font-smoothing: antialiased;
@@ -663,7 +664,7 @@ body {
 a.pure-button-primary,
 a.pure-button-selected {
     background-color: C8C6C6;
-    color: #030202;
+    color: #ffffff;
 }
 
 /*! Copyright 2013 Yahoo! Inc. http://yuilibrary.com/license/ */
@@ -1297,7 +1298,7 @@ Forms Core
 
 .pure-menu a,
 .pure-menu .pure-menu-can-have-children > li:after {
-    color: #4f4f4f;
+    color: #999999;
 }
 
 .pure-menu .pure-menu-can-have-children > li:hover:after {
@@ -1311,7 +1312,10 @@ Forms Core
 
 .pure-menu li a:hover,
 .pure-menu li a:focus {
-    background: #dedede;
+    background: #555555;
+    border-radius: 5px;
+    color: #adadad;
+
 }
 
 /* DISABLED STATES */
@@ -1346,14 +1350,16 @@ Forms Core
 
 /* SELECTED MENU ITEM */
 .pure-menu li.pure-menu-selected a {
-    background-color: C8C6C6;
+    background-color: cccccc;
     color: #171616;
+
 }
 
 /* SELECTED MENU ITEM */
 .pure-menu li.pure-menu-selected-top a {
-    background-color: #efefef;
-    color: #171616;
+    background-color: #666666   ;
+    color: #cccccc;
+    border-radius: 5px;
 }
 
 
