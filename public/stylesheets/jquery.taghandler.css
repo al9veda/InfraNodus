@@ -41,7 +41,9 @@
 }
 .tagHandler ul.tagHandlerContainer input.tagInputField {
     box-sizing: border-box;
-    border: none;
+    border-style: none!important;
+    border-color: transparent!important;
+    border-width: 0!important;
     background-color: #666;
     width: 2em;
     color: #000;
