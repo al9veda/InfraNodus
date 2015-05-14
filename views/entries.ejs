@@ -710,7 +710,8 @@ sigma.parsers.json(
                 maxNodeSize: 16,
                 minEdgeSize: 0.5,
                 maxEdgeSize: 2,
-                labelThreshold: 8
+                labelThreshold: 8,
+                defaultLabelColor: '#fff'
             }
         },
         function(sigma) {
@@ -718,8 +719,8 @@ sigma.parsers.json(
             var i,
                     timeout = 4000,
                     nodes = sigma.graph.nodes(),
-                    color_context = '#666',
-                    color_addcontext = '#666688',
+                    color_context = '#fff',
+                    color_addcontext = '#ccc',
                     len = nodes.length;
 
 
