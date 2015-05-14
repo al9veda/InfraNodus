@@ -378,6 +378,15 @@ small screens.
     z-index: 10;
 }
 
+#logo {
+    position: fixed;
+    bottom: -45px;
+    text-align: right;
+    right: 15px; /* "#menu width" */
+    height: 80px;
+    z-index: 15;
+}
+
 #graph-reload {
     position: fixed;
     top: 0px;
