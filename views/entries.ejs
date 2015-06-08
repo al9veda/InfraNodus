@@ -157,8 +157,6 @@
                 <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
                         <textarea columns="40" rows="4" name='entry[body]' id="statement"><% if (url) { %><%= urltitle %> <%= url %><% } %></textarea>
-                        <div id="addToContextsLabel">in constellation:</div>
-                        <ul id="addToContexts"></ul>
                         <input type="hidden" id="addedContexts" name="addedContexts">
                         <input type="hidden" id="context" name="context" value="<%= context %>">
                         <input type="hidden" id="selectedContexts" name="selectedContexts" value="">
@@ -2875,11 +2873,11 @@ sigma.parsers.json(
 
         <% if (perceivername) { %>
 
-            currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/<%= perceivername %>">all sets</a></li>';
+            currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/<%= perceivername %>">constellations</a></li>';
 
         <% } else { %>
 
-            currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/<%= user.name %>/edit">all sets</a></li>';
+            currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/<%= user.name %>/edit">constellations</a></li>';
 
         <% } %>
 
@@ -2894,10 +2892,10 @@ sigma.parsers.json(
                     // for the menu
                     <% if (perceivername) { %>
                         context_filters += '<li class="app-context-link menu-item-divided pure-menu-selected"><a href="/<%= perceivername %>/' + n + '">' + n + '</a></li>';
-                        currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/<%= perceivername %>">all sets</a></li>';
+                        currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/<%= perceivername %>">constellations</a></li>';
                     <% } else { %>
                         context_filters += '<li class="app-context-link menu-item-divided pure-menu-selected"><a href="/<%= user.name %>/' + n + '/edit">' + n + '</a></li>';
-                        currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/<%= user.name %>/edit">all sets</a></li>';
+                        currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/<%= user.name %>/edit">constellations</a></li>';
                     <% } %>
 
                 }
