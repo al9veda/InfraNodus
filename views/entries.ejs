@@ -71,8 +71,8 @@
 
 
              <% if (entries.length == 0) { %>
-                 <div id="helpnotice">To start a constelversation, share this permanent link. Bookmark and come back at any time.<br><br>
-                     <form class="pure-form"><input type="text" id="collabinvite" size="22" maxlength="80" class="pure-input" value=""></form>
+                 <div id="helpnotice">To start a constelversation, send this permanent link to your partner. Bookmark and come back at any time.<br><br>
+                     <form class="pure-form"><input type="text" id="collabinvite" size="30" maxlength="80" class="pure-input" value=""></form>
                  </div>
              <% } %>
               <div id="entryform">
@@ -1458,7 +1458,7 @@ sigma.parsers.json(
         });
 
 
-        collaborate_message = '<a href="mailto:chat@infranodus.com?subject=Chat%20Now&body=http://' + graph_share_url + '/edit?collaborate=' + collaborate_id + '">Invite us</a> or other people for a real-time constellaversation – just share the link below:<br>';
+        collaborate_message = '<a href="mailto:chat@infranodus.com?subject=Chat%20Now&body=http://' + graph_share_url + '/edit?collaborate=' + collaborate_id + '">Invite us</a> or other people for a real-time constelversation – just share the link below:<br>';
 
         collaborate_html = '<span><form class="pure-form">' + collaborate_message + '<input type="text" id="collaburl" size="22" maxlength="80" class="pure-input" value="http://' + graph_share_url + '/edit?collaborate=' + collaborate_id + '"></form></span>';
 
@@ -1519,7 +1519,7 @@ sigma.parsers.json(
                         setTimeout(function() {
                             $('#collaborate-link').tooltipster('content', collab_content);
                         }, 1000);
-                    }, 2000);
+                    }, 7000);
                 }
                 else if (times_seen > 15) {
                     localStorage.setItem('TooltipSeen', 1);

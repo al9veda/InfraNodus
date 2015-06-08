@@ -498,6 +498,15 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         max-height: 80px!important;
     }
 
+    #logo {
+        position: fixed;
+        top: 7px;
+        text-align: left;
+        left: 50px; /* "#menu width" */
+        height: 80px;
+        z-index: 15;
+    }
+
 
 
 }
