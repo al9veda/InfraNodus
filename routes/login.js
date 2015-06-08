@@ -17,6 +17,7 @@
 // request methods available for User objects
 var User = require('../lib/user');
 var passport = require('passport');
+var leetspeak = require('leetspeak');
 
 
 // when user accesses /login page with GET, populate login template view with data
@@ -40,12 +41,13 @@ exports.submit = function(req, res, next){
             if (err) { return next(err); }
 
             var _redirect = decodeURIComponent(req.body.redirect);
+            var _context = leetspeak('');
 
             if (_redirect) {
                 return res.redirect(_redirect);
             }
             else {
-                return res.redirect('/' + user.name +'/edit');
+                return res.redirect('/' + user.name + '/' + _context + '/edit');
             }
         });
     })(req, res, next);
