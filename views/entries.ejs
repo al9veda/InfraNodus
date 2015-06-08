@@ -64,9 +64,17 @@
                      <% include messages %>
                      <div id="warnings"></div>
                      <div id="messages"></div>
-             </div>
 
 
+
+                 </div>
+
+
+             <% if (entries.length == 0) { %>
+                 <div id="helpnotice">To start a constelversation, share this permanent link. Bookmark and come back at any time.<br><br>
+                     <form class="pure-form"><input type="text" id="collabinvite" size="22" maxlength="80" class="pure-input" value=""></form>
+                 </div>
+             <% } %>
               <div id="entryform">
 
 
@@ -148,7 +156,7 @@
             <% } %>
                 <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
-                        <textarea columns="40" rows="4" name='entry[body]' id="statement" placeholder='type in some words or #hashtags to see how they connect'><% if (url) { %><%= urltitle %> <%= url %><% } %></textarea>
+                        <textarea columns="40" rows="4" name='entry[body]' id="statement"><% if (url) { %><%= urltitle %> <%= url %><% } %></textarea>
                         <div id="addToContextsLabel">systems:</div>
                         <ul id="addToContexts"></ul>
                         <input type="hidden" id="addedContexts" name="addedContexts">
@@ -193,7 +201,7 @@
         </div>
         <div id="controls">
                 <div id="graph-reload">
-                <a href="javascript:" id="go_next"><img src="/images/eyezoom.png"  title="choose a few nodes from the graph and click this button to find out more" vspace="0" border="0"></a><br><a href="javascript:location.reload();"><img src="/images/reload.png" title="clear and reload graph" vspace="6" border="0"></a><br><a href="javascript:" id="improve-layout"><img src="/images/diamond.png" title="improve graph layout" vspace="3" border="0"></a>
+                <a href="javascript:location.reload();"><img src="/images/reload.png" title="clear and reload graph" vspace="6" border="0"></a><br><a href="javascript:" id="improve-layout"><img src="/images/diamond.png" title="improve graph layout" vspace="3" border="0"></a>
 
         </div>
 
@@ -590,8 +598,7 @@ function submitFormProcess() {
                         $('#statement').removeClass('loading');
                         $('#submitbutton').removeAttr('disabled');
                         socket.emit('chat message', {postedby: postedby, entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
-                        // This function will see what it has to say
-                        infraTalk(5000);
+
                     }
                     else if (res.errormsg) {
                         $('#statement').removeClass('loading');
@@ -821,6 +828,11 @@ sigma.parsers.json(
                 }
 
 
+                // If no nodes are shown on the graph, we get the dummy from JSON, do not show it
+
+                if (n.id == 'dummy') {
+                    n.color = '#000000';
+                }
 
                 // Save node's default color, for hide and show later
                 n.originalColor = n.color;
@@ -828,6 +840,7 @@ sigma.parsers.json(
 
                 // Creating an index of node labels to IDs for filtering
                 nodeIDs[n.label] = n.id;
+
 
                 //console.log(n);
 
@@ -1304,6 +1317,13 @@ sigma.parsers.json(
 
                     sigma.refresh();
 
+
+                    if ($('.entry').length < 2) {
+                        sigma.camera.goTo({
+                            ratio: sigma.camera.ratio * 2 * sigma.camera.settings('zoomingRatio')
+                        });
+                    }
+
                     sigma.startForceAtlas2();
 
                     // Don't run it forever not to overheat :)
@@ -1443,6 +1463,11 @@ sigma.parsers.json(
         collaborate_html = '<span><form class="pure-form">' + collaborate_message + '<input type="text" id="collaburl" size="22" maxlength="80" class="pure-input" value="http://' + graph_share_url + '/edit?collaborate=' + collaborate_id + '"></form></span>';
 
         collaborate_content = $(collaborate_html);
+
+        $('#collabinvite').val('http://' + graph_share_url + '/edit?collaborate=' + collaborate_id);
+        $('#collabinvite').click(function () {
+            $(this).select();
+        });
 
         $('#collaborate-link').tooltipster({
             theme: 'tooltipster-noir',
@@ -1822,7 +1847,6 @@ sigma.parsers.json(
 
 
 
-        infraTalk();
         <% } %>
 
 
@@ -2315,44 +2339,7 @@ sigma.parsers.json(
     });
     }
 
-    // Initial conversation with the user - HELP of a sorts
 
-    function infraTalk (timer) {
-        if (localStorage.getItem('disablehelp') != 1) {
-        if (!timer) {
-            var timer = 3000;
-        }
-        var utterance = '';
-        var vocabulary = [];
-
-        if (!current_context) {
-            vocabulary = [
-                "Let's start from a clear page... What are you interested in thinking about?",
-                "Can you say something else about it?"
-            ];
-        }
-        else {
-            vocabulary = [
-                "To start, write your ideas, import data, or invite somebody to collaborate using the icon below..."
-            ];
-            timer = 10000;
-        }
-
-        var visibleentries_current = $(".entry:visible").length;
-
-        if (!visibleentries_current || visibleentries_current == null) {
-            visibleentries_current = 0;
-        }
-        var pose = visibleentries_current;
-        utterance = vocabulary[pose];
-        if (utterance) {
-            setTimeout(function() {
-                socket.emit('chat message', {mute: 1, postedby: 'infratalk', entryuid: '', entrytext: utterance, graph: '', help: 1});
-            }, timer);
-        }
-        }
-
-    }
 
 
     // Filter out the statements that don't have any of the nodes clicked
