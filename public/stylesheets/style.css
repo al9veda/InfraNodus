@@ -125,6 +125,7 @@ textarea:focus {
 /*    box-shadow: 0px 1px 1px 2px #f3f4f6;*/
     word-wrap: break-word;
     pointer-events: auto!important;
+    margin-left: 50px;
 }
 
 
@@ -366,6 +367,7 @@ a:hover.app-more-link {
     padding-left: 50px;
     z-index: 1;
     overflow:hidden;
+    border-radius: 10px;
 
 /*    pointer-events: none;*/
 }

@@ -1151,7 +1151,7 @@ sigma.parsers.json(
 
                 if (!selfPosted) {
 
-                    added_entry =  "<div class='entry alien' style='display: none; margin-left: 50px' data-uid='" + msg.entryuid + "'><p class='entry-text gray'>" + msg.entrytext + "</p><p class='entry-date gray'>by " + posted_by + " at " + moment().format('hh:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
+                    added_entry =  "<div class='entry alien' style='display: none; margin-left: 0px;!important' data-uid='" + msg.entryuid + "'><p class='entry-text gray'>" + msg.entrytext + "</p><p class='entry-date gray'>by " + posted_by + " at " + moment().format('hh:mm:ss') + "</p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
 
                     if (msg.help) {
                         added_entry =  "<div class='entry alien' style='display: none; margin-left: 50px' data-uid='" + msg.entryuid + "'><p class='entry-text gray'>" + msg.entrytext + "</p><p class='entry-date gray'>help tip &nbsp;<em></em><a href='javascript:' class='disablehelp'>disable</a></em></p><div class='separator'>&nbsp;</div><div id='" + msg.entryuid + "' class='hidden'></div></div>";
@@ -3308,7 +3308,7 @@ sigma.parsers.json(
 
                     }
                         else  {
-                            n.color = '#ddd';
+                            n.color = '#333';
                             n.label = '';
                         }
                 });
