@@ -157,7 +157,7 @@
                 <form action='/post' name='submitform' id="submitform" method='post' class='pure-form'>
 
                         <textarea columns="40" rows="4" name='entry[body]' id="statement"><% if (url) { %><%= urltitle %> <%= url %><% } %></textarea>
-                        <div id="addToContextsLabel">systems:</div>
+                        <div id="addToContextsLabel">in constellation:</div>
                         <ul id="addToContexts"></ul>
                         <input type="hidden" id="addedContexts" name="addedContexts">
                         <input type="hidden" id="context" name="context" value="<%= context %>">
@@ -440,6 +440,8 @@ var collaborate_html = '';
 
 var collaborate_storage = JSON.parse(localStorage.getItem("collaborate"));
 
+var collaboration_activated = '';
+
 // If the user opened a URL with collaborate=xxxxxx then they join the room that's the "url_path/xxxxxx"
 if (collaborate_invite) {
     collaborate_id = collaborate_invite;
@@ -491,6 +493,8 @@ if (!collaborate_invite) {
                 }, 1000);
 
             }, 2000);
+
+            $('#helpnotice').hide();
         }
     });
 
@@ -1415,6 +1419,8 @@ sigma.parsers.json(
 // Auto-resize to fill content;
 
     $(document).ready(function(){
+
+
 
         $('.tooltip').tooltipster({
             theme: 'tooltipster-noir',
