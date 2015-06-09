@@ -8,7 +8,7 @@
 
 =================
 
-### UN1V3R53 is based on [InfraNodus text network visualization software]((http://github.com/noduslabs/infranodus)
+### UN1V3R53 is based on [InfraNodus text network visualization software](http://github.com/noduslabs/infranodus)
 
 [Try it Online](http://un1v3r53.com) - request invitation code through [Nodus Labs](http://noduslabs.com/contact/)
 
