@@ -588,8 +588,15 @@ function submitFormProcess() {
         <% } %>
         // TODO make it possible that those statements get submitted in both graphs
 
+
+        var urlRegex =/((\#\#\#)|(\/me))/ig;
+
+        var infraExtract = urlRegex.exec($('#statement').val());
+
+
+
         // is urlvars mute off? then post as usual
-        if (!mute) {
+        if (!mute && infraExtract == null) {
         $.post('/post', $("#submitform").serialize())
                 .done(function(res) {
                     //3. Receive the server response, no need to emit an event
@@ -621,8 +628,8 @@ function submitFormProcess() {
             selfPosted = '1';
             $('#statement').removeClass('loading');
             $('#submitbutton').removeAttr('disabled');
-            $("#statement").val('');
             socket.emit('chat message', {mute: 1, postedby: postedby, entryuid: '', entrytext: $('#statement').val(), graph: ''});
+            $("#statement").val('');
         }
 
         return false;
