@@ -32,7 +32,7 @@
 
 
             <div id="content">
-                <div id="statements" style="background: white;">
+                <div id="statements">
                     <p>Please, log in below or <a href="/signup">sign up</a>.</p>
                     <% include messages %>
                     <form action='/login' method='post' class="pure-form pure-form-stacked">
@@ -53,7 +53,7 @@
 
                 </div>
 
-                <div id="graph-container" style="background: white;"></div>
+                <div id="graph-container" style="background: black;"></div>
 
 
             </div>
@@ -115,8 +115,8 @@
                 var i,
                         timeout = 4000,
                         nodes = sigma.graph.nodes(),
-                        color_context = '#666',
-                        color_addcontext = '#666688',
+                        color_context = '#fff',
+                        color_addcontext = '#fff',
                         len = nodes.length;
 
 

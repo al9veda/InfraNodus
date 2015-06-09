@@ -8,6 +8,7 @@
 #layout {
     position: relative;
     padding-left: 0;
+    background-color: #000000;
 }
 #layout.active {
     position: relative;
