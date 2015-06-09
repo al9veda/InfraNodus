@@ -136,8 +136,13 @@ textarea:focus {
 }
 
 .gray {
-    opacity: 0.5;
+    opacity: 0.7;
    /* padding-left: 50px;*/
+}
+.muted{
+    opacity: 0.5;
+    font-style: italic;
+    /* padding-left: 50px;*/
 }
 
 .entry-date {
