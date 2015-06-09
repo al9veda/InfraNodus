@@ -194,6 +194,9 @@ var chat = io.on('connection', function(socket){
     socket.on('node click', function(msg){
         socket.broadcast.to(socket.room).emit('node click', msg);
     });
+    socket.on('typing', function(msg){
+        socket.broadcast.to(socket.room).emit('typing', msg);
+    });
     socket.on('login', function(data){
 
         var room = findClientsSocket(io, data.id);

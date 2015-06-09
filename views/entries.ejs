@@ -1226,6 +1226,7 @@ sigma.parsers.json(
                     selfPosted = null;
                 }
 
+                $("#typing").remove();
                 $(added_entry).appendTo($('#entries')).slideDown("fast");
                 $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
 
@@ -1830,6 +1831,46 @@ sigma.parsers.json(
         });
 
         search_graph();
+
+
+        // Start 'is typing' message
+
+        var typing = false;
+        var timeout = undefined;
+
+        function timeoutFunction() {
+            typing = false;
+            socket.emit('typing', {isTyping: false});
+        }
+
+        $("#statement").keypress(function(e){
+            console.log("smth");
+            if (e.which !== 13) {
+                if (typing === false && $("#statement").is(":focus")) {
+                    typing = true;
+                    console.log('a');
+                    socket.emit('typing', {isTyping: true});
+                } else {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(timeoutFunction, 5000);
+                }
+            }
+        });
+
+
+        socket.on('typing', function(msg) {
+            if (msg.isTyping === true) {
+                $("#entries").append('<div id="typing">typing...</div>');
+                $("#entries").animate({ scrollTop: $('#entries')[0].scrollHeight }, 1000);
+                timeout = setTimeout(timeoutFunction, 5000);
+            } else {
+                $("#typing").remove();
+            }
+        });
+
+
+
+        // End typing
 
         // Make texarea automatically resizeable
         $('textarea').autosize();
