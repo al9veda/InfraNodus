@@ -607,6 +607,7 @@ function submitFormProcess() {
                         $("#statement").val('');
                         $('#statement').removeClass('loading');
                         $('#submitbutton').removeAttr('disabled');
+                        $('#helpnotice').hide();
                         socket.emit('chat message', {postedby: postedby, entryuid: JSON.parse(res.entryuid).data, entrytext: res.entrytext, graph: res.graph});
 
                     }
@@ -1361,7 +1362,13 @@ sigma.parsers.json(
             socket.on('delete message', function(msg){
 
 
+
                 $('[data-uid="' + msg.entryuid + '"]').fadeOut();
+
+                if ($('.entry:visible').length <= 1) {
+                    $('#helpnotice').show();
+                }
+
 
                 $("#statement").val('');
 
@@ -1857,11 +1864,9 @@ sigma.parsers.json(
         }
 
         $("#statement").keypress(function(e){
-            console.log("smth");
             if (e.which !== 13) {
                 if (typing === false && $("#statement").is(":focus")) {
                     typing = true;
-                    console.log('a');
                     socket.emit('typing', {isTyping: true});
                 } else {
                     clearTimeout(timeout);
@@ -2290,7 +2295,6 @@ sigma.parsers.json(
                                     $("#warnings").slideUp('slow');
                                     $("#warnings").text('');
                                 },2000);
-
 
                             }
                             else if (res.errormsg) {
