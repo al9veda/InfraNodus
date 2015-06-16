@@ -13,8 +13,8 @@
     <script src="/javascripts/jquery.content-panel-switcher.js"></script>
     <link rel="stylesheet" type="text/css" href="/stylesheets/tooltipster.css" />
     <link rel="stylesheet" type="text/css" href="/stylesheets/tooltipster-noir.css" />
-
-
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache" />
 
 </head>
 <body>
@@ -71,8 +71,11 @@
 
 
              <% if (entries.length == 0) { %>
-                 <div id="helpnotice">To start a constelversation, send this permanent link to your partner. Bookmark and come back at any time.<br><br>
-                     <form class="pure-form"><input type="text" id="collabinvite" size="30" maxlength="80" class="pure-input" value=""></form>
+                 <div id="helpnotice">To start a constelversation, send this permanent link to your partner. Bookmark and come back at any time. <br><br>
+                     <form class="pure-form"><input type="text" id="collabinvite" size="25" maxlength="80" class="pure-input" value=""></form> <br>
+<!--
+                     <div id="showarchive"></div>
+-->
                  </div>
              <% } %>
               <div id="entryform">
@@ -1440,7 +1443,6 @@ sigma.parsers.json(
     $(document).ready(function(){
 
 
-
         $('.tooltip').tooltipster({
             theme: 'tooltipster-noir',
             position: 'left',
@@ -1490,6 +1492,7 @@ sigma.parsers.json(
         collaborate_content = $(collaborate_html);
 
         $('#collabinvite').val('http://' + graph_share_url + '/edit?collaborate=' + collaborate_id);
+        /*$('#showarchive').append('<a href="/' + current_user + '/edit">all constelversations</a>');*/
         $('#collabinvite').click(function () {
             $(this).select();
         });
@@ -3598,7 +3601,9 @@ sigma.parsers.json(
 </script>
 
 
-
+             <iframe style="height:0px;width:0px;visibility:hidden" src="about:blank">
+                 this frame prevents back forward cache
+             </iframe>
 
 <% include statsbelow %>
 </body>

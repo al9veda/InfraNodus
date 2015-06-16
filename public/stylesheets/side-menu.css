@@ -321,7 +321,7 @@ small screens.
 
 .chat-highlight:hover {
 
-    background: rgba(0,0,0,0.7)!important;
+    background: rgba(31,141,214,1)!important;
     background-image: url('../images/chatwhite.png')!important;
     background-repeat:no-repeat!important;
     background-position:center!important;
@@ -476,7 +476,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     }
 
     #chat-link:hover {
-        background: rgba(0,0,0,0.1);
+       /* background: rgba(0,0,0,0.1);*/
         background-image: url('../images/close.png');
         background-repeat:no-repeat;
         background-position:center;
@@ -493,6 +493,10 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 
     #entryform {
         max-width: 261px;
+    }
+
+    #helpnotice {
+        max-width: 200px;
     }
 
     textarea {
