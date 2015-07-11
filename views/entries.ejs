@@ -90,7 +90,10 @@
                         <a id="finds" class="switcher set1">search</a>
                     </li>
                     <li class="pure-menu-selected-top">
-                        <a id="adds" class="switcher set1">write</a>
+                        <a id="adds" class="switcher set1">add</a>
+                    </li>
+                    <li>
+                        <a id="newdream" href="javascript:">+ new</a>
                     </li>
 
 
@@ -165,7 +168,7 @@
                         <input type="hidden" id="statementid" name="statementid" value="">
                         <input type="hidden" name="timestamp" value="">
                         &nbsp;<br>
-                        <input type='submit' id="submitbutton" name="btnSubmit" value="add" class="pure-button pure-button-primary">
+                        <input type='submit' id="submitbutton" name="btnSubmit" value="save" class="pure-button pure-button-primary">
 
                 </form>
 
@@ -196,9 +199,7 @@
                     <!-- Chat icon -->
                     <span></span>
                 </a>
-        <div id="logo">
-            <img src="/images/un1v3r53.png" border="0">
-        </div>
+
         <div id="controls">
                 <div id="graph-reload">
                 <a href="javascript:location.reload();"><img src="/images/reload.png" title="clear and reload graph" vspace="6" border="0"></a><br><a href="javascript:" id="improve-layout"><img src="/images/diamond.png" title="improve graph layout" vspace="3" border="0"></a>
@@ -1152,6 +1153,21 @@ sigma.parsers.json(
                 else {
                     alert("Click this after you select a few nodes to find them on the web.");
                 }
+
+
+
+            });
+
+
+            // Forward from the new graph button
+
+            $("#newdream").on('click', function(e) {
+
+                e.preventDefault();
+                var newdreamdate = new Date();
+                var newdreamlink = newdreamdate.toISOString().slice(0,16).replace(/-|:|T/g,"");
+
+                window.open('/' + current_user + '/' + newdreamlink + '/edit','_self');
 
 
 
@@ -3030,7 +3046,7 @@ sigma.parsers.json(
                         '<li class="menu-item-small"><a href="/api/public/nodes/<%= perceivername %>/<%= context %>?gexf=1" target="_blank">export</a></li>' +
                         '<li class="menu-item-small"><a href="http://noduslabs.com/infranodus/" target="_blank">about</a></li>' +
                         '<li class="menu-item-small"><a href="http://noduslabs.com/contact/" target="_blank">contact</a></li>' +
-                        '<li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">help &amp; github</a></li>';
+                        '';
 
 
             <% } else if (receivername) { %>
@@ -3044,7 +3060,7 @@ sigma.parsers.json(
                         '<li class="menu-item-small"><a href="/api/user/nodes/<%= context %>?gexf=1" target="_blank">export</a></li>' +
                         '<li class="menu-item-small"><a href="http://noduslabs.com/infranodus/" target="_blank">about</a></li>' +
                         '<li class="menu-item-small"><a href="http://noduslabs.com/contact/" target="_blank">contact</a></li>' +
-                        '<li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">help &amp; github</a></li>';
+                        '';
 
 
             <% } else { %>
@@ -3060,7 +3076,7 @@ sigma.parsers.json(
                         '<li class="menu-item-small"><a href="/#features">demo</a></li>' +
                         '<li class="menu-item-small"><a href="/#usecases">case studies</a></li>' +
                         '<li class="menu-item-small"><a href="http://noduslabs.com/contact/" target="_blank">contact</a></li>' +
-                        '<li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">help &amp; github</a></li>';
+                        '';
 
             <% } %>
 
@@ -3072,7 +3088,7 @@ sigma.parsers.json(
                     '<li class="menu-item-small"><a href="/api/user/nodes/<%= context %>?gexf=1" target="_blank">export</a></li>' +
                     '<li class="menu-item-small"><a href="http://noduslabs.com/cases/infranodus-the-network-thinking-app/" target="_blank">demo</a></li>' +
                     '<li class="menu-item-small"><a href="http://noduslabs.com/contact/" target="_blank">contact</a></li>' +
-                    '<li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">help &amp; github</a></li>';
+                    '';
 
         <% } %>
 
