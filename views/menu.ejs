@@ -4,20 +4,17 @@
         <% if (locals.user) { %>
         <a class="pure-menu-heading" href="/<%= user.name %>/edit"><%= user.name %></a>
         <ul>
-            <li class="menu-item-divided"><a href="/<%= user.name %>/edit">all un1v3r53</a></li>
+            <li class="menu-item-divided"><a href="/<%= user.name %>/edit">all dreams</a></li>
             <li><a href="/logout">logout</a></li>
         </ul>
         <% } else { %>
-        <a class="pure-menu-heading" href="/">un1v3r53</a>
+        <a class="pure-menu-heading" href="/">dreams.network</a>
         <ul>
             <li><a href="/login">login</a></li>
             <li><a href="/signup">sign up</a></li>
             <li>&nbsp;</li>
             <li>&nbsp;</li>
             <li class="menu-item-small"><a href="http://noduslabs.com/infranodus/" target="_blank">about</a></li>
-            <li class="menu-item-small"><a href="/#features">demo</a></li>
-            <li class="menu-item-small"><a href="/#usecases">case studies</a></li>
-            <li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">github</a></li>
             <li class="menu-item-small"><a href="http://noduslabs.com/contact/" target="_blank">contact</a></li>
         </ul>
         <% } %>

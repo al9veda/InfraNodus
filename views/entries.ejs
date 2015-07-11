@@ -479,7 +479,7 @@ if (!collaborate_invite) {
         if(data.boolean && data.id == collaborate_matrix[collaborate_room]) {
             console.log('in chat room ' + data.id);
             var collab_content = $('#collaborate-link').tooltipster('content');
-            $('#collaborate-link').tooltipster('content', 'THE UN1V3R53 CHAT IS ON');
+            $('#collaborate-link').tooltipster('content', 'THE CHAT IS ON');
             $('#collaborate-link').addClass('is-collab');
             $('#collaborate-link').tooltipster('show');
             setTimeout(function() {
@@ -499,7 +499,7 @@ if (!collaborate_invite) {
         console.log(msg.people);
         $('#collaborate-link').removeClass('is-collab');
         var collab_content = $('#collaborate-link').tooltipster('content');
-        $('#collaborate-link').tooltipster('content', 'THE UN1V3R53 CHAT IS OFF');
+        $('#collaborate-link').tooltipster('content', 'THE CHAT IS OFF');
         $('#collaborate-link').tooltipster('show');
         setTimeout(function() {
             $('#collaborate-link').tooltipster('hide');

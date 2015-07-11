@@ -1,3 +1,3 @@
 exports.render = function(req, res){
-    res.render('home', { title: 'Meaningful Constelversations - Build Your Own UN1V3R53' });
+    res.render('home', { title: 'Digital Network Oracle for Lucid Dream Weaving' });
 };

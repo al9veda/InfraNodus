@@ -1,4 +1,4 @@
-##UN1V3R53 is an online chat graph visualization system based on Node.Js, Neo4J, Sigma.Js and Socket.Io
+##DREAMS.NETWORK is an online graph visualization system for dreams written using Node.Js, Neo4J, Sigma.Js and Socket.Io
 
 #### Using this tool you can visualize your conversations live as a graph to make them more meaningful and to keep track of ideas.
 
@@ -8,9 +8,11 @@
 
 =================
 
-### UN1V3R53 is based on [InfraNodus text network visualization software](http://github.com/noduslabs/infranodus)
+### DREAMS.NETWORK is based on [InfraNodus text network visualization software](http://github.com/noduslabs/infranodus)
 
-[Try it Online](http://un1v3r53.com) - request invitation code through [Nodus Labs](http://noduslabs.com/contact/)
+Other examples of InfraNodus implementations for specific purposes are [UN1V3R53](http://un1v3r53.com) chat software with visual graph feedback and [InfraNodus](http://infranodus.com) tool for connecting disjointed bits and pieces of information together.
+
+[Try it Online](http://dreams.network) - request invitation code through [Nodus Labs](http://noduslabs.com/contact/)
 
 
 =================
