@@ -71,8 +71,7 @@
 
 
              <% if (entries.length == 0) { %>
-                 <div id="helpnotice">To start a constelversation, send this permanent link to your partner. Bookmark and come back at any time. <br><br>
-                     <form class="pure-form"><input type="text" id="collabinvite" size="25" maxlength="80" class="pure-input" value=""></form> <br>
+                 <div id="helpnotice">To start interpreting your dream, start typing what you have seen, sensed and heard below using the statements that are 2-3 sentences long.<br>
 <!--
                      <div id="showarchive"></div>
 -->
@@ -91,7 +90,7 @@
                         <a id="finds" class="switcher set1">search</a>
                     </li>
                     <li class="pure-menu-selected-top">
-                        <a id="adds" class="switcher set1">chat</a>
+                        <a id="adds" class="switcher set1">write</a>
                     </li>
 
 
@@ -166,7 +165,7 @@
                         <input type="hidden" id="statementid" name="statementid" value="">
                         <input type="hidden" name="timestamp" value="">
                         &nbsp;<br>
-                        <input type='submit' id="submitbutton" name="btnSubmit" value="send" class="pure-button pure-button-primary">
+                        <input type='submit' id="submitbutton" name="btnSubmit" value="add" class="pure-button pure-button-primary">
 
                 </form>
 
@@ -209,12 +208,7 @@
         <div id="graph-tools">
                 <a href="javascript:" id="zoom-in"><img src="/images/zoom-in.png" border="0"></a><br><a href="javascript:" id="zoom-out"><img src="/images/zoom-out.png" border="0"></a>
          </div>
-            <% if (!perceivername) { %>
-                <a href="javascript:" id="microphone-link" class="tooltip" title="voice to text on/off">
-                    <!-- Microphone icon -->
-                    <span></span>
-                </a>
-            <% } %>
+
       </div>
 
     </div>
@@ -1485,9 +1479,9 @@ sigma.parsers.json(
         });
 
 
-        collaborate_message = '<a href="mailto:chat@infranodus.com?subject=Chat%20Now&body=http://' + graph_share_url + '/edit?collaborate=' + collaborate_id + '">Invite us</a> or other people for a real-time constelversation – just share the link below:<br>';
+        collaborate_message = '<a href="mailto:chat@infranodus.com?subject=Chat%20Now&body=http://' + graph_share_url + '/edit?collaborate=' + collaborate_id + '">Contact us</a> once you are done describing your dream to learn how to interpret it using the graph.';
 
-        collaborate_html = '<span><form class="pure-form">' + collaborate_message + '<input type="text" id="collaburl" size="22" maxlength="80" class="pure-input" value="http://' + graph_share_url + '/edit?collaborate=' + collaborate_id + '"></form></span>';
+        collaborate_html = '<span>' + collaborate_message + '</span>';
 
         collaborate_content = $(collaborate_html);
 
@@ -1528,7 +1522,7 @@ sigma.parsers.json(
                     graph_share_url = graph_share_url + "/" + current_context;
                 }
 
-                var collab_invite = '<a href="mailto:chat@infranodus.com?subject=Chat%20Now&body=http://' + graph_share_url + '/edit?collaborate=' + collaborate_id + '">Chat Now!</a><br>';
+                var collab_invite = '<a href="mailto:chat@infranodus.com?subject=Chat%20Now&body=http://' + graph_share_url + '/edit?collaborate=' + collaborate_id + '">Need Help?</a><br>';
 
                 var times_seen = localStorage.getItem('TooltipSeen');
 
@@ -2934,11 +2928,11 @@ sigma.parsers.json(
 
         <% if (perceivername) { %>
 
-            currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/<%= perceivername %>">constellations</a></li>';
+            currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/<%= perceivername %>">all dreams</a></li>';
 
         <% } else { %>
 
-            currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/<%= user.name %>/edit">constellations</a></li>';
+            currentContextURL = '<li id="listall" class="menu-item-divided pure-menu-selected"><a href="/<%= user.name %>/edit">all dreams</a></li>';
 
         <% } %>
 
@@ -2953,10 +2947,10 @@ sigma.parsers.json(
                     // for the menu
                     <% if (perceivername) { %>
                         context_filters += '<li class="app-context-link menu-item-divided pure-menu-selected"><a href="/<%= perceivername %>/' + n + '">' + n + '</a></li>';
-                        currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/<%= perceivername %>">constellations</a></li>';
+                        currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/<%= perceivername %>">all dreams</a></li>';
                     <% } else { %>
                         context_filters += '<li class="app-context-link menu-item-divided pure-menu-selected"><a href="/<%= user.name %>/' + n + '/edit">' + n + '</a></li>';
-                        currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/<%= user.name %>/edit">constellations</a></li>';
+                        currentContextURL = '<li id="listall" class="menu-item-divided"><a href="/<%= user.name %>/edit">all dreams</a></li>';
                     <% } %>
 
                 }
@@ -2979,7 +2973,7 @@ sigma.parsers.json(
         }
 
         <% if (!perceivername) { %>
-            addNewContext = '<li id="addNewContext" class="menu-item-divided"><a id="addcontextbutton" href="javascript:">+</a>&nbsp;<form action="/post" method="GET" class="pure-form" id="addcontextinput"><input type="text" id="addcontextname" size="7" class="pure-input"></form></li><li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
+            addNewContext = '<li id="addNewContext" class="menu-item-divided"><a id="addcontextbutton" href="javascript:">+</a>&nbsp;<div style="position:relative;margin-top:7px;!important;margin-bottom:7px;!important"><form action="" method="GET" class="pure-form" id="addcontextinput"><input type="text" id="addcontextname" size="7" class="pure-input"></form></div></li><li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
         <% } else { %>
             addNewContext = '<li class="menu-item-divided">&nbsp;<a href="javascript:"></a></li>';
 
@@ -3012,11 +3006,11 @@ sigma.parsers.json(
 
         <% if (context) { %>
 
-                switch_field = '<li class="menu-item-small"><a href="/<%= user.name %>/<% context %>">go to public view</a></li>';
+                switch_field = '';
 
             <% } else { %>
 
-                switch_field = '<li class="menu-item-small"><a href="/<%= user.name %>">go to public view</a></li>';
+                switch_field = '';
 
             <% } %>
 
@@ -3033,7 +3027,6 @@ sigma.parsers.json(
                         '<li class="menu-item-small">&nbsp;</li>' +
                         '<li class="menu-item-small"><a href="/logout">logout</a></li>' +
                         '<li class="menu-item-small"><a href="/settings">settings</a></li>' +
-                        '<li class="menu-item-small"><a href="/import">import</a></li>' +
                         '<li class="menu-item-small"><a href="/api/public/nodes/<%= perceivername %>/<%= context %>?gexf=1" target="_blank">export</a></li>' +
                         '<li class="menu-item-small"><a href="http://noduslabs.com/infranodus/" target="_blank">about</a></li>' +
                         '<li class="menu-item-small"><a href="http://noduslabs.com/contact/" target="_blank">contact</a></li>' +
@@ -3048,7 +3041,6 @@ sigma.parsers.json(
                         '<li class="menu-item-small"><a href="/">home page</a></li>' +
                         '<li class="menu-item-small">&nbsp;</li>' +
                         '<li class="menu-item-small"><a href="/settings">settings</a></li>' +
-                        '<li class="menu-item-small"><a href="/import">import</a></li>' +
                         '<li class="menu-item-small"><a href="/api/user/nodes/<%= context %>?gexf=1" target="_blank">export</a></li>' +
                         '<li class="menu-item-small"><a href="http://noduslabs.com/infranodus/" target="_blank">about</a></li>' +
                         '<li class="menu-item-small"><a href="http://noduslabs.com/contact/" target="_blank">contact</a></li>' +
@@ -3077,10 +3069,8 @@ sigma.parsers.json(
             auxLinks = '<br>' +
                     '<li class="menu-item-small"><a href="/logout">logout</a></li>' +
                     '<li class="menu-item-small"><a href="/settings">settings</a></li>' +
-                    '<li class="menu-item-small"><a href="/import">import</a></li>' +
                     '<li class="menu-item-small"><a href="/api/user/nodes/<%= context %>?gexf=1" target="_blank">export</a></li>' +
                     '<li class="menu-item-small"><a href="http://noduslabs.com/cases/infranodus-the-network-thinking-app/" target="_blank">demo</a></li>' +
-                    '<li class="menu-item-small"><a href="http://noduslabs.com/tag/infranodus/" target="_blank">case studies</a></li>' +
                     '<li class="menu-item-small"><a href="http://noduslabs.com/contact/" target="_blank">contact</a></li>' +
                     '<li class="menu-item-small"><a href="http://github.com/noduslabs/infranodus" target="_blank">help &amp; github</a></li>';
 
